@@ -1,0 +1,52 @@
+# podwash configuration
+# Copy to config.yml and customize
+
+# Base URL where this service is accessible (used in RSS feed URLs)
+base_url: "http://localhost:8080"
+
+# Directory for SQLite database and audio files
+data_dir: "./data"
+
+# Feeds to monitor
+feeds:
+  - name: "My Favorite Podcast"
+    url: "https://feeds.example.com/podcast.xml"
+    slug: "my-favorite-podcast"
+    poll_interval_minutes: 60
+
+  # - name: "Another Podcast"
+  #   url: "https://feeds.example.com/another.xml"
+  #   slug: "another-podcast"
+  #   poll_interval_minutes: 120
+
+# Processing settings
+processing:
+  # Whisper model: tiny, base, small, medium, large-v3
+  whisper_model: "base"
+  # Whisper compute type: int8, float16, float32
+  whisper_compute_type: "int8"
+  # Minimum confidence to cut an ad segment (0.0-1.0)
+  confidence_threshold: 0.7
+  # Padding in seconds around ad boundaries
+  ad_boundary_padding: 0.5
+  # Maximum episodes to keep processed audio for (older get cleaned up)
+  retention_days: 30
+  # Classifier backend: "claude" or "ollama"
+  classifier_backend: "claude"
+
+# Claude API settings
+claude:
+  model: "claude-sonnet-4-5-20250929"
+  max_tokens: 4096
+
+# Ollama settings (used when classifier_backend = "ollama")
+ollama:
+  model: "llama3.1"
+  base_url: "http://localhost:11434"
+  max_tokens: 4096
+
+# Self-healing alerts (set in .env on each host, NOT here):
+#   ALERT_TELEGRAM_BOT_TOKEN  bot token
+#   ALERT_TELEGRAM_CHAT_ID    target chat (e.g. -100...)
+#   ALERT_TELEGRAM_THREAD_ID  optional thread id
+# When unset, alerts still print to stderr but no Telegram message is sent.

@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Config with secrets
+config.yml
+.env
+
+# Data directory
+data/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Tooling caches / state
+.pytest_cache/
+.ruff_cache/
+.opencode/
+.aider*
+
+# Local issue tracker (not part of the public project)
+.beads/

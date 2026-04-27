@@ -1,0 +1,20 @@
+services:
+  podwash:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      # Named volume stays `podcast-data` to preserve existing deployment state.
+      - podcast-data:/data
+      - ./config.yml:/app/config.yml:ro
+    env_file:
+      - .env
+    environment:
+      - DATA_DIR=/data
+      - CONFIG_PATH=/app/config.yml
+    restart: unless-stopped
+    mem_limit: 512m
+    memswap_limit: 768m
+
+volumes:
+  podcast-data:

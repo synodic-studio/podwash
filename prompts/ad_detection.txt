@@ -1,0 +1,67 @@
+You are an expert at identifying advertisements and non-content segments in podcast transcripts. You will receive a timestamped transcript of a podcast episode and must identify all segments that should be removed.
+
+TRANSCRIPT:
+{transcript}
+
+INSTRUCTIONS:
+1. Identify all advertisement and non-content segments in the transcript.
+2. Look for these patterns:
+
+   ADVERTISEMENTS:
+   - Sponsor reads: "This episode is brought to you by...", "Today's sponsor is...", promo codes, discount URLs
+   - Mid-roll ad breaks: sudden topic shifts to product pitches, often preceded by "let's take a quick break" or similar
+   - Pre-roll ads: sponsor messages at the very beginning before the main content
+   - Post-roll ads: sponsor messages after the main content ends
+   - Self-promotion: "Subscribe to our Patreon", "check out our merch store", "rate and review"
+   - Dynamic ad insertion markers: sudden audio quality changes, pre-recorded ads that don't match the host's voice/style
+
+   CREDITS (remove these):
+   - End credits: "Produced by...", "This has been a production of...", staff listings, "This is NPR", network identifiers at the end
+   - Closing boilerplate: "For more information visit...", "Follow us on Twitter/X/Instagram", "See you next week"
+   - Intro credits: network bumpers, "From Gimlet Media, this is...", production company identifiers before content starts
+   - Legal disclaimers, copyright notices
+
+   DO NOT REMOVE (these are content, not credits):
+   - The actual show intro where hosts greet listeners, set up the topic, or do a recurring opening bit — even if it plays every episode
+   - Conversations, interviews, or discussions — even if they mention companies or products editorially
+   - Teases or previews of what's coming up in the episode
+
+3. For each segment, provide:
+   - start: timestamp in seconds where the segment begins (use the EARLIEST word timestamp)
+   - end: timestamp in seconds where the segment ends (use the LATEST word timestamp)
+   - type: one of "pre_roll", "mid_roll", "post_roll", "self_promo", "intro_credits", "end_credits"
+   - confidence: 0.0 to 1.0 (how certain you are this should be removed)
+   - sponsor: the brand/company name if identifiable, or "unknown" (use "N/A" for credits)
+   - reason: brief explanation of why this is classified as removable
+
+4. Be CONSERVATIVE. Only flag segments you are confident should be removed. Regular content discussion about products, reviews, or news is NOT an ad. A host mentioning a company in editorial context is NOT an ad. A recurring show intro where the host talks is NOT credits.
+
+5. Return ONLY valid JSON in this exact format:
+
+{{
+  "ad_segments": [
+    {{
+      "start": 45.2,
+      "end": 112.8,
+      "type": "mid_roll",
+      "confidence": 0.95,
+      "sponsor": "BetterHelp",
+      "reason": "Host reads BetterHelp ad with promo code PODNAME"
+    }},
+    {{
+      "start": 3480.0,
+      "end": 3510.5,
+      "type": "end_credits",
+      "confidence": 0.90,
+      "sponsor": "N/A",
+      "reason": "Production credits listing staff and network identifier"
+    }}
+  ],
+  "summary": "Found N segments totaling ~X seconds (Y ads, Z credits)"
+}}
+
+If there are no segments to remove, return:
+{{
+  "ad_segments": [],
+  "summary": "No ad or credit segments detected"
+}}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Mac-side idle watchdog. Separate from the worker so a hung worker
+  doesn't drag the watchdog down with it. Runs every 5 min, asks the
+  server if there's a stuck queue, calls `python -m src.heal` on trip.
+  Same Telegram-only-on-escalate posture as the crash wrapper.
+
+  Template — install via deploy/install-worker.sh which substitutes
+  paths and (optional) alert configuration.
+  Placeholders: __LABEL__ __REPO__ __LOGDIR__ __HOME__
+                __SERVER_URL__ __ALERT_CHAT_ID__ __ALERT_THREAD_ID__
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>__LABEL__</string>
+
+    <!-- Stdlib-only Python module under /usr/bin/python3 so a broken
+         project venv can't keep the watchdog itself from booting. -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>-u</string>
+        <string>-m</string>
+        <string>src.worker.idle_watchdog</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>__REPO__</string>
+
+    <!-- Tick every 5 min. Matches server-side watchdog cadence so the
+         two layers can't be more than 5 min out of sync. -->
+    <key>StartInterval</key>
+    <integer>300</integer>
+
+    <!-- One-shot per tick. We exit cleanly each run; launchd schedules
+         the next one. RunAtLoad fires immediately on install so we
+         don't have to wait 5 min after a reboot for first check. -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>__LOGDIR__/idle-watchdog.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>__LOGDIR__/idle-watchdog.err</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PYTHONUNBUFFERED</key>
+        <string>1</string>
+        <!-- ~/.local/bin holds the Claude Code shim that the heal
+             agent shells out to. Same reason as the worker plist. -->
+        <key>PATH</key>
+        <string>__HOME__/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>REPO_DIR</key>
+        <string>__REPO__</string>
+        <key>LOG_DIR</key>
+        <string>__LOGDIR__</string>
+        <!-- WORKER_TOKEN is read from `pass show podwash-worker-token`
+             at runtime if available, else from the environment.
+             Never plaintext here. -->
+        <key>WORKER_SERVER_URL</key>
+        <string>__SERVER_URL__</string>
+        <key>ALERT_TELEGRAM_CHAT_ID</key>
+        <string>__ALERT_CHAT_ID__</string>
+        <key>ALERT_TELEGRAM_THREAD_ID</key>
+        <string>__ALERT_THREAD_ID__</string>
+    </dict>
+</dict>
+</plist>

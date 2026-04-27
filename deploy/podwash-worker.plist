@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Template — install via deploy/install-worker.sh which substitutes
+  paths and (optional) alert configuration for the current user.
+  Placeholders: __LABEL__ __REPO__ __LOGDIR__ __HOME__ __UV__
+                __ALERT_CHAT_ID__ __ALERT_THREAD_ID__
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>__LABEL__</string>
+
+    <!-- Always go through the wrapper. It re-syncs deps with `uv run
+         --extra worker`, escalates crash bursts via the self-heal
+         agent, and is the only thing standing between launchd's silent
+         throttle loop and an undetected outage. Runs under system
+         Python so a broken project venv can't keep the wrapper itself
+         from booting (the whole point is to detect and recover from a
+         broken venv). -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>-u</string>
+        <string>-m</string>
+        <string>src.worker.wrapper</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>__REPO__</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+
+    <!-- Throttle restarts so a crash loop doesn't hammer the API -->
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
+
+    <key>StandardOutPath</key>
+    <string>__LOGDIR__/podwash-worker.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>__LOGDIR__/podwash-worker.err</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>CONFIG_PATH</key>
+        <string>__REPO__/config.yml</string>
+        <!-- Unbuffered stdio so launchd log files show progress live -->
+        <key>PYTHONUNBUFFERED</key>
+        <string>1</string>
+        <!-- ANTHROPIC_API_KEY + WORKER_TOKEN are read from `pass`
+             (password-store) at startup if available, else from the
+             environment. Do not put secrets in plaintext here. -->
+        <!-- ~/.local/bin holds the Claude Code shim that the heal
+             agent shells out to. Without it on PATH the wrapper would
+             always return UNAVAILABLE and Telegram every crash. The
+             literal "$HOME" doesn't expand in plists, so install-worker.sh
+             substitutes it. -->
+        <key>PATH</key>
+        <string>__HOME__/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <!-- Wrapper needs to know where uv lives + where to write state. -->
+        <key>UV_BIN</key>
+        <string>__UV__</string>
+        <key>REPO_DIR</key>
+        <string>__REPO__</string>
+        <key>LOG_DIR</key>
+        <string>__LOGDIR__</string>
+        <!-- Self-heal alerts route through Telegram if configured.
+             Bot token comes from `pass show telegram-bot-token` at
+             runtime if pass is installed, else ALERT_TELEGRAM_BOT_TOKEN
+             from the environment. Chat + thread are substituted by
+             install-worker.sh from PODWASH_ALERT_CHAT_ID /
+             PODWASH_ALERT_THREAD_ID env vars (empty = no Telegram). -->
+        <key>ALERT_TELEGRAM_CHAT_ID</key>
+        <string>__ALERT_CHAT_ID__</string>
+        <key>ALERT_TELEGRAM_THREAD_ID</key>
+        <string>__ALERT_THREAD_ID__</string>
+    </dict>
+</dict>
+</plist>
