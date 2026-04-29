@@ -17,11 +17,15 @@ _STATUS_PREFIX = {
     EpisodeStatus.FAILED: "\u2718",  # ✘
 }
 
-# Suffix appended to the source GUID when an episode is ad-free ready.
-# Podcast clients key episodes by GUID, so swapping the GUID on completion
-# forces the app to treat the cleaned MP3 as a fresh episode rather than
-# reusing the cached placeholder it saw during processing.
-_COMPLETED_GUID_SUFFIX = ":clean"
+# Cache-buster appended to the audio enclosure URL once an episode is
+# ad-free ready. Apps typically key media by enclosure URL, so swapping
+# the URL forces a fresh download of the cleaned MP3 even though they've
+# previously cached the placeholder served while processing. The GUID
+# stays stable so the app updates the existing episode in place rather
+# than creating a duplicate (an earlier version mutated the GUID for the
+# same purpose, which left ghost "not-yet-processed" entries behind for
+# days as the app treated the new GUID as a brand-new episode).
+_COMPLETED_AUDIO_QUERY = "?v=clean"
 
 
 def generate_feed_xml(
@@ -69,6 +73,12 @@ def generate_feed_xml(
 
     for episode in episodes:
         audio_url = f"{base_url}/audio/{feed.id}/{episode.id}.mp3"
+        # Mutate the audio URL (not the GUID) on completion so apps re-pull
+        # the cleaned MP3 even if they cached the placeholder. Keeping the
+        # GUID stable means the existing episode is updated in place
+        # instead of being shown as a duplicate alongside the old one.
+        if episode.status == EpisodeStatus.COMPLETED:
+            audio_url = f"{audio_url}{_COMPLETED_AUDIO_QUERY}"
         pub_date = _format_pub_date(episode.pub_date)
         desc = (
             escape(episode.description)
@@ -77,12 +87,7 @@ def generate_feed_xml(
         )
         prefix = _STATUS_PREFIX.get(episode.status, "\u25cb")
         title = f"{prefix} {episode.title}"
-        # Mutate GUID on completion so podcast apps re-fetch audio (see
-        # _COMPLETED_GUID_SUFFIX comment for rationale).
-        if episode.status == EpisodeStatus.COMPLETED:
-            feed_guid = f"{episode.guid}{_COMPLETED_GUID_SUFFIX}"
-        else:
-            feed_guid = episode.guid
+        feed_guid = episode.guid
 
         xml_parts.append("    <item>")
         xml_parts.append(f"      <title>{escape(title)}</title>")
