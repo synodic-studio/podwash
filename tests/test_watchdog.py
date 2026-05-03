@@ -141,7 +141,10 @@ def test_watchdog_alerts_when_no_claim_ever_recorded(conn, monkeypatch):
     assert "never claimed" in sent[0]["problem"]
 
 
-def test_watchdog_alerts_on_stale_claim_reset(conn, monkeypatch):
+def test_watchdog_silently_resets_stale_claims(conn, monkeypatch):
+    # Reset IS the repair. Stale claim → row flips back to 'pending'
+    # for retry, no Telegram noise. (If retries hit the cap, the
+    # failed-episode burst alert catches it.)
     stale = (datetime.now() - timedelta(hours=2)).isoformat()
     _insert_episode(conn, status="downloading", claimed_at=stale, claimed_by="dead")
     sent: list[dict] = []
@@ -149,9 +152,7 @@ def test_watchdog_alerts_on_stale_claim_reset(conn, monkeypatch):
     settings = Settings()
     settings.worker.stale_minutes = 45
     scheduler._watchdog(conn, settings)
-    kinds = [a["kind"] for a in sent]
-    assert "stale in-flight claims reset" in kinds
-    # Side effect: row was actually rolled back.
+    assert not any(a["kind"] == "stale in-flight claims reset" for a in sent)
     row = conn.execute("SELECT status FROM episodes").fetchone()
     assert row["status"] == "pending"
 

@@ -175,10 +175,12 @@ the cheap one.
 4. **Server-side watchdog (`_watchdog` in `src/scheduler.py`)** — runs
    every 5 min on the server as the **backstop**. By the time it
    fires, both the worker AND the Mac-side idle watchdog have failed
-   to act, which usually means the worker host itself is offline. Also
-   fires on stale in-flight claim resets and terminal-failure
-   bursts — those represent a different failure class (data/pipeline
-   rot, not worker-host liveness) and stay Telegram-direct.
+   to act, which usually means the worker host itself is offline.
+   Also fires on terminal-failure bursts (data/pipeline rot — a
+   different failure class, stays Telegram-direct). Stale in-flight
+   claims are silently reset back to 'pending' on each tick — the
+   reset IS the repair, so no alert; if retries can't finish, the
+   failed-episode burst catches it.
 
 Alerts are throttled per `(subsystem, kind)` to one per hour (state in
 `/tmp/podwash-alerts/`), so a long outage doesn't spam. Self-heal

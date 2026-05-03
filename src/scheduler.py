@@ -131,25 +131,13 @@ def _watchdog(conn: sqlite3.Connection, settings: Settings) -> None:
                 },
             )
 
-    # Condition 2: stuck in-flight claims. The claim API resets these on
-    # the next claim attempt, but if the worker is gone there will never
-    # be a next claim — so we surface them here too.
-    stuck = queries.reset_stale_claims(conn, settings.worker.stale_minutes)
-    if stuck:
-        send_alert(
-            subsystem="server-watchdog",
-            kind="stale in-flight claims reset",
-            problem=(
-                f"Reset {stuck} episode(s) whose claim was older than "
-                f"{settings.worker.stale_minutes} min — a worker died "
-                "mid-job without reporting."
-            ),
-            fix=(
-                "Investigate the worker logs around that timestamp; the "
-                "rows are now back in 'pending' and will be retried."
-            ),
-            context={"reset_count": stuck},
-        )
+    # Condition 2: stuck in-flight claims. The reset itself IS the
+    # repair — rows go back to 'pending' and will be retried on the
+    # next claim. Silent recovery; do not alert. If retries can't
+    # actually finish the work, Condition 3 (failed-episode burst)
+    # catches it. If the worker is gone for good, Condition 1
+    # (worker silent with backlog) catches it.
+    queries.reset_stale_claims(conn, settings.worker.stale_minutes)
 
     # Condition 3: terminal-failure burst. Episodes that hit retry-cap
     # land in 'failed' and stay there. Without this alert a quietly
