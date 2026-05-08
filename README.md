@@ -47,11 +47,12 @@ Episode titles in the proxy feed are prefixed with a status symbol:
 - `✘` — failed; tap to retry
 - `✂` — prefix on the channel title (not an episode status)
 
-When an episode completes, its enclosure URL changes from
-`/audio/{feed_id}/{episode_id}.mp3` to `/audio/clean/{uuid}.mp3`.
-The GUID stays the same so your app updates the existing item in place
-rather than showing a duplicate. The URL change is what forces the
-client to fetch the real file instead of using the cached placeholder.
+When an episode completes, both the **GUID and the enclosure URL** change
+to a fresh UUID. The GUID change is what forces your podcast client to
+treat it as a new episode and download it fresh — a stable GUID means
+the client replays the cached placeholder regardless of URL. You may
+briefly see two entries (the old placeholder in history, the new cleaned
+episode in your feed), which is expected.
 
 If the placeholder clip plays all the way through before processing
 finishes, some apps auto-archive the episode. You'll find the finished

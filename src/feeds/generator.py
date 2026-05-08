@@ -67,18 +67,24 @@ def generate_feed_xml(
         # replaying the cached placeholder. GUID stays stable so apps update
         # the existing episode in place rather than showing a duplicate.
         if episode.status == EpisodeStatus.COMPLETED and episode.clean_token:
+            # Both the GUID and the URL change on completion. GUID change is
+            # what forces the podcast client to treat this as a new episode and
+            # download it fresh \u2014 a stable GUID means the client considers it
+            # the same episode and replays the cached placeholder. URL change
+            # is a second guarantee. The old GUID disappears from the feed;
+            # clients that keep played episodes will show it in history, which
+            # is fine.
             audio_url = f"{base_url}/audio/clean/{episode.clean_token}.mp3"
+            feed_guid = episode.clean_token
         else:
             audio_url = f"{base_url}/audio/{feed.id}/{episode.id}.mp3"
+            feed_guid = episode.guid
         pub_date = _format_pub_date(episode.pub_date)
         desc = (
             escape(episode.description)
             if episode.description
             else escape(episode.title)
         )
-        prefix = _STATUS_PREFIX.get(episode.status, "\u25cb")
-        title = f"{prefix} {episode.title}"
-        feed_guid = episode.guid
 
         xml_parts.append("    <item>")
         xml_parts.append(f"      <title>{escape(title)}</title>")
