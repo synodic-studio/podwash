@@ -17,8 +17,9 @@ RSS feed ─► download MP3 ─► Whisper transcribe ─► Claude classify �
   → cut). Older episodes are processed on-demand when your podcast app
   requests them.
 - Until an episode is processed, podwash serves a short placeholder
-  clip and queues the work; the next refresh in your app gets the
-  cleaned audio.
+  clip and queues the work. When processing finishes, the episode gets
+  a new unique URL in the feed so your podcast client re-downloads the
+  real audio instead of replaying the cached placeholder.
 - Re-publishes each podcast as a proxy RSS feed at
   `/feeds/{slug}.xml`. Subscribe to that URL in your podcast app
   instead of the original feed.
@@ -35,6 +36,26 @@ The architecture is two-process:
 Both halves can run on the same machine for local use, or on separate
 machines (e.g. a small VPS for the server, a Mac at home for the
 worker that has more CPU/RAM than you want to pay for in the cloud).
+
+## Feed status markers
+
+Episode titles in the proxy feed are prefixed with a status symbol:
+
+- `○` — not yet processed; tap in your app to queue it
+- `◐` — currently downloading / transcribing / classifying / editing
+- `●` — **done, ad-free audio is ready**
+- `✘` — failed; tap to retry
+- `✂` — prefix on the channel title (not an episode status)
+
+When an episode completes, its enclosure URL changes from
+`/audio/{feed_id}/{episode_id}.mp3` to `/audio/clean/{uuid}.mp3`.
+The GUID stays the same so your app updates the existing item in place
+rather than showing a duplicate. The URL change is what forces the
+client to fetch the real file instead of using the cached placeholder.
+
+If the placeholder clip plays all the way through before processing
+finishes, some apps auto-archive the episode. You'll find the finished
+version in your archive/history.
 
 ## Quick start (local, single machine)
 
@@ -140,7 +161,8 @@ See `CLAUDE.md` for the full recovery design.
 
 - `GET  /submit` — HTML form for adding feeds.
 - `GET  /feeds/{slug}.xml` — proxy RSS feed (subscribe to this).
-- `GET  /audio/{feed_id}/{episode_id}.mp3` — processed audio.
+- `GET  /audio/{feed_id}/{episode_id}.mp3` — placeholder or in-progress audio.
+- `GET  /audio/clean/{uuid}.mp3` — completed ad-free audio (URL from feed).
 - `GET  /api/feeds` — list all feeds.
 - `POST /api/feeds` — add a new feed.
 - `GET  /api/feeds/{id}/episodes` — list episodes for a feed.

@@ -1,6 +1,7 @@
 """CRUD operations for feeds, episodes, and processing logs."""
 
 import sqlite3
+import uuid
 from datetime import datetime, timedelta
 
 from .models import Episode, EpisodeStatus, Feed, ProcessingLog
@@ -347,12 +348,19 @@ def mark_completed(
     episode_id: int,
     processed_audio_path: str,
     ad_segments_json: str | None,
-) -> None:
-    """Finalize an episode: mark completed, save artifacts, release claim."""
+) -> str:
+    """Finalize an episode: mark completed, save artifacts, release claim.
+
+    Generates a fresh clean_token (UUID) so the feed URL changes from the
+    placeholder path to a new path that podcast clients haven't cached.
+    Returns the token.
+    """
+    token = str(uuid.uuid4())
     conn.execute(
         """UPDATE episodes
         SET status = 'completed',
             processed_audio_path = ?,
+            clean_token = ?,
             ad_segments_json = COALESCE(?, ad_segments_json),
             original_audio_path = NULL,
             transcript_json_path = NULL,
@@ -360,9 +368,20 @@ def mark_completed(
             claimed_by = NULL,
             error_message = NULL
         WHERE id = ?""",
-        (processed_audio_path, ad_segments_json, episode_id),
+        (processed_audio_path, token, ad_segments_json, episode_id),
     )
     conn.commit()
+    return token
+
+
+def get_episode_by_clean_token(conn: sqlite3.Connection, token: str) -> Episode | None:
+    """Look up a completed episode by its clean_token."""
+    row = conn.execute(
+        "SELECT * FROM episodes WHERE clean_token = ?", (token,)
+    ).fetchone()
+    if row is None:
+        return None
+    return _row_to_episode(row)
 
 
 def mark_failed(

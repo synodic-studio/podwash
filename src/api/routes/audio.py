@@ -73,3 +73,39 @@ async def get_audio(feed_id: int, episode_id: int, request: Request):
         media_type="audio/mpeg",
         headers={"Cache-Control": "no-cache"},
     )
+
+
+@router.get("/audio/clean/{clean_token}.mp3")
+async def get_clean_audio(clean_token: str, request: Request):
+    """Serve a completed episode's processed audio by its clean token."""
+    conn = request.app.state.db
+    settings = request.app.state.settings
+
+    episode = queries.get_episode_by_clean_token(conn, clean_token)
+    if episode is None or episode.status != EpisodeStatus.COMPLETED or not episode.processed_audio_path:
+        raise HTTPException(status_code=404, detail="Episode not found")
+
+    file_path = Path(settings.data_dir) / episode.processed_audio_path
+    if file_path.exists():
+        return FileResponse(
+            path=str(file_path),
+            media_type="audio/mpeg",
+            headers={"Cache-Control": "public, max-age=86400"},
+        )
+
+    # File gone — reset so the next tap on the old URL reprocesses it.
+    queries.update_episode_status(conn, episode.id, EpisodeStatus.NEW)
+    send_alert(
+        subsystem="server-audio",
+        kind="completed audio missing",
+        problem=(
+            f"Episode {episode.id} is marked completed but "
+            f"{file_path} does not exist. Reset to NEW."
+        ),
+        fix=(
+            "Check disk health on the server (`df -h`, inspect the data dir) "
+            "and the cleanup job for an off-by-one."
+        ),
+        context={"episode_id": episode.id, "missing_path": str(file_path)},
+    )
+    raise HTTPException(status_code=404, detail="Episode not found")

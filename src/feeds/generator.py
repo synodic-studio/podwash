@@ -17,17 +17,6 @@ _STATUS_PREFIX = {
     EpisodeStatus.FAILED: "\u2718",  # ✘
 }
 
-# Cache-buster appended to the audio enclosure URL once an episode is
-# ad-free ready. Apps typically key media by enclosure URL, so swapping
-# the URL forces a fresh download of the cleaned MP3 even though they've
-# previously cached the placeholder served while processing. The GUID
-# stays stable so the app updates the existing episode in place rather
-# than creating a duplicate (an earlier version mutated the GUID for the
-# same purpose, which left ghost "not-yet-processed" entries behind for
-# days as the app treated the new GUID as a brand-new episode).
-_COMPLETED_AUDIO_QUERY = "?v=clean"
-
-
 def generate_feed_xml(
     feed: Feed,
     episodes: list[Episode],
@@ -72,13 +61,15 @@ def generate_feed_xml(
         xml_parts.append("    </image>")
 
     for episode in episodes:
-        audio_url = f"{base_url}/audio/{feed.id}/{episode.id}.mp3"
-        # Mutate the audio URL (not the GUID) on completion so apps re-pull
-        # the cleaned MP3 even if they cached the placeholder. Keeping the
-        # GUID stable means the existing episode is updated in place
-        # instead of being shown as a duplicate alongside the old one.
-        if episode.status == EpisodeStatus.COMPLETED:
-            audio_url = f"{audio_url}{_COMPLETED_AUDIO_QUERY}"
+        # Completed episodes get a unique-path URL routed through /audio/clean/.
+        # The path changes (old placeholder URL → new clean URL) so podcast
+        # clients that key downloads by URL fetch the real MP3 instead of
+        # replaying the cached placeholder. GUID stays stable so apps update
+        # the existing episode in place rather than showing a duplicate.
+        if episode.status == EpisodeStatus.COMPLETED and episode.clean_token:
+            audio_url = f"{base_url}/audio/clean/{episode.clean_token}.mp3"
+        else:
+            audio_url = f"{base_url}/audio/{feed.id}/{episode.id}.mp3"
         pub_date = _format_pub_date(episode.pub_date)
         desc = (
             escape(episode.description)

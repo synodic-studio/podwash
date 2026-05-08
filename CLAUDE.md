@@ -79,11 +79,33 @@ place at `$PODWASH_REMOTE_DIR` (defaults to `/opt/podwash`) — they
 hold secrets and host-specific values and are intentionally NOT
 transferred by the deploy script.
 
+## Feed Status Markers
+
+Episode titles in the proxy RSS feed are prefixed with a status symbol:
+
+- `○` — new, not yet processed (tapping triggers on-demand processing)
+- `◐` — currently in-progress (downloading / transcribing / classifying / editing)
+- `●` — **done, ad-free audio is ready** (this is the success state)
+- `✘` — failed (tapping retries)
+- `✂` — feed-level prefix on the channel title (not episode status)
+
+When an episode completes, the enclosure URL changes from
+`/audio/{feed_id}/{episode_id}.mp3` to `/audio/clean/{uuid}.mp3` (a
+fresh UUID stored in `episodes.clean_token`). The GUID stays stable so
+apps update the existing episode in place rather than showing a duplicate.
+The path change forces podcast clients to fetch the real file rather than
+replaying the cached placeholder.
+
+Note: if the placeholder clip played all the way through before the episode
+finished, some apps auto-archive the episode and it ends up in the
+archive/history rather than the main list.
+
 ## Key URLs
 
 - `/submit` — Web form for adding new podcast feeds
 - `/feeds/{slug}.xml` — Proxy RSS feed (subscribe in podcast app)
-- `/audio/{feed_id}/{episode_id}.mp3` — Processed audio endpoint
+- `/audio/{feed_id}/{episode_id}.mp3` — Placeholder or in-progress audio
+- `/audio/clean/{uuid}.mp3` — Completed ad-free audio (UUID from `episodes.clean_token`)
 - `/api/feeds` — JSON list of all feeds (GET) / submit new feed (POST)
 - `/api/feeds/{id}/episodes` — Episode list for a feed
 - `/api/episodes/{id}/process` — Manually trigger episode processing

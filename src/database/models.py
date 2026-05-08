@@ -46,6 +46,7 @@ class Episode(BaseModel):
     transcript_json_path: str | None = None
     ad_segments_json: str | None = None
     processed_audio_path: str | None = None
+    clean_token: str | None = None
     claimed_at: datetime | None = None
     claimed_by: str | None = None
     created_at: datetime = Field(default_factory=datetime.now)

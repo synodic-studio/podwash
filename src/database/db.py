@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS episodes (
     transcript_json_path TEXT,
     ad_segments_json TEXT,
     processed_audio_path TEXT,
+    clean_token TEXT UNIQUE,
     claimed_at TEXT,
     claimed_by TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
@@ -107,6 +108,7 @@ def _migrate(conn: sqlite3.Connection) -> None:
         # 24h" — without it, a quietly-broken classifier could rot every
         # episode and we'd never know.
         ("failed_at", "ALTER TABLE episodes ADD COLUMN failed_at TEXT"),
+        ("clean_token", "ALTER TABLE episodes ADD COLUMN clean_token TEXT"),
     ):
         if name not in cols:
             conn.execute(ddl)
@@ -115,4 +117,7 @@ def _migrate(conn: sqlite3.Connection) -> None:
     )
     conn.execute(
         "CREATE INDEX IF NOT EXISTS idx_episodes_failed_at ON episodes(failed_at)"
+    )
+    conn.execute(
+        "CREATE UNIQUE INDEX IF NOT EXISTS idx_episodes_clean_token ON episodes(clean_token)"
     )
