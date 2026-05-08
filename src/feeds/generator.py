@@ -61,11 +61,6 @@ def generate_feed_xml(
         xml_parts.append("    </image>")
 
     for episode in episodes:
-        # Completed episodes get a unique-path URL routed through /audio/clean/.
-        # The path changes (old placeholder URL → new clean URL) so podcast
-        # clients that key downloads by URL fetch the real MP3 instead of
-        # replaying the cached placeholder. GUID stays stable so apps update
-        # the existing episode in place rather than showing a duplicate.
         if episode.status == EpisodeStatus.COMPLETED and episode.clean_token:
             # Both the GUID and the URL change on completion. GUID change is
             # what forces the podcast client to treat this as a new episode and
@@ -85,6 +80,8 @@ def generate_feed_xml(
             if episode.description
             else escape(episode.title)
         )
+        prefix = _STATUS_PREFIX.get(episode.status, "○")
+        title = f"{prefix} {episode.title}"
 
         xml_parts.append("    <item>")
         xml_parts.append(f"      <title>{escape(title)}</title>")
