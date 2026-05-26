@@ -36,6 +36,12 @@ CREATE TABLE IF NOT EXISTS episodes (
     clean_token TEXT UNIQUE,
     claimed_at TEXT,
     claimed_by TEXT,
+    claim_token TEXT,
+    source_identity TEXT,
+    is_active INTEGER NOT NULL DEFAULT 1,
+    publication_state TEXT NOT NULL DEFAULT 'placeholder',
+    last_seen_at TEXT,
+    completed_at TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     UNIQUE(feed_id, guid)
 );
@@ -52,6 +58,9 @@ CREATE TABLE IF NOT EXISTS processing_log (
 
 CREATE INDEX IF NOT EXISTS idx_episodes_feed_id ON episodes(feed_id);
 CREATE INDEX IF NOT EXISTS idx_episodes_status ON episodes(status);
+CREATE INDEX IF NOT EXISTS idx_episodes_feed_active_pub ON episodes(feed_id, is_active, pub_date);
+CREATE INDEX IF NOT EXISTS idx_episodes_source_identity ON episodes(feed_id, source_identity);
+CREATE INDEX IF NOT EXISTS idx_episodes_claim_token ON episodes(claim_token);
 CREATE INDEX IF NOT EXISTS idx_processing_log_episode_id ON processing_log(episode_id);
 """
 
@@ -109,6 +118,18 @@ def _migrate(conn: sqlite3.Connection) -> None:
         # episode and we'd never know.
         ("failed_at", "ALTER TABLE episodes ADD COLUMN failed_at TEXT"),
         ("clean_token", "ALTER TABLE episodes ADD COLUMN clean_token TEXT"),
+        ("claim_token", "ALTER TABLE episodes ADD COLUMN claim_token TEXT"),
+        ("source_identity", "ALTER TABLE episodes ADD COLUMN source_identity TEXT"),
+        (
+            "is_active",
+            "ALTER TABLE episodes ADD COLUMN is_active INTEGER NOT NULL DEFAULT 1",
+        ),
+        (
+            "publication_state",
+            "ALTER TABLE episodes ADD COLUMN publication_state TEXT NOT NULL DEFAULT 'placeholder'",
+        ),
+        ("last_seen_at", "ALTER TABLE episodes ADD COLUMN last_seen_at TEXT"),
+        ("completed_at", "ALTER TABLE episodes ADD COLUMN completed_at TEXT"),
     ):
         if name not in cols:
             conn.execute(ddl)
@@ -120,4 +141,13 @@ def _migrate(conn: sqlite3.Connection) -> None:
     )
     conn.execute(
         "CREATE UNIQUE INDEX IF NOT EXISTS idx_episodes_clean_token ON episodes(clean_token)"
+    )
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_episodes_feed_active_pub ON episodes(feed_id, is_active, pub_date)"
+    )
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_episodes_source_identity ON episodes(feed_id, source_identity)"
+    )
+    conn.execute(
+        "CREATE INDEX IF NOT EXISTS idx_episodes_claim_token ON episodes(claim_token)"
     )

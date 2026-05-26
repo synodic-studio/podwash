@@ -186,9 +186,22 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
         try:
             episodes = parse_feed(feed.source_url, feed.id, max_episodes=max_episodes)
             new_count = 0
+            seen_at = datetime.now()
+            active_ids: list[int] = []
             for episode in episodes:
-                if queries.upsert_episode(conn, episode) is not None:
+                ep_id, inserted = queries.upsert_episode_from_poll(
+                    conn, episode, seen_at=seen_at
+                )
+                active_ids.append(ep_id)
+                if inserted:
                     new_count += 1
+            # Only prune visibility when we actually got episodes back —
+            # an empty parse is suspicious enough to leave existing rows
+            # alone rather than blank the whole feed.
+            if active_ids:
+                queries.mark_feed_poll_visibility(
+                    conn, feed.id, active_ids, seen_at=seen_at
+                )
             if not feed.image_url:
                 from src.feeds.parser import extract_feed_image
 
@@ -242,11 +255,16 @@ def _cleanup_old(conn: sqlite3.Connection, settings: Settings) -> None:
     data_dir = Path(settings.data_dir)
     cutoff = datetime.now() - timedelta(days=settings.processing.retention_days)
 
+    # Cleanup keys off completed_at (when the row finished) rather than
+    # created_at (when the row was first discovered). A recently-
+    # completed episode that was discovered months ago should not be
+    # pruned. Older rows missing completed_at fall back to created_at
+    # so legacy DBs still tidy up.
     rows = conn.execute(
         """SELECT id, processed_audio_path FROM episodes
         WHERE status = 'completed'
-        AND processed_audio_path IS NOT NULL
-        AND created_at < ?""",
+          AND processed_audio_path IS NOT NULL
+          AND COALESCE(completed_at, created_at) < ?""",
         (cutoff.isoformat(),),
     ).fetchall()
 
@@ -257,8 +275,17 @@ def _cleanup_old(conn: sqlite3.Connection, settings: Settings) -> None:
             if file_path.exists():
                 file_path.unlink()
                 print(f"[cleanup] Deleted old processed file for episode {ep_id}")
+            # Clear clean_token so the stale /audio/clean/{token}.mp3
+            # URL stops resolving once we've removed the file; reset
+            # the row to NEW with placeholder publication state.
             conn.execute(
-                "UPDATE episodes SET processed_audio_path = NULL, status = ? WHERE id = ?",
+                """UPDATE episodes
+                SET processed_audio_path = NULL,
+                    clean_token = NULL,
+                    status = ?,
+                    publication_state = 'placeholder',
+                    completed_at = NULL
+                WHERE id = ?""",
                 (EpisodeStatus.NEW.value, ep_id),
             )
             conn.commit()

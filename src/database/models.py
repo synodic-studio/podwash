@@ -49,6 +49,12 @@ class Episode(BaseModel):
     clean_token: str | None = None
     claimed_at: datetime | None = None
     claimed_by: str | None = None
+    claim_token: str | None = None
+    source_identity: str | None = None
+    is_active: bool = True
+    publication_state: str = "placeholder"
+    last_seen_at: datetime | None = None
+    completed_at: datetime | None = None
     created_at: datetime = Field(default_factory=datetime.now)
 
 

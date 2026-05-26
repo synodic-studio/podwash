@@ -6,6 +6,16 @@ from datetime import datetime, timedelta
 
 from .models import Episode, EpisodeStatus, Feed, ProcessingLog
 
+# Statuses where pipeline output is committed; metadata refresh during
+# repolls must not stomp on them.
+_LOCKED_PROCESSING_STATUSES = (
+    EpisodeStatus.DOWNLOADING.value,
+    EpisodeStatus.TRANSCRIBING.value,
+    EpisodeStatus.CLASSIFYING.value,
+    EpisodeStatus.EDITING.value,
+    EpisodeStatus.COMPLETED.value,
+)
+
 
 def upsert_feed(conn: sqlite3.Connection, feed: Feed) -> int:
     """Insert or update a feed. Returns the feed id."""
@@ -114,12 +124,165 @@ def upsert_episode(conn: sqlite3.Connection, episode: Episode) -> int | None:
 
 
 def get_episodes_for_feed(conn: sqlite3.Connection, feed_id: int) -> list[Episode]:
-    """Get all episodes for a feed, ordered by pub_date descending."""
+    """Get all episodes for a feed, ordered by pub_date descending.
+
+    Includes hidden/inactive rows — callers wanting the user-visible
+    set should prefer get_visible_episodes_for_feed.
+    """
     rows = conn.execute(
         "SELECT * FROM episodes WHERE feed_id = ? ORDER BY pub_date DESC",
         (feed_id,),
     ).fetchall()
     return [_row_to_episode(row) for row in rows]
+
+
+def get_visible_episodes_for_feed(
+    conn: sqlite3.Connection, feed_id: int, *, limit: int | None = None
+) -> list[Episode]:
+    """Get episodes that should appear in the generated RSS for a feed.
+
+    Filters out rows hidden by retention or superseded by completion
+    (`publication_state='hidden'`) and rows the source feed no longer
+    surfaces (`is_active=0`). Honors `limit` so `max_episodes` applies
+    to RSS output, not just parser input.
+    """
+    sql = (
+        "SELECT * FROM episodes WHERE feed_id = ? AND is_active = 1 "
+        "AND publication_state != 'hidden' "
+        "ORDER BY pub_date DESC, id DESC"
+    )
+    params: list[object] = [feed_id]
+    if limit is not None and limit > 0:
+        sql += " LIMIT ?"
+        params.append(limit)
+    rows = conn.execute(sql, params).fetchall()
+    return [_row_to_episode(row) for row in rows]
+
+
+def upsert_episode_from_poll(
+    conn: sqlite3.Connection, episode: Episode, *, seen_at: datetime
+) -> tuple[int, bool]:
+    """Insert or update an episode discovered during a poll.
+
+    Returns ``(episode_id, inserted)``. Match order:
+      1. ``feed_id + source_identity`` when set (preferred — survives
+         unstable source GUIDs and tracking-param drift).
+      2. ``feed_id + guid``.
+
+    On update, refreshes source-side metadata but preserves processing
+    state (status, processed_audio_path, clean_token, retry_count) so
+    a metadata-only republish doesn't churn completed work.
+    """
+    seen_iso = seen_at.isoformat()
+    pub_iso = episode.pub_date.isoformat() if episode.pub_date else None
+
+    existing = None
+    if episode.source_identity:
+        existing = conn.execute(
+            "SELECT id, status FROM episodes WHERE feed_id = ? AND source_identity = ?",
+            (episode.feed_id, episode.source_identity),
+        ).fetchone()
+    if existing is None:
+        existing = conn.execute(
+            "SELECT id, status FROM episodes WHERE feed_id = ? AND guid = ?",
+            (episode.feed_id, episode.guid),
+        ).fetchone()
+
+    if existing is None:
+        cur = conn.execute(
+            """INSERT INTO episodes
+            (feed_id, guid, title, source_audio_url, pub_date,
+             duration_seconds, description, status, source_identity,
+             last_seen_at, is_active, publication_state)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'new', ?, ?, 1, 'placeholder')""",
+            (
+                episode.feed_id,
+                episode.guid,
+                episode.title,
+                episode.source_audio_url,
+                pub_iso,
+                episode.duration_seconds,
+                episode.description,
+                episode.source_identity,
+                seen_iso,
+            ),
+        )
+        conn.commit()
+        return cur.lastrowid, True
+
+    ep_id = existing["id"]
+    status = existing["status"]
+    if status in _LOCKED_PROCESSING_STATUSES:
+        # Don't touch source_audio_url mid-pipeline / after completion;
+        # the worker already committed to a snapshot.
+        conn.execute(
+            """UPDATE episodes
+            SET guid = ?, title = ?, pub_date = ?, duration_seconds = ?,
+                description = ?, source_identity = COALESCE(?, source_identity),
+                last_seen_at = ?, is_active = 1
+            WHERE id = ?""",
+            (
+                episode.guid,
+                episode.title,
+                pub_iso,
+                episode.duration_seconds,
+                episode.description,
+                episode.source_identity,
+                seen_iso,
+                ep_id,
+            ),
+        )
+    else:
+        conn.execute(
+            """UPDATE episodes
+            SET guid = ?, title = ?, source_audio_url = ?, pub_date = ?,
+                duration_seconds = ?, description = ?,
+                source_identity = COALESCE(?, source_identity),
+                last_seen_at = ?, is_active = 1
+            WHERE id = ?""",
+            (
+                episode.guid,
+                episode.title,
+                episode.source_audio_url,
+                pub_iso,
+                episode.duration_seconds,
+                episode.description,
+                episode.source_identity,
+                seen_iso,
+                ep_id,
+            ),
+        )
+    conn.commit()
+    return ep_id, False
+
+
+def mark_feed_poll_visibility(
+    conn: sqlite3.Connection,
+    feed_id: int,
+    active_episode_ids: list[int],
+    *,
+    seen_at: datetime,
+) -> int:
+    """Set ``is_active=0`` for episodes the source feed no longer surfaces.
+
+    Returns the number of rows hidden. Rows still in the latest poll
+    are left alone; ``upsert_episode_from_poll`` already refreshed
+    their ``last_seen_at`` / ``is_active`` for this tick.
+    """
+    if active_episode_ids:
+        placeholders = ",".join("?" * len(active_episode_ids))
+        sql = (
+            f"UPDATE episodes SET is_active = 0 WHERE feed_id = ? "
+            f"AND id NOT IN ({placeholders}) AND is_active = 1"
+        )
+        cur = conn.execute(sql, [feed_id, *active_episode_ids])
+    else:
+        cur = conn.execute(
+            "UPDATE episodes SET is_active = 0 WHERE feed_id = ? AND is_active = 1",
+            (feed_id,),
+        )
+    conn.commit()
+    return cur.rowcount
 
 
 def get_episode_by_id(conn: sqlite3.Connection, episode_id: int) -> Episode | None:
@@ -356,6 +519,7 @@ def mark_completed(
     Returns the token.
     """
     token = str(uuid.uuid4())
+    now_iso = datetime.now().isoformat()
     conn.execute(
         """UPDATE episodes
         SET status = 'completed',
@@ -366,9 +530,27 @@ def mark_completed(
             transcript_json_path = NULL,
             claimed_at = NULL,
             claimed_by = NULL,
-            error_message = NULL
+            claim_token = NULL,
+            error_message = NULL,
+            publication_state = 'clean',
+            completed_at = ?
         WHERE id = ?""",
-        (processed_audio_path, token, ad_segments_json, episode_id),
+        (processed_audio_path, token, ad_segments_json, now_iso, episode_id),
+    )
+    # Hide any duplicate placeholder rows that point at the same source
+    # episode so the generated RSS doesn't emit both placeholder and
+    # clean items.
+    conn.execute(
+        """UPDATE episodes
+        SET publication_state = 'hidden', is_active = 0
+        WHERE id != ?
+          AND status != 'completed'
+          AND feed_id = (SELECT feed_id FROM episodes WHERE id = ?)
+          AND source_identity IS NOT NULL
+          AND source_identity = (
+            SELECT source_identity FROM episodes WHERE id = ?
+          )""",
+        (episode_id, episode_id, episode_id),
     )
     conn.commit()
     return token
@@ -438,10 +620,12 @@ def count_recent_failures(conn: sqlite3.Connection, hours: int = 24) -> int:
 def _row_to_episode(row: sqlite3.Row) -> Episode:
     """Convert a database row to an Episode model."""
     d = dict(row)
-    if d.get("pub_date"):
-        d["pub_date"] = datetime.fromisoformat(d["pub_date"])
-    if d.get("created_at"):
-        d["created_at"] = datetime.fromisoformat(d["created_at"])
-    if d.get("claimed_at"):
-        d["claimed_at"] = datetime.fromisoformat(d["claimed_at"])
+    for field in ("pub_date", "created_at", "claimed_at", "last_seen_at", "completed_at"):
+        val = d.get(field)
+        if val:
+            d[field] = datetime.fromisoformat(val)
+    if "is_active" in d:
+        d["is_active"] = bool(d["is_active"])
+    # Drop unmodeled columns (e.g. failed_at) so Pydantic doesn't choke.
+    d.pop("failed_at", None)
     return Episode(**d)

@@ -2,10 +2,74 @@
 
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import feedparser
 
 from src.database.models import Episode
+
+# Tracking parameters podcast hosts append; same audio with different
+# values is the same source episode.
+_TRACKING_PARAMS = {
+    "fbclid",
+    "gclid",
+    "rss_app",
+    "_from",
+}
+
+_TRACKING_PREFIXES = ("utm",)
+
+
+def _is_tracking_param(key: str) -> bool:
+    k = key.lower()
+    if k in _TRACKING_PARAMS:
+        return True
+    return any(k == p or k.startswith(p + "_") or k == p for p in _TRACKING_PREFIXES)
+
+
+def normalize_audio_url(url: str) -> str:
+    """Lowercase scheme/host and strip common tracking query params.
+
+    Two URLs that differ only by tracking parameters or scheme/host
+    case must normalize to the same string so dedup can spot them as
+    the same source episode.
+    """
+    if not url:
+        return ""
+    parts = urlsplit(url.strip())
+    scheme = parts.scheme.lower()
+    host = parts.hostname or ""
+    netloc = host.lower()
+    if parts.port is not None:
+        netloc = f"{netloc}:{parts.port}"
+    if parts.username:
+        cred = parts.username
+        if parts.password is not None:
+            cred = f"{cred}:{parts.password}"
+        netloc = f"{cred}@{netloc}"
+    query_pairs = [
+        (k, v)
+        for k, v in parse_qsl(parts.query, keep_blank_values=True)
+        if not _is_tracking_param(k)
+    ]
+    query = urlencode(query_pairs)
+    return urlunsplit((scheme, netloc, parts.path, query, ""))
+
+
+def build_source_identity(entry, audio_url: str) -> str:
+    """Build a durable identity for a source episode.
+
+    Prefers normalized audio URL because source GUIDs and links rotate
+    when podcast hosts re-stamp tracking. Falls back to a stable tuple
+    when no audio URL is available.
+    """
+    normalized = normalize_audio_url(audio_url) if audio_url else ""
+    if normalized:
+        return normalized
+    title = (entry.get("title") or "").strip().lower()
+    date = entry.get("published") or entry.get("updated") or ""
+    duration = entry.get("itunes_duration") or ""
+    return f"title:{title}|date:{date}|dur:{duration}"
 
 
 def extract_feed_image(url: str) -> str | None:
@@ -51,6 +115,7 @@ def parse_feed(url: str, feed_id: int, max_episodes: int = 0) -> list[Episode]:
                 pub_date=pub_date,
                 duration_seconds=duration,
                 description=description,
+                source_identity=build_source_identity(entry, audio_url),
             )
         )
 
