@@ -52,7 +52,7 @@ def test_single_failure_does_not_alert(conn, monkeypatch):
     def _boom(*a, **kw):
         raise RuntimeError("404")
 
-    monkeypatch.setattr(scheduler, "parse_feed", _boom)
+    monkeypatch.setattr(scheduler, "fetch_public_feed_sync", _boom)
     sent: list[dict] = []
     monkeypatch.setattr(scheduler, "send_alert", lambda **kw: sent.append(kw) or True)
 
@@ -67,7 +67,7 @@ def test_alert_fires_at_threshold(conn, monkeypatch):
     def _boom(*a, **kw):
         raise RuntimeError("connection refused")
 
-    monkeypatch.setattr(scheduler, "parse_feed", _boom)
+    monkeypatch.setattr(scheduler, "fetch_public_feed_sync", _boom)
     sent: list[dict] = []
     monkeypatch.setattr(scheduler, "send_alert", lambda **kw: sent.append(kw) or True)
 
@@ -86,14 +86,17 @@ def test_successful_poll_resets_streak(conn, monkeypatch):
     feed_id = _make_feed(conn)
     calls: list[str] = []
 
-    def _flaky(url, fid, max_episodes=0):
+    def _flaky(url, **kw):
         calls.append("call")
         # Fail the first two attempts, then succeed.
         if len(calls) <= 2:
             raise RuntimeError("transient")
-        return []
+        return b"<rss/>"
 
-    monkeypatch.setattr(scheduler, "parse_feed", _flaky)
+    monkeypatch.setattr(scheduler, "fetch_public_feed_sync", _flaky)
+    monkeypatch.setattr(
+        scheduler, "parse_feed_content", lambda content, fid, max_episodes=0: []
+    )
     sent: list[dict] = []
     monkeypatch.setattr(scheduler, "send_alert", lambda **kw: sent.append(kw) or True)
 
@@ -107,6 +110,6 @@ def test_successful_poll_resets_streak(conn, monkeypatch):
     def _boom(*a, **kw):
         raise RuntimeError("again")
 
-    monkeypatch.setattr(scheduler, "parse_feed", _boom)
+    monkeypatch.setattr(scheduler, "fetch_public_feed_sync", _boom)
     scheduler._poll_feeds(conn, Settings())
     assert scheduler._feed_failure_counts[feed_id] == 1

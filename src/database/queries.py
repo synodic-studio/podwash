@@ -546,26 +546,41 @@ def mark_completed(
         WHERE id = ?""",
         (processed_audio_path, token, ad_segments_json, now_iso, episode_id),
     )
-    # Hide any duplicate placeholder rows that point at the same source
-    # episode so the generated RSS doesn't emit both placeholder and
-    # clean items.
-    conn.execute(
-        """UPDATE episodes
-        SET publication_state = 'hidden', is_active = 0
-        WHERE id != ?
-          AND status != 'completed'
-          AND feed_id = (SELECT feed_id FROM episodes WHERE id = ?)
-          AND source_identity IS NOT NULL
-          AND source_identity = (
-            SELECT source_identity FROM episodes WHERE id = ?
-          )""",
-        (episode_id, episode_id, episode_id),
-    )
     conn.commit()
+    # Hide any other publication (placeholder OR earlier completed) that
+    # points at the same source episode so the generated RSS only emits
+    # the current clean item.
+    hide_superseded_publications(conn, episode_id)
     return token
 
 
 _IN_FLIGHT_STATUSES = ("downloading", "transcribing", "classifying", "editing")
+
+
+def hide_superseded_publications(conn: sqlite3.Connection, episode_id: int) -> int:
+    """Hide every other row in the same feed sharing ``source_identity``.
+
+    The given ``episode_id`` is treated as the current/canonical
+    publication for its source episode. All other rows (placeholder OR
+    completed) get ``publication_state='hidden'`` and ``is_active=0``
+    so the generated RSS only emits one item per source.
+
+    Returns the number of rows hidden.
+    """
+    cur = conn.execute(
+        """UPDATE episodes
+        SET publication_state = 'hidden', is_active = 0
+        WHERE id != ?
+          AND feed_id = (SELECT feed_id FROM episodes WHERE id = ?)
+          AND source_identity IS NOT NULL
+          AND source_identity = (
+            SELECT source_identity FROM episodes WHERE id = ?
+          )
+          AND (publication_state != 'hidden' OR is_active = 1)""",
+        (episode_id, episode_id, episode_id),
+    )
+    conn.commit()
+    return cur.rowcount
 
 
 def mark_completed_if_claimed(
@@ -616,19 +631,8 @@ def mark_completed_if_claimed(
     if cur.rowcount != 1:
         conn.commit()
         return None
-    conn.execute(
-        """UPDATE episodes
-        SET publication_state = 'hidden', is_active = 0
-        WHERE id != ?
-          AND status != 'completed'
-          AND feed_id = (SELECT feed_id FROM episodes WHERE id = ?)
-          AND source_identity IS NOT NULL
-          AND source_identity = (
-            SELECT source_identity FROM episodes WHERE id = ?
-          )""",
-        (episode_id, episode_id, episode_id),
-    )
     conn.commit()
+    hide_superseded_publications(conn, episode_id)
     return new_token
 
 
@@ -640,34 +644,48 @@ def mark_failed_if_claimed(
     error_message: str,
     max_retries: int = 3,
 ) -> EpisodeStatus | None:
-    """Apply mark_failed semantics only if the caller still owns the claim."""
+    """Apply mark_failed semantics only if the caller still owns the claim.
+
+    The status decision and the write are a single atomic statement —
+    a worker that loses the claim between SELECT and UPDATE would
+    otherwise clobber the new owner.
+    """
+    in_flight = ",".join(f"'{s}'" for s in _IN_FLIGHT_STATUSES)
+    now_iso = datetime.now().isoformat()
     row = conn.execute(
-        f"""SELECT retry_count FROM episodes
+        f"""UPDATE episodes
+        SET status = CASE
+                WHEN retry_count + 1 < ? THEN 'pending'
+                ELSE 'failed'
+            END,
+            retry_count = retry_count + 1,
+            error_message = ?,
+            claimed_at = NULL,
+            claimed_by = NULL,
+            claim_token = NULL,
+            failed_at = CASE
+                WHEN retry_count + 1 < ? THEN failed_at
+                ELSE ?
+            END
         WHERE id = ?
           AND claimed_by = ?
           AND claim_token = ?
-          AND status IN ({",".join("'" + s + "'" for s in _IN_FLIGHT_STATUSES)})""",
-        (episode_id, worker_id, claim_token),
+          AND status IN ({in_flight})
+        RETURNING status""",
+        (
+            max_retries,
+            error_message[:500],
+            max_retries,
+            now_iso,
+            episode_id,
+            worker_id,
+            claim_token,
+        ),
     ).fetchone()
+    conn.commit()
     if row is None:
         return None
-    new_retry = (row["retry_count"] or 0) + 1
-    new_status = (
-        EpisodeStatus.PENDING if new_retry < max_retries else EpisodeStatus.FAILED
-    )
-    failed_at = (
-        datetime.now().isoformat() if new_status == EpisodeStatus.FAILED else None
-    )
-    conn.execute(
-        """UPDATE episodes
-        SET status = ?, retry_count = ?, error_message = ?,
-            claimed_at = NULL, claimed_by = NULL, claim_token = NULL,
-            failed_at = COALESCE(?, failed_at)
-        WHERE id = ?""",
-        (new_status.value, new_retry, error_message[:500], failed_at, episode_id),
-    )
-    conn.commit()
-    return new_status
+    return EpisodeStatus(row["status"])
 
 
 def get_episode_by_clean_token(conn: sqlite3.Connection, token: str) -> Episode | None:

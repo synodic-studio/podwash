@@ -86,12 +86,39 @@ def extract_feed_image(url: str) -> str | None:
 
 
 def parse_feed(url: str, feed_id: int, max_episodes: int = 0) -> list[Episode]:
-    """
-    Fetch and parse an RSS feed, returning Episode models for each entry.
+    """Fetch and parse an RSS feed, returning Episode models per entry.
 
-    Episodes are returned newest-first (by pub_date).
+    Convenience wrapper around :func:`parse_feed_content`. Callers
+    that handle stored or user-supplied URLs MUST use the SSRF-safe
+    fetcher and pass bytes to ``parse_feed_content`` instead — letting
+    feedparser dereference arbitrary URLs would re-open the SSRF
+    surface that ``fetch_public_feed`` exists to close.
     """
     parsed = feedparser.parse(url)
+    return _episodes_from_parsed(parsed, feed_id, max_episodes)
+
+
+def parse_feed_content(
+    content: bytes | str, feed_id: int, max_episodes: int = 0
+) -> list[Episode]:
+    """Parse RSS bytes/text already fetched via the SSRF-safe path."""
+    parsed = feedparser.parse(content)
+    return _episodes_from_parsed(parsed, feed_id, max_episodes)
+
+
+def extract_feed_image_from_content(content: bytes | str) -> str | None:
+    """Channel-level artwork URL from pre-fetched RSS bytes/text."""
+    parsed = feedparser.parse(content)
+    feed_info = parsed.feed
+    if href := feed_info.get("image", {}).get("href"):
+        return href
+    if img := feed_info.get("image"):
+        if isinstance(img, dict) and img.get("url"):
+            return img["url"]
+    return None
+
+
+def _episodes_from_parsed(parsed, feed_id: int, max_episodes: int) -> list[Episode]:
     episodes: list[Episode] = []
 
     for entry in parsed.entries:

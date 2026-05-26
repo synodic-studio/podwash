@@ -15,6 +15,7 @@ gets 409 — the row is mutated only when the caller still owns it.
 """
 
 import secrets
+import uuid
 from pathlib import Path
 
 from fastapi import (
@@ -118,9 +119,11 @@ async def submit_result(
     ep_dir = data_dir / f"feed_{episode.feed_id}" / f"ep_{episode.id}"
     ep_dir.mkdir(parents=True, exist_ok=True)
     final_path = ep_dir / "processed.mp3"
-    # Write to a token-scoped temp file first so a stale upload can't
-    # clobber the final file even if it races past validation.
-    temp_path = ep_dir / f"processed.mp3.tmp-{claim_token}"
+    # Per-request unique temp path: two concurrent uploads for the same
+    # claim token must not share a temp file (one would clobber the
+    # other's bytes before mark_completed_if_claimed runs).
+    request_id = uuid.uuid4().hex
+    temp_path = ep_dir / f"processed.mp3.tmp-{claim_token}-{request_id}"
 
     max_bytes = max(1, settings.worker.max_upload_mb) * 1024 * 1024
     total = 0

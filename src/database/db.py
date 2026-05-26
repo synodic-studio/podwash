@@ -148,3 +148,87 @@ def _migrate(conn: sqlite3.Connection) -> None:
     conn.execute(
         "CREATE INDEX IF NOT EXISTS idx_episodes_claim_token ON episodes(claim_token)"
     )
+    _backfill_post_migration(conn)
+
+
+def _backfill_post_migration(conn: sqlite3.Connection) -> None:
+    """Populate identity fields for legacy rows the ALTER TABLE just added.
+
+    A completed row with ``source_identity=NULL`` is invisible to the
+    poll-time dedup query; the next poll with a rotated GUID inserts a
+    second row and the old clean publication gets hidden. Backfill so
+    legacy rows participate in dedup from the first poll after upgrade.
+
+    Also fixes up ``publication_state`` for legacy rows: completed +
+    clean_token → ``clean``; everything else stays at the default
+    (``placeholder``) which is correct for not-yet-processed rows.
+    """
+    # Lazy import: db.py is loaded before parser.py is on most import paths,
+    # and we don't want to introduce a hard cycle just for this helper.
+    from src.feeds.parser import normalize_audio_url
+
+    rows = conn.execute(
+        "SELECT id, source_audio_url FROM episodes "
+        "WHERE source_identity IS NULL OR source_identity = ''"
+    ).fetchall()
+    for row in rows:
+        conn.execute(
+            "UPDATE episodes SET source_identity = ? WHERE id = ?",
+            (normalize_audio_url(row["source_audio_url"] or ""), row["id"]),
+        )
+    conn.execute(
+        """UPDATE episodes
+        SET publication_state = 'clean'
+        WHERE status = 'completed'
+          AND clean_token IS NOT NULL
+          AND clean_token != ''
+          AND publication_state != 'clean'
+          AND publication_state != 'hidden'"""
+    )
+    # Backfill completed_at for rows that completed before we tracked it —
+    # fall back to created_at so retention math doesn't churn old rows.
+    conn.execute(
+        """UPDATE episodes
+        SET completed_at = COALESCE(completed_at, created_at)
+        WHERE status = 'completed' AND completed_at IS NULL"""
+    )
+    # Collapse pre-existing duplicates so the first /feeds/*.xml after
+    # upgrade doesn't emit two items for the same source.
+    _collapse_legacy_duplicates(conn)
+
+
+def _collapse_legacy_duplicates(conn: sqlite3.Connection) -> None:
+    """Hide all-but-the-newest active row per (feed_id, source_identity).
+
+    Prefer the most recent completed row (by completed_at, then id).
+    Falls back to the highest id if none are completed. Existing
+    ``publication_state='hidden'`` rows stay hidden.
+    """
+    groups = conn.execute(
+        """SELECT feed_id, source_identity, COUNT(*) AS n
+        FROM episodes
+        WHERE source_identity IS NOT NULL AND source_identity != ''
+          AND is_active = 1 AND publication_state != 'hidden'
+        GROUP BY feed_id, source_identity
+        HAVING n > 1"""
+    ).fetchall()
+    for grp in groups:
+        rows = conn.execute(
+            """SELECT id, status, completed_at FROM episodes
+            WHERE feed_id = ? AND source_identity = ?
+              AND is_active = 1 AND publication_state != 'hidden'""",
+            (grp["feed_id"], grp["source_identity"]),
+        ).fetchall()
+        # Newest completed wins; otherwise highest id.
+        completed = [r for r in rows if r["status"] == "completed"]
+        if completed:
+            keeper = max(completed, key=lambda r: (r["completed_at"] or "", r["id"]))
+        else:
+            keeper = max(rows, key=lambda r: r["id"])
+        for r in rows:
+            if r["id"] == keeper["id"]:
+                continue
+            conn.execute(
+                "UPDATE episodes SET publication_state='hidden', is_active=0 WHERE id=?",
+                (r["id"],),
+            )

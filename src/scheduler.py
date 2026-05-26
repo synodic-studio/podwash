@@ -19,8 +19,17 @@ from src.alerting import send_alert
 from src.config import Settings
 from src.database import queries
 from src.database.models import EpisodeStatus
-from src.feeds.parser import parse_feed
+from src.feeds.fetcher import fetch_public_feed_sync
+from src.feeds.parser import (
+    extract_feed_image_from_content,
+    parse_feed,
+    parse_feed_content,
+)
 from src.safe_paths import UnsafeRelativePath, resolve_under_data_dir
+
+# ``parse_feed`` is re-exported for compatibility but the scheduler
+# itself must always go through the SSRF-safe fetcher.
+__all__ = ["start_scheduler", "parse_feed", "parse_feed_content"]
 
 # Watchdog thresholds. The watchdog is the safety net for failures the
 # worker-side preflight + crash wrapper miss (Vultr can't see worker logs).
@@ -185,7 +194,8 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
 
         print(f"[scheduler] Polling feed: {feed.name}")
         try:
-            episodes = parse_feed(feed.source_url, feed.id, max_episodes=max_episodes)
+            content = fetch_public_feed_sync(feed.source_url)
+            episodes = parse_feed_content(content, feed.id, max_episodes=max_episodes)
             new_count = 0
             seen_at = datetime.now()
             active_ids: list[int] = []
@@ -204,9 +214,7 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
                     conn, feed.id, active_ids, seen_at=seen_at
                 )
             if not feed.image_url:
-                from src.feeds.parser import extract_feed_image
-
-                image_url = extract_feed_image(feed.source_url)
+                image_url = extract_feed_image_from_content(content)
                 if image_url:
                     queries.update_feed_image(conn, feed.id, image_url)
             queries.update_feed_polled(conn, feed.id)
