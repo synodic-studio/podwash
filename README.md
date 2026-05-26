@@ -47,16 +47,20 @@ Episode titles in the proxy feed are prefixed with a status symbol:
 - `✘` — failed; tap to retry
 - `✂` — prefix on the channel title (not an episode status)
 
-When an episode completes, both the **GUID and the enclosure URL** change
-to a fresh UUID. The GUID change is what forces your podcast client to
-treat it as a new episode and download it fresh — a stable GUID means
-the client replays the cached placeholder regardless of URL. You may
-briefly see two entries (the old placeholder in history, the new cleaned
-episode in your feed), which is expected.
+When an episode completes, podwash intentionally publishes the cleaned
+audio as a **new RSS item** with a fresh `<guid>` (the episode's
+`clean_token`) and a `/audio/clean/{token}.mp3` enclosure URL. The
+placeholder item disappears from the generated feed — only the cleaned
+publication remains visible. Your podcast client downloads the cleaned
+audio as a new episode rather than replaying the cached placeholder.
+Old played items may still live in the client's history/archive.
 
-If the placeholder clip plays all the way through before processing
-finishes, some apps auto-archive the episode. You'll find the finished
-version in your archive/history.
+Feed identity is durable: source GUID or tracking-URL changes don't
+create duplicate items. Polls maintain an active window (`max_episodes`
+limits what's emitted), and rows the source no longer surfaces drop
+out of the visible RSS. If the placeholder clip plays all the way
+through before processing finishes, some apps auto-archive the
+episode — find the finished version in your archive/history.
 
 ## Quick start (local, single machine)
 
@@ -112,8 +116,15 @@ Two files, both gitignored:
 
 A handful of env vars override config.yml at runtime: `BASE_URL`,
 `DATA_DIR`, `HOST`, `PORT`, `CONFIG_PATH`. The worker also reads
-`WORKER_TOKEN` (shared secret between server and worker) and
-`WORKER_SERVER_URL` (where to poll the queue API).
+`WORKER_TOKEN` (shared secret between server and worker),
+`WORKER_SERVER_URL` (where to poll the queue API), and
+`WORKER_MAX_UPLOAD_MB` (server-side cap on the uploaded MP3,
+defaults to 500).
+
+The management API (`/api/feeds`, `/api/episodes/*`) is gated by
+`ADMIN_TOKEN` (or `PODWASH_ADMIN_TOKEN`, or `pass show
+podwash-admin-token`). When unset, mutation endpoints return 503.
+The public `/feeds/*.xml`, `/audio/*`, and `/health` stay open.
 
 ### Optional: Telegram alerts
 
@@ -164,10 +175,10 @@ See `CLAUDE.md` for the full recovery design.
 - `GET  /feeds/{slug}.xml` — proxy RSS feed (subscribe to this).
 - `GET  /audio/{feed_id}/{episode_id}.mp3` — placeholder or in-progress audio.
 - `GET  /audio/clean/{uuid}.mp3` — completed ad-free audio (URL from feed).
-- `GET  /api/feeds` — list all feeds.
-- `POST /api/feeds` — add a new feed.
-- `GET  /api/feeds/{id}/episodes` — list episodes for a feed.
-- `POST /api/episodes/{id}/process` — manually trigger processing.
+- `GET  /api/feeds` — list all feeds. **Requires `ADMIN_TOKEN`.**
+- `POST /api/feeds` — add a new feed. **Requires `ADMIN_TOKEN`.**
+- `GET  /api/feeds/{id}/episodes` — list episodes. **Requires `ADMIN_TOKEN`.**
+- `POST /api/episodes/{id}/process` — manually trigger processing. **Requires `ADMIN_TOKEN`.**
 - `GET  /health` — health check.
 
 Plus a small `/api/jobs/*` family used internally by the worker.

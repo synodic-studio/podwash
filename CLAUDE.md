@@ -89,19 +89,29 @@ Episode titles in the proxy RSS feed are prefixed with a status symbol:
 - `✘` — failed (tapping retries)
 - `✂` — feed-level prefix on the channel title (not episode status)
 
-When an episode completes, **both the GUID and the enclosure URL change**
-to a fresh UUID stored in `episodes.clean_token`. The GUID change is
-what actually forces the podcast client to treat this as a new episode
-and download it fresh — a stable GUID means the client considers it the
-same episode and replays the cached placeholder regardless of URL. The
-URL change (`/audio/clean/{uuid}.mp3`) is a second guarantee. The old
-GUID disappears from the feed; clients keep played episodes in history,
-so you may see the placeholder entry in your archive alongside the new
-cleaned episode.
+When an episode completes, the proxy feed publishes the cleaned audio
+as a **new RSS item** with a fresh GUID (`episodes.clean_token`) and a
+`/audio/clean/{uuid}.mp3` enclosure. The placeholder publication is
+removed from the generated RSS — only the current cleaned item is
+visible. Old placeholder/clean rows that point at the same source
+episode are marked `publication_state='hidden'` (or `is_active=0`)
+during merge and never re-appear in `/feeds/{slug}.xml`.
 
-Note: if the placeholder clip played all the way through before the episode
-finished, some apps auto-archive the episode and it ends up in the
-archive/history rather than the main list.
+Feed identity is durable. Polling matches existing rows by
+`source_identity` (normalized audio URL with tracking params stripped)
+first, then by `(feed_id, guid)`. Source GUIDs and tracking URLs can
+rotate without spawning duplicate rows. Rows the source no longer
+surfaces are flagged `is_active=0`. `max_episodes` limits what
+`/feeds/{slug}.xml` emits — not just what `parse_feed()` ingests.
+
+Retention cleanup keys off `episodes.completed_at` (not `created_at`):
+a recently-completed episode discovered months ago is preserved. When
+a row is reset, the stale `clean_token` is cleared so old
+`/audio/clean/{token}.mp3` URLs stop resolving.
+
+Note: if the placeholder clip played all the way through before the
+episode finished, some apps auto-archive the episode and it ends up in
+the archive/history rather than the main list.
 
 ## Key URLs
 
@@ -119,6 +129,19 @@ archive/history rather than the main list.
 - `config.yml` — main config (gitignored, copy from `config.example.yml`)
 - `.env` — `ANTHROPIC_API_KEY` (required for ad classification)
 - Env overrides: `BASE_URL`, `DATA_DIR`, `HOST`, `PORT`, `CONFIG_PATH`
+- Worker env: `WORKER_TOKEN`, `WORKER_SERVER_URL`,
+  `WORKER_MAX_UPLOAD_MB` (default 500, used by the server-side queue
+  to bound /api/jobs/{id}/result uploads).
+- Admin env: `ADMIN_TOKEN` (also `PODWASH_ADMIN_TOKEN` or
+  `pass show podwash-admin-token`). Gates the management endpoints
+  under `/api/feeds` and `/api/episodes`; unset means those endpoints
+  return 503. Public `/feeds/*.xml`, `/audio/*`, and `/health` are
+  always open.
+- Deploy env (server side): `PODWASH_PORT` (host port; default 8080)
+  and `PODWASH_CONTAINER_PORT` (container listen port; default 8080).
+  `scripts/deploy.sh` passes `PORT=$CONTAINER_PORT` into the container
+  and rolls back to the previously-running image if the new container
+  fails its health check.
 
 ### Self-healing alerts
 

@@ -58,9 +58,6 @@ CREATE TABLE IF NOT EXISTS processing_log (
 
 CREATE INDEX IF NOT EXISTS idx_episodes_feed_id ON episodes(feed_id);
 CREATE INDEX IF NOT EXISTS idx_episodes_status ON episodes(status);
-CREATE INDEX IF NOT EXISTS idx_episodes_feed_active_pub ON episodes(feed_id, is_active, pub_date);
-CREATE INDEX IF NOT EXISTS idx_episodes_source_identity ON episodes(feed_id, source_identity);
-CREATE INDEX IF NOT EXISTS idx_episodes_claim_token ON episodes(claim_token);
 CREATE INDEX IF NOT EXISTS idx_processing_log_episode_id ON processing_log(episode_id);
 """
 
