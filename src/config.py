@@ -49,6 +49,19 @@ class WorkerConfig(BaseModel):
     idle_poll_seconds: int = 120
     # Worker-side only: max retries per episode before giving up.
     max_retries: int = 3
+    # Maximum size of a /result upload in MB. Anything larger gets 413.
+    max_upload_mb: int = 500
+
+
+class AdminConfig(BaseModel):
+    """Server-side admin API auth.
+
+    When ``token`` is unset, mutation endpoints under /api/feeds and
+    /api/episodes refuse with 503. Set via ADMIN_TOKEN env var or pass
+    ``podwash-admin-token``.
+    """
+
+    token: str = ""
 
 
 class Settings(BaseModel):
@@ -59,6 +72,7 @@ class Settings(BaseModel):
     claude: ClaudeConfig = Field(default_factory=ClaudeConfig)
     ollama: OllamaConfig = Field(default_factory=OllamaConfig)
     worker: WorkerConfig = Field(default_factory=WorkerConfig)
+    admin: AdminConfig = Field(default_factory=AdminConfig)
     anthropic_api_key: str = ""
     host: str = "0.0.0.0"
     port: int = 8080
@@ -115,6 +129,23 @@ def load_settings(config_path: str | None = None) -> Settings:
             settings.worker.token = _r.stdout.strip()
     if env_server_url := os.getenv("WORKER_SERVER_URL"):
         settings.worker.server_url = env_server_url
+    if env_upload_mb := os.getenv("WORKER_MAX_UPLOAD_MB"):
+        try:
+            settings.worker.max_upload_mb = int(env_upload_mb)
+        except ValueError:
+            pass
+
+    # Admin token for management mutation endpoints.
+    if env_admin := os.getenv("ADMIN_TOKEN") or os.getenv("PODWASH_ADMIN_TOKEN"):
+        settings.admin.token = env_admin
+    elif not settings.admin.token and shutil.which("pass"):
+        _r = subprocess.run(
+            ["pass", "show", "podwash-admin-token"],
+            capture_output=True,
+            text=True,
+        )
+        if _r.returncode == 0 and _r.stdout.strip():
+            settings.admin.token = _r.stdout.strip()
 
     # Ensure data dir exists
     Path(settings.data_dir).mkdir(parents=True, exist_ok=True)

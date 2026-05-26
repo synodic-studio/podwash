@@ -122,10 +122,22 @@ async def submit_result(
     # clobber the final file even if it races past validation.
     temp_path = ep_dir / f"processed.mp3.tmp-{claim_token}"
 
+    max_bytes = max(1, settings.worker.max_upload_mb) * 1024 * 1024
+    total = 0
     try:
         with temp_path.open("wb") as f:
             while chunk := await audio.read(1024 * 1024):
+                total += len(chunk)
+                if total > max_bytes:
+                    raise HTTPException(
+                        status_code=413,
+                        detail=(
+                            f"Upload exceeds {settings.worker.max_upload_mb} MB limit"
+                        ),
+                    )
                 f.write(chunk)
+        if total == 0:
+            raise HTTPException(status_code=400, detail="Empty upload")
 
         rel_path = str(final_path.relative_to(data_dir))
         new_token = queries.mark_completed_if_claimed(

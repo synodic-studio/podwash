@@ -19,10 +19,27 @@ from fastapi.responses import FileResponse
 from src.alerting import send_alert
 from src.database import queries
 from src.database.models import EpisodeStatus
+from src.safe_paths import UnsafeRelativePath, resolve_under_data_dir
 
 router = APIRouter()
 
 PROCESSING_CLIP = Path(__file__).parent.parent.parent / "static" / "processing.mp3"
+
+
+def _alert_unsafe_path(episode_id: int, stored: str) -> None:
+    send_alert(
+        subsystem="server-audio",
+        kind="unsafe processed path",
+        problem=(
+            f"Episode {episode_id} processed_audio_path={stored!r} escapes "
+            "the configured data dir. Refusing to serve."
+        ),
+        fix=(
+            "Inspect the DB row; this should never appear from the normal "
+            "pipeline. Likely a stray manual UPDATE or corruption."
+        ),
+        context={"episode_id": episode_id, "stored_path": stored},
+    )
 
 
 @router.get("/audio/clean/{clean_token}.mp3")
@@ -35,7 +52,13 @@ async def get_clean_audio(clean_token: str, request: Request):
     if episode is None or episode.status != EpisodeStatus.COMPLETED or not episode.processed_audio_path:
         raise HTTPException(status_code=404, detail="Episode not found")
 
-    file_path = Path(settings.data_dir) / episode.processed_audio_path
+    try:
+        file_path = resolve_under_data_dir(
+            settings.data_dir, episode.processed_audio_path
+        )
+    except UnsafeRelativePath:
+        _alert_unsafe_path(episode.id, episode.processed_audio_path)
+        raise HTTPException(status_code=404, detail="Episode not found")
     if file_path.exists():
         return FileResponse(
             path=str(file_path),
@@ -71,7 +94,18 @@ async def get_audio(feed_id: int, episode_id: int, request: Request):
         raise HTTPException(status_code=404, detail="Episode not found")
 
     if episode.status == EpisodeStatus.COMPLETED and episode.processed_audio_path:
-        file_path = Path(settings.data_dir) / episode.processed_audio_path
+        try:
+            file_path = resolve_under_data_dir(
+                settings.data_dir, episode.processed_audio_path
+            )
+        except UnsafeRelativePath:
+            _alert_unsafe_path(episode_id, episode.processed_audio_path)
+            queries.update_episode_status(conn, episode_id, EpisodeStatus.NEW)
+            return FileResponse(
+                path=str(PROCESSING_CLIP),
+                media_type="audio/mpeg",
+                headers={"Cache-Control": "no-cache"},
+            )
         if file_path.exists():
             return FileResponse(
                 path=str(file_path),

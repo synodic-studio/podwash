@@ -4,11 +4,13 @@ import re
 from pathlib import Path
 
 import feedparser
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
+from src.api.auth import require_admin_token
 from src.database import queries
 from src.database.models import EpisodeStatus, Feed
+from src.feeds.fetcher import FeedFetchError, fetch_public_feed
 
 router = APIRouter(prefix="/api", tags=["management"])
 
@@ -26,11 +28,31 @@ PROCESSING_STATUSES = {
 
 
 def _slugify(text: str) -> str:
-    """Convert text to a URL-safe slug."""
+    """Convert text to a URL-safe slug. May return an empty string."""
     text = text.lower().strip()
     text = re.sub(r"[^\w\s-]", "", text)
     text = re.sub(r"[\s_]+", "-", text)
     return re.sub(r"-+", "-", text).strip("-")
+
+
+def _slug_for(title: str, source_url: str) -> str:
+    """Return a non-empty slug seed for a feed.
+
+    Falls back to the source hostname (then to ``"feed"``) so emoji- or
+    punctuation-only titles still get a usable slug — the uniqueness
+    suffix loop later guarantees the final slug doesn't collide.
+    """
+    slug = _slugify(title)
+    if slug:
+        return slug
+    try:
+        from urllib.parse import urlsplit
+
+        host = urlsplit(source_url).hostname or ""
+        slug = _slugify(host)
+    except ValueError:
+        slug = ""
+    return slug or "feed"
 
 
 _APPLE_PODCASTS_RE = re.compile(r"https?://podcasts\.apple\.com/.+?/id(\d+)")
@@ -44,7 +66,7 @@ async def _resolve_apple_podcasts_url(url: str) -> str:
     podcast_id = match.group(1)
     import httpx
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=httpx.Timeout(10.0)) as client:
         resp = await client.get(
             f"https://itunes.apple.com/lookup?id={podcast_id}&entity=podcast"
         )
@@ -60,7 +82,7 @@ async def _resolve_apple_podcasts_url(url: str) -> str:
 
 
 @router.get("/feeds")
-async def list_feeds(request: Request):
+async def list_feeds(request: Request, _: None = Depends(require_admin_token)):
     conn = request.app.state.db
     feeds = queries.get_all_feeds(conn, enabled_only=False)
     stats = queries.get_feed_episode_stats(conn)
@@ -82,7 +104,11 @@ async def list_feeds(request: Request):
 
 
 @router.post("/feeds", status_code=201)
-async def submit_feed(body: FeedSubmission, request: Request):
+async def submit_feed(
+    body: FeedSubmission,
+    request: Request,
+    _: None = Depends(require_admin_token),
+):
     """Submit a new podcast RSS feed URL for processing."""
     conn = request.app.state.db
     url = await _resolve_apple_podcasts_url(body.url.strip())
@@ -100,8 +126,14 @@ async def submit_feed(body: FeedSubmission, request: Request):
             "already_existed": True,
         }
 
-    # Fetch and validate the RSS feed
-    parsed = feedparser.parse(url)
+    # Fetch via the SSRF-safe fetcher (timeouts, size cap, public IP only)
+    # and pass the bytes to feedparser. Never let feedparser dereference
+    # arbitrary URLs.
+    try:
+        body = await fetch_public_feed(url)
+    except FeedFetchError as exc:
+        raise HTTPException(status_code=400, detail=f"Could not fetch feed: {exc}")
+    parsed = feedparser.parse(body)
     if parsed.bozo and not parsed.entries:
         raise HTTPException(
             status_code=400,
@@ -115,7 +147,7 @@ async def submit_feed(body: FeedSubmission, request: Request):
             detail="Feed has no title. Is this a valid podcast RSS feed?",
         )
 
-    slug = _slugify(feed_title)
+    slug = _slug_for(feed_title, url)
 
     # Ensure slug is unique
     suffix = 0
@@ -145,7 +177,9 @@ async def submit_feed(body: FeedSubmission, request: Request):
 
 
 @router.delete("/feeds/{feed_id}")
-async def delete_feed(feed_id: int, request: Request):
+async def delete_feed(
+    feed_id: int, request: Request, _: None = Depends(require_admin_token)
+):
     """Remove a feed and all its episodes."""
     conn = request.app.state.db
     settings = request.app.state.settings
@@ -166,7 +200,9 @@ async def delete_feed(feed_id: int, request: Request):
 
 
 @router.get("/feeds/{feed_id}/episodes")
-async def list_episodes(feed_id: int, request: Request):
+async def list_episodes(
+    feed_id: int, request: Request, _: None = Depends(require_admin_token)
+):
     conn = request.app.state.db
     feed = queries.get_feed_by_id(conn, feed_id)
     if feed is None:
@@ -188,7 +224,9 @@ async def list_episodes(feed_id: int, request: Request):
 
 
 @router.post("/episodes/{episode_id}/process", status_code=202)
-async def trigger_processing(episode_id: int, request: Request):
+async def trigger_processing(
+    episode_id: int, request: Request, _: None = Depends(require_admin_token)
+):
     """Enqueue an episode for the worker by flipping status back to pending."""
     conn = request.app.state.db
 
@@ -210,7 +248,9 @@ async def trigger_processing(episode_id: int, request: Request):
 
 
 @router.get("/episodes/{episode_id}/logs")
-async def get_episode_logs(episode_id: int, request: Request):
+async def get_episode_logs(
+    episode_id: int, request: Request, _: None = Depends(require_admin_token)
+):
     conn = request.app.state.db
     episode = queries.get_episode_by_id(conn, episode_id)
     if episode is None:

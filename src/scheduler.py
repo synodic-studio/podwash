@@ -20,6 +20,7 @@ from src.config import Settings
 from src.database import queries
 from src.database.models import EpisodeStatus
 from src.feeds.parser import parse_feed
+from src.safe_paths import UnsafeRelativePath, resolve_under_data_dir
 
 # Watchdog thresholds. The watchdog is the safety net for failures the
 # worker-side preflight + crash wrapper miss (Vultr can't see worker logs).
@@ -270,7 +271,20 @@ def _cleanup_old(conn: sqlite3.Connection, settings: Settings) -> None:
 
     for row in rows:
         ep_id, path_str = row["id"], row["processed_audio_path"]
-        file_path = data_dir / path_str
+        try:
+            file_path = resolve_under_data_dir(data_dir, path_str)
+        except UnsafeRelativePath:
+            send_alert(
+                subsystem="server-cleanup",
+                kind="unsafe processed path",
+                problem=(
+                    f"Refusing to unlink episode {ep_id} — stored path "
+                    f"{path_str!r} escapes data dir."
+                ),
+                fix="Inspect the DB row before deleting anything.",
+                context={"episode_id": ep_id, "stored_path": path_str},
+            )
+            continue
         try:
             if file_path.exists():
                 file_path.unlink()
