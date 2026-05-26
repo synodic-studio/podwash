@@ -301,7 +301,11 @@ def reset_orphaned_in_flight(conn: sqlite3.Connection) -> int:
     orphaned and will never advance. Reset to pending so it retries.
     """
     cur = conn.execute(
-        """UPDATE episodes SET status = 'pending'
+        """UPDATE episodes
+        SET status = 'pending',
+            claimed_at = NULL,
+            claimed_by = NULL,
+            claim_token = NULL
         WHERE status IN ('downloading','transcribing','classifying','editing')""",
     )
     conn.commit()
@@ -464,7 +468,10 @@ def reset_stale_claims(conn: sqlite3.Connection, stale_minutes: int = 45) -> int
     cutoff = (datetime.now() - timedelta(minutes=stale_minutes)).isoformat()
     cur = conn.execute(
         """UPDATE episodes
-        SET status = 'pending', claimed_at = NULL, claimed_by = NULL
+        SET status = 'pending',
+            claimed_at = NULL,
+            claimed_by = NULL,
+            claim_token = NULL
         WHERE claimed_at IS NOT NULL
           AND claimed_at < ?
           AND status IN ('downloading','transcribing','classifying','editing')""",
@@ -487,10 +494,12 @@ def claim_next_pending(
     """
     reset_stale_claims(conn, stale_minutes)
     now = datetime.now().isoformat()
+    claim_token = str(uuid.uuid4())
     # UPDATE ... RETURNING is SQLite 3.35+; fine on any modern host.
     row = conn.execute(
         """UPDATE episodes
-        SET status = 'downloading', claimed_at = ?, claimed_by = ?
+        SET status = 'downloading', claimed_at = ?, claimed_by = ?,
+            claim_token = ?
         WHERE id = (
             SELECT id FROM episodes
             WHERE status = 'pending'
@@ -498,7 +507,7 @@ def claim_next_pending(
             LIMIT 1
         )
         RETURNING *""",
-        (now, worker_id),
+        (now, worker_id, claim_token),
     ).fetchone()
     conn.commit()
     if row is None:
@@ -556,6 +565,111 @@ def mark_completed(
     return token
 
 
+_IN_FLIGHT_STATUSES = ("downloading", "transcribing", "classifying", "editing")
+
+
+def mark_completed_if_claimed(
+    conn: sqlite3.Connection,
+    episode_id: int,
+    worker_id: str,
+    claim_token: str,
+    processed_audio_path: str,
+    ad_segments_json: str | None,
+) -> str | None:
+    """Mark the episode completed only if the caller still owns the claim.
+
+    Returns the new clean_token on success or ``None`` if the row was
+    reclaimed, completed by someone else, or never claimed by this
+    worker. Callers should treat ``None`` as ``409 Conflict``.
+    """
+    new_token = str(uuid.uuid4())
+    now_iso = datetime.now().isoformat()
+    in_flight = ",".join(f"'{s}'" for s in _IN_FLIGHT_STATUSES)
+    cur = conn.execute(
+        f"""UPDATE episodes
+        SET status = 'completed',
+            processed_audio_path = ?,
+            clean_token = ?,
+            ad_segments_json = COALESCE(?, ad_segments_json),
+            original_audio_path = NULL,
+            transcript_json_path = NULL,
+            claimed_at = NULL,
+            claimed_by = NULL,
+            claim_token = NULL,
+            error_message = NULL,
+            publication_state = 'clean',
+            completed_at = ?
+        WHERE id = ?
+          AND claimed_by = ?
+          AND claim_token = ?
+          AND status IN ({in_flight})""",
+        (
+            processed_audio_path,
+            new_token,
+            ad_segments_json,
+            now_iso,
+            episode_id,
+            worker_id,
+            claim_token,
+        ),
+    )
+    if cur.rowcount != 1:
+        conn.commit()
+        return None
+    conn.execute(
+        """UPDATE episodes
+        SET publication_state = 'hidden', is_active = 0
+        WHERE id != ?
+          AND status != 'completed'
+          AND feed_id = (SELECT feed_id FROM episodes WHERE id = ?)
+          AND source_identity IS NOT NULL
+          AND source_identity = (
+            SELECT source_identity FROM episodes WHERE id = ?
+          )""",
+        (episode_id, episode_id, episode_id),
+    )
+    conn.commit()
+    return new_token
+
+
+def mark_failed_if_claimed(
+    conn: sqlite3.Connection,
+    episode_id: int,
+    worker_id: str,
+    claim_token: str,
+    error_message: str,
+    max_retries: int = 3,
+) -> EpisodeStatus | None:
+    """Apply mark_failed semantics only if the caller still owns the claim."""
+    row = conn.execute(
+        f"""SELECT retry_count FROM episodes
+        WHERE id = ?
+          AND claimed_by = ?
+          AND claim_token = ?
+          AND status IN ({",".join("'" + s + "'" for s in _IN_FLIGHT_STATUSES)})""",
+        (episode_id, worker_id, claim_token),
+    ).fetchone()
+    if row is None:
+        return None
+    new_retry = (row["retry_count"] or 0) + 1
+    new_status = (
+        EpisodeStatus.PENDING if new_retry < max_retries else EpisodeStatus.FAILED
+    )
+    failed_at = (
+        datetime.now().isoformat() if new_status == EpisodeStatus.FAILED else None
+    )
+    conn.execute(
+        """UPDATE episodes
+        SET status = ?, retry_count = ?, error_message = ?,
+            claimed_at = NULL, claimed_by = NULL, claim_token = NULL,
+            failed_at = COALESCE(?, failed_at)
+        WHERE id = ?""",
+        (new_status.value, new_retry, error_message[:500], failed_at, episode_id),
+    )
+    conn.commit()
+    return new_status
+
+
 def get_episode_by_clean_token(conn: sqlite3.Connection, token: str) -> Episode | None:
     """Look up a completed episode by its clean_token."""
     row = conn.execute(
@@ -592,7 +706,7 @@ def mark_failed(
     conn.execute(
         """UPDATE episodes
         SET status = ?, retry_count = ?, error_message = ?,
-            claimed_at = NULL, claimed_by = NULL,
+            claimed_at = NULL, claimed_by = NULL, claim_token = NULL,
             failed_at = COALESCE(?, failed_at)
         WHERE id = ?""",
         (new_status.value, new_retry, error_message[:500], failed_at, episode_id),

@@ -16,6 +16,7 @@ class Job:
     title: str
     source_audio_url: str
     duration_seconds: int | None
+    claim_token: str
 
 
 class QueueClient:
@@ -45,6 +46,12 @@ class QueueClient:
             return None
         r.raise_for_status()
         data = r.json()
+        claim_token = data.get("claim_token")
+        if not claim_token:
+            raise RuntimeError(
+                "queue handed out a claim without a claim_token; "
+                "the server is out of date"
+            )
         return Job(
             episode_id=data["episode_id"],
             feed_id=data["feed_id"],
@@ -52,6 +59,7 @@ class QueueClient:
             title=data["title"],
             source_audio_url=data["source_audio_url"],
             duration_seconds=data.get("duration_seconds"),
+            claim_token=claim_token,
         )
 
     def submit_result(
@@ -59,6 +67,8 @@ class QueueClient:
         episode_id: int,
         processed_audio: Path,
         ad_segments_json: str | None,
+        *,
+        claim_token: str,
     ) -> dict:
         """Upload the cleaned MP3 + classifier metadata. Uses a long timeout for big files."""
         with processed_audio.open("rb") as f:
@@ -66,16 +76,20 @@ class QueueClient:
                 f"/api/jobs/{episode_id}/result",
                 files={"audio": (processed_audio.name, f, "audio/mpeg")},
                 data={"ad_segments_json": ad_segments_json or ""},
+                headers={"X-Claim-Token": claim_token},
                 timeout=300.0,
             )
         r.raise_for_status()
         return r.json()
 
-    def submit_failure(self, episode_id: int, error: str) -> dict:
+    def submit_failure(
+        self, episode_id: int, error: str, *, claim_token: str
+    ) -> dict:
         """Report a pipeline failure for retry bookkeeping."""
         r = self._http.post(
             f"/api/jobs/{episode_id}/fail",
             json={"error": error[:500]},
+            headers={"X-Claim-Token": claim_token},
         )
         r.raise_for_status()
         return r.json()

@@ -7,8 +7,14 @@ Flow:
 
 Auth: shared bearer token (settings.worker.token). Workers set
 WORKER_TOKEN; the Vultr server reads the same value.
+
+Claim ownership: the claim returned by /next includes an opaque
+``claim_token``. Result/fail submissions must echo it back via
+``X-Claim-Token`` along with ``X-Worker-Id``. A stale or reset claim
+gets 409 — the row is mutated only when the caller still owns it.
 """
 
+import secrets
 from pathlib import Path
 
 from fastapi import (
@@ -38,7 +44,8 @@ def _require_token(request: Request, authorization: str | None = Header(None)) -
         )
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing bearer token")
-    if authorization.removeprefix("Bearer ").strip() != expected:
+    provided = authorization.removeprefix("Bearer ").strip()
+    if not secrets.compare_digest(provided, expected):
         raise HTTPException(status_code=403, detail="Invalid worker token")
 
 
@@ -79,6 +86,7 @@ async def claim_next(
         "title": episode.title,
         "source_audio_url": episode.source_audio_url,
         "duration_seconds": episode.duration_seconds,
+        "claim_token": episode.claim_token,
     }
 
 
@@ -88,11 +96,19 @@ async def submit_result(
     request: Request,
     audio: UploadFile = File(..., description="Cleaned MP3"),
     ad_segments_json: str | None = Form(None),
+    worker: str | None = Header(None, alias="X-Worker-Id"),
+    claim_token: str | None = Header(None, alias="X-Claim-Token"),
     _: None = Depends(_require_token),
 ):
     """Worker uploads the cleaned MP3. We persist it and mark the episode completed."""
     conn = request.app.state.db
     settings = request.app.state.settings
+
+    if not worker or not claim_token:
+        raise HTTPException(
+            status_code=409,
+            detail="Missing X-Worker-Id or X-Claim-Token",
+        )
 
     episode = queries.get_episode_by_id(conn, episode_id)
     if episode is None:
@@ -101,16 +117,39 @@ async def submit_result(
     data_dir = Path(settings.data_dir)
     ep_dir = data_dir / f"feed_{episode.feed_id}" / f"ep_{episode.id}"
     ep_dir.mkdir(parents=True, exist_ok=True)
-    processed_path = ep_dir / "processed.mp3"
+    final_path = ep_dir / "processed.mp3"
+    # Write to a token-scoped temp file first so a stale upload can't
+    # clobber the final file even if it races past validation.
+    temp_path = ep_dir / f"processed.mp3.tmp-{claim_token}"
 
-    # Stream to disk so we don't buffer the whole file in memory.
-    with processed_path.open("wb") as f:
-        while chunk := await audio.read(1024 * 1024):
-            f.write(chunk)
+    try:
+        with temp_path.open("wb") as f:
+            while chunk := await audio.read(1024 * 1024):
+                f.write(chunk)
 
-    rel_path = str(processed_path.relative_to(data_dir))
-    queries.mark_completed(conn, episode_id, rel_path, ad_segments_json)
-    size_mb = processed_path.stat().st_size / (1024 * 1024)
+        rel_path = str(final_path.relative_to(data_dir))
+        new_token = queries.mark_completed_if_claimed(
+            conn,
+            episode_id,
+            worker,
+            claim_token,
+            rel_path,
+            ad_segments_json,
+        )
+        if new_token is None:
+            raise HTTPException(
+                status_code=409,
+                detail="Claim no longer owned by this worker",
+            )
+        temp_path.replace(final_path)
+    finally:
+        if temp_path.exists():
+            try:
+                temp_path.unlink()
+            except OSError:
+                pass
+
+    size_mb = final_path.stat().st_size / (1024 * 1024)
     print(
         f"[jobs] Episode {episode_id} '{episode.title}' completed via worker ({size_mb:.1f}MB)"
     )
@@ -122,18 +161,36 @@ async def submit_failure(
     episode_id: int,
     request: Request,
     payload: dict,
+    worker: str | None = Header(None, alias="X-Worker-Id"),
+    claim_token: str | None = Header(None, alias="X-Claim-Token"),
     _: None = Depends(_require_token),
 ):
     """Worker reports a pipeline failure. Retries up to worker.max_retries."""
     conn = request.app.state.db
     settings = request.app.state.settings
 
+    if not worker or not claim_token:
+        raise HTTPException(
+            status_code=409,
+            detail="Missing X-Worker-Id or X-Claim-Token",
+        )
+
     if queries.get_episode_by_id(conn, episode_id) is None:
         raise HTTPException(status_code=404, detail="Episode not found")
 
     error = str(payload.get("error", ""))[:500] or "unknown worker error"
-    new_status = queries.mark_failed(
-        conn, episode_id, error, max_retries=settings.worker.max_retries
+    new_status = queries.mark_failed_if_claimed(
+        conn,
+        episode_id,
+        worker,
+        claim_token,
+        error,
+        max_retries=settings.worker.max_retries,
     )
+    if new_status is None:
+        raise HTTPException(
+            status_code=409,
+            detail="Claim no longer owned by this worker",
+        )
     print(f"[jobs] Episode {episode_id} failed → {new_status.value}: {error}")
     return {"status": new_status.value, "error": error}

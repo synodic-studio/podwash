@@ -53,7 +53,9 @@ async def _process_and_upload(
     )
 
     # Upload — the server flips status to completed and owns the file.
-    client.submit_result(job.episode_id, processed_path, raw_json)
+    client.submit_result(
+        job.episode_id, processed_path, raw_json, claim_token=job.claim_token
+    )
     size_mb = processed_path.stat().st_size / (1024 * 1024)
     print(f"[worker] Episode {job.episode_id} uploaded ({size_mb:.1f}MB)")
 
@@ -78,7 +80,9 @@ async def run_once(client: QueueClient, settings: Settings) -> bool:
         traceback.print_exc()
         print(f"[worker] Episode {job.episode_id} failed: {err}")
         try:
-            client.submit_failure(job.episode_id, err)
+            client.submit_failure(
+                job.episode_id, err, claim_token=job.claim_token
+            )
         except Exception as api_exc:
             print(f"[worker] Could not report failure to server: {api_exc}")
     finally:
