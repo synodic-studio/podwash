@@ -53,16 +53,45 @@ install_one() {
     local src="$REPO/deploy/${template_basename}.plist"
     local dst="$HOME/Library/LaunchAgents/${label}.plist"
 
-    sed \
-        -e "s|__LABEL__|$label|g" \
-        -e "s|__UV__|$UV_BIN|g" \
-        -e "s|__REPO__|$REPO|g" \
-        -e "s|__LOGDIR__|$LOGDIR|g" \
-        -e "s|__HOME__|$HOME|g" \
-        -e "s|__SERVER_URL__|$SERVER_URL|g" \
-        -e "s|__ALERT_CHAT_ID__|$ALERT_CHAT_ID|g" \
-        -e "s|__ALERT_THREAD_ID__|$ALERT_THREAD_ID|g" \
-        "$src" > "$dst"
+    # Use Python rather than sed so values containing &, \, or sed
+    # delimiters round-trip cleanly. Each replacement is a literal
+    # string + XML-escape so the resulting plist remains valid even
+    # if (e.g.) the server URL contains query string &.
+    LABEL="$label" UV_PATH="$UV_BIN" REPO_PATH="$REPO" \
+    LOGDIR_PATH="$LOGDIR" HOME_PATH="$HOME" \
+    SERVER_URL_VAL="$SERVER_URL" \
+    ALERT_CHAT_ID_VAL="$ALERT_CHAT_ID" \
+    ALERT_THREAD_ID_VAL="$ALERT_THREAD_ID" \
+    python3 - "$src" "$dst" <<'PY'
+import os
+import sys
+from xml.sax.saxutils import escape
+
+src, dst = sys.argv[1], sys.argv[2]
+mapping = {
+    "__LABEL__": os.environ["LABEL"],
+    "__UV__": os.environ["UV_PATH"],
+    "__REPO__": os.environ["REPO_PATH"],
+    "__LOGDIR__": os.environ["LOGDIR_PATH"],
+    "__HOME__": os.environ["HOME_PATH"],
+    "__SERVER_URL__": os.environ["SERVER_URL_VAL"],
+    "__ALERT_CHAT_ID__": os.environ["ALERT_CHAT_ID_VAL"],
+    "__ALERT_THREAD_ID__": os.environ["ALERT_THREAD_ID_VAL"],
+}
+with open(src) as f:
+    body = f.read()
+for placeholder, value in mapping.items():
+    body = body.replace(placeholder, escape(value))
+with open(dst, "w") as f:
+    f.write(body)
+PY
+
+    if command -v plutil >/dev/null 2>&1; then
+        if ! plutil -lint "$dst" >/dev/null; then
+            echo "error: rendered plist failed plutil -lint: $dst" >&2
+            exit 1
+        fi
+    fi
 
     if launchctl list | grep -q "$label"; then
         echo "Unloading existing $label"

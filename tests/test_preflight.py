@@ -39,9 +39,24 @@ def test_check_secrets_lists_each_missing_secret():
     assert "pass" in fix
 
 
-def test_check_imports_ok_when_modules_present():
-    # anthropic + faster_whisper are required by the test env (pyproject
-    # has them under the `worker` extra and we run via `uv run`).
+def test_check_imports_ok_when_modules_present(monkeypatch):
+    # Hermetic: don't depend on the worker extras being installed.
+    import builtins
+    import sys
+    import types
+
+    real_import = builtins.__import__
+
+    def _import(name, *args, **kwargs):
+        if name in ("anthropic", "faster_whisper"):
+            mod = sys.modules.get(name)
+            if mod is None:
+                mod = types.ModuleType(name)
+                sys.modules[name] = mod
+            return mod
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", _import)
     ok, _, _ = preflight._check_imports(_settings())
     assert ok is True
 

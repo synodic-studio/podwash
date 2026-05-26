@@ -26,7 +26,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 # Heal CLI exit codes — kept literal so this file doesn't have to import
@@ -81,14 +81,27 @@ def _fetch_health(server_url: str, token: str, timeout: float = 15.0) -> dict:
 
 
 def _silent_minutes(last_claim_at: str | None, now: datetime) -> float:
-    """How long since any worker last claimed. inf if never."""
+    """How long since any worker last claimed. inf if never.
+
+    Normalizes both sides to naive UTC before subtracting so a mix of
+    aware/naive timestamps (sqlite may have stored either) doesn't
+    raise ``TypeError`` and crash the tick.
+    """
     if not last_claim_at:
         return float("inf")
     try:
         last = datetime.fromisoformat(last_claim_at)
-    except ValueError:
+    except (ValueError, TypeError):
         return float("inf")
-    return (now - last).total_seconds() / 60
+    try:
+        if last.tzinfo is not None:
+            last = last.astimezone(timezone.utc).replace(tzinfo=None)
+        ref = now
+        if ref.tzinfo is not None:
+            ref = ref.astimezone(timezone.utc).replace(tzinfo=None)
+        return (ref - last).total_seconds() / 60
+    except (TypeError, ValueError):
+        return float("inf")
 
 
 def evaluate(

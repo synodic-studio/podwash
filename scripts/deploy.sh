@@ -11,7 +11,9 @@
 #   PODWASH_REMOTE_DIR        Default: /opt/podwash
 #   PODWASH_CONTAINER         Default: podwash
 #   PODWASH_IMAGE             Default: podwash
-#   PODWASH_PORT              Default: 8080
+#   PODWASH_PORT              Host port to expose. Default: 8080
+#   PODWASH_CONTAINER_PORT    Port the container listens on. Default: 8080.
+#                             The app reads PORT from the env we pass.
 #   PODWASH_PUBLIC_HEALTH_URL Optional. If set, curl'd at the end as a
 #                             final smoke test (e.g. through a tunnel
 #                             or load balancer). Empty = skip.
@@ -30,7 +32,8 @@ REMOTE_SSH="${PODWASH_REMOTE_SSH:-}"
 REMOTE_DIR="${PODWASH_REMOTE_DIR:-/opt/podwash}"
 CONTAINER="${PODWASH_CONTAINER:-podwash}"
 IMAGE_NAME="${PODWASH_IMAGE:-podwash}"
-PORT="${PODWASH_PORT:-8080}"
+HOST_PORT="${PODWASH_PORT:-8080}"
+CONTAINER_PORT="${PODWASH_CONTAINER_PORT:-8080}"
 PUBLIC_HEALTH_URL="${PODWASH_PUBLIC_HEALTH_URL:-}"
 
 if [[ -z "$REMOTE_SSH" ]]; then
@@ -89,7 +92,7 @@ docker save "${IMAGE_NAME}:${SHA}" "${IMAGE_NAME}:latest" \
     | ssh "$REMOTE_SSH" "docker load" >/dev/null \
     || die "image transfer failed"
 
-log "6/7 restart container on remote"
+log "6/7 restart container on remote (with rollback on failure)"
 ssh "$REMOTE_SSH" bash -s <<EOF || die "remote restart failed"
 set -euo pipefail
 
@@ -97,32 +100,66 @@ mkdir -p "$REMOTE_DIR/data"
 [ -f "$REMOTE_DIR/config.yml" ] || { echo "[remote] missing $REMOTE_DIR/config.yml"; exit 1; }
 [ -f "$REMOTE_DIR/.env" ]       || { echo "[remote] missing $REMOTE_DIR/.env"; exit 1; }
 
+# Capture the currently-running image id so we can roll back if the
+# new container fails its health check. If nothing is running, this
+# is empty and rollback is a no-op.
+OLD_IMAGE=\$(docker inspect --format='{{.Image}}' "$CONTAINER" 2>/dev/null || true)
+
 if docker ps -a --format '{{.Names}}' | grep -qx "$CONTAINER"; then
     docker stop "$CONTAINER" >/dev/null 2>&1 || true
     docker rm   "$CONTAINER" >/dev/null 2>&1 || true
 fi
 
-docker run -d \
-    --name "$CONTAINER" \
-    --restart unless-stopped \
-    -p ${PORT}:${PORT} \
-    -v "$REMOTE_DIR/config.yml:/app/config.yml:ro" \
-    -v "$REMOTE_DIR/data:/data" \
-    --env-file "$REMOTE_DIR/.env" \
-    -e DATA_DIR=/data \
-    -e CONFIG_PATH=/app/config.yml \
-    --memory=512m --memory-swap=768m \
-    "${IMAGE_NAME}:${SHA}" >/dev/null
+start_container() {
+    local image="\$1"
+    docker run -d \\
+        --name "$CONTAINER" \\
+        --restart unless-stopped \\
+        -p ${HOST_PORT}:${CONTAINER_PORT} \\
+        -v "$REMOTE_DIR/config.yml:/app/config.yml:ro" \\
+        -v "$REMOTE_DIR/data:/data" \\
+        --env-file "$REMOTE_DIR/.env" \\
+        -e DATA_DIR=/data \\
+        -e CONFIG_PATH=/app/config.yml \\
+        -e PORT=${CONTAINER_PORT} \\
+        --memory=512m --memory-swap=768m \\
+        "\$image" >/dev/null
+}
+
+start_container "${IMAGE_NAME}:${SHA}"
 
 echo "[remote] waiting for /health"
+HEALTHY=0
 for i in \$(seq 1 30); do
-    if curl -fsS "http://127.0.0.1:${PORT}/health" >/dev/null 2>&1; then
+    if curl -fsS "http://127.0.0.1:${HOST_PORT}/health" >/dev/null 2>&1; then
         echo "[remote] healthy after \${i}s"
-        exit 0
+        HEALTHY=1
+        break
     fi
     sleep 1
 done
-echo "[remote] health check timed out"; docker logs --tail=50 "$CONTAINER"; exit 1
+
+if [ "\$HEALTHY" = "1" ]; then
+    exit 0
+fi
+
+echo "[remote] health check timed out; tail of new container logs:"
+docker logs --tail=50 "$CONTAINER" || true
+
+if [ -n "\$OLD_IMAGE" ]; then
+    echo "[remote] rolling back to previous image \$OLD_IMAGE"
+    docker stop "$CONTAINER" >/dev/null 2>&1 || true
+    docker rm   "$CONTAINER" >/dev/null 2>&1 || true
+    start_container "\$OLD_IMAGE"
+    for i in \$(seq 1 30); do
+        if curl -fsS "http://127.0.0.1:${HOST_PORT}/health" >/dev/null 2>&1; then
+            echo "[remote] rolled back successfully after \${i}s"
+            break
+        fi
+        sleep 1
+    done
+fi
+exit 1
 EOF
 
 if [[ -n "$PUBLIC_HEALTH_URL" ]]; then
@@ -133,4 +170,4 @@ else
     log "7/7 skipped (PODWASH_PUBLIC_HEALTH_URL unset)"
 fi
 
-log "deploy complete: ${IMAGE_NAME}:${SHA} live on $REMOTE_SSH:${PORT}"
+log "deploy complete: ${IMAGE_NAME}:${SHA} live on $REMOTE_SSH:${HOST_PORT} (container :${CONTAINER_PORT})"

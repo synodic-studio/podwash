@@ -33,12 +33,7 @@ async def cut_ads(
 
     if not ad_segments:
         # No ads to cut — just copy the file
-        proc = await asyncio.create_subprocess_exec(
-            "ffmpeg", "-y", "-i", str(audio_path), "-c", "copy", str(output_path),
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        await proc.communicate()
+        await _run_ffmpeg_copy(audio_path, output_path)
         elapsed_ms = int((time.monotonic() - start_time) * 1000)
         return ProcessingLog(
             episode_id=0,
@@ -59,12 +54,7 @@ async def cut_ads(
 
     if not keep_segments:
         # Everything is an ad? Just copy original as safety measure
-        proc = await asyncio.create_subprocess_exec(
-            "ffmpeg", "-y", "-i", str(audio_path), "-c", "copy", str(output_path),
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        await proc.communicate()
+        await _run_ffmpeg_copy(audio_path, output_path)
         elapsed_ms = int((time.monotonic() - start_time) * 1000)
         return ProcessingLog(
             episode_id=0,
@@ -102,6 +92,7 @@ async def cut_ads(
 
     if proc.returncode != 0:
         raise RuntimeError(f"ffmpeg failed: {stderr.decode()[:500]}")
+    _assert_nonempty(output_path)
 
     total_cut = sum(s["end"] - s["start"] for s in ads)
     elapsed_ms = int((time.monotonic() - start_time) * 1000)
@@ -139,15 +130,51 @@ def _compute_keep_segments(
     return [(s, e) for s, e in keep if e - s > 0.1]
 
 
+async def _run_ffmpeg_copy(src: Path, dst: Path) -> None:
+    """Stream-copy src to dst with ffmpeg, raising on any failure."""
+    proc = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y", "-i", str(src), "-c", "copy", str(dst),
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+    )
+    _, stderr = await proc.communicate()
+    if proc.returncode != 0:
+        raise RuntimeError(f"ffmpeg copy failed: {stderr.decode()[:500]}")
+    _assert_nonempty(dst)
+
+
+def _assert_nonempty(path: Path) -> None:
+    if not path.exists():
+        raise RuntimeError(f"ffmpeg reported success but output missing: {path}")
+    if path.stat().st_size <= 0:
+        raise RuntimeError(f"ffmpeg produced empty output: {path}")
+
+
 async def _get_duration(audio_path: Path) -> float:
     """Get audio duration in seconds via ffprobe."""
     proc = await asyncio.create_subprocess_exec(
-        "ffprobe", "-v", "quiet",
+        "ffprobe", "-v", "error",
         "-show_entries", "format=duration",
         "-of", "default=noprint_wrappers=1:nokey=1",
         str(audio_path),
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
-    stdout, _ = await proc.communicate()
-    return float(stdout.decode().strip())
+    stdout, stderr = await proc.communicate()
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"ffprobe failed (rc={proc.returncode}): "
+            f"{stderr.decode()[:300]}"
+        )
+    raw = stdout.decode().strip()
+    if not raw:
+        raise RuntimeError(f"ffprobe returned empty duration for {audio_path}")
+    try:
+        duration = float(raw)
+    except ValueError as exc:
+        raise RuntimeError(
+            f"ffprobe returned non-numeric duration {raw!r}"
+        ) from exc
+    if duration <= 0 or duration != duration:  # NaN guard
+        raise RuntimeError(f"ffprobe returned non-positive duration {duration}")
+    return duration

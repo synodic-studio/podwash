@@ -8,7 +8,7 @@ which is exercised end-to-end by the wrapper tests.
 from __future__ import annotations
 
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from src.worker import idle_watchdog
@@ -79,3 +79,25 @@ def test_cooldown_stamp_handles_corrupt_file(tmp_path: Path) -> None:
     stamp.write_text("not a number\n")
     # Garbage in → safe default (allow firing).
     assert idle_watchdog._within_cooldown(stamp, 1800) is False
+
+
+def test_evaluate_handles_aware_last_claim_with_naive_now() -> None:
+    now = datetime(2026, 4, 27, 12, 0, 0)  # naive
+    old = "2026-04-27T10:00:00+00:00"  # aware
+    should, _ = idle_watchdog.evaluate(
+        _snapshot(pending=1, last_claim_at=old),
+        no_claim_minutes=30,
+        now=now,
+    )
+    assert should is True
+
+
+def test_evaluate_handles_aware_last_claim_with_aware_now() -> None:
+    now = datetime(2026, 4, 27, 12, 0, 0, tzinfo=timezone.utc)
+    old = "2026-04-27T10:00:00+00:00"
+    should, _ = idle_watchdog.evaluate(
+        _snapshot(pending=1, last_claim_at=old),
+        no_claim_minutes=30,
+        now=now,
+    )
+    assert should is True
