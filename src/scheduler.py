@@ -37,6 +37,7 @@ _WATCHDOG_INTERVAL_MIN = 5
 _NO_RECENT_CLAIM_MIN = 30  # "worker is silent" if no claim in this window
 _FAILED_BURST_THRESHOLD = 5  # alert if this many episodes failed in last 24h
 _FEED_POLL_FAIL_THRESHOLD = 3  # alert after this many consecutive feed errors
+DEFAULT_MAX_EPISODES_PER_FEED = 100
 
 # In-memory consecutive-failure counter per feed_id, scoped to the
 # scheduler process. We don't persist it — restarts forgive a feed and
@@ -186,10 +187,10 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
             if datetime.now() - last < timedelta(minutes=feed.poll_interval_minutes):
                 continue
 
-        max_episodes = 0
+        max_episodes = DEFAULT_MAX_EPISODES_PER_FEED
         for fc in settings.feeds:
             if fc.slug == feed.slug:
-                max_episodes = fc.max_episodes
+                max_episodes = fc.max_episodes or DEFAULT_MAX_EPISODES_PER_FEED
                 break
 
         print(f"[scheduler] Polling feed: {feed.name}")

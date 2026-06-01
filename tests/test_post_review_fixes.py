@@ -236,6 +236,7 @@ def test_scheduler_calls_fetch_public_feed_sync(monkeypatch, tmp_path):
     )
 
     fetched: list[str] = []
+    parsed_limits: list[int] = []
 
     def _fake_fetch(url, **kw):
         fetched.append(url)
@@ -244,6 +245,7 @@ def test_scheduler_calls_fetch_public_feed_sync(monkeypatch, tmp_path):
     monkeypatch.setattr(scheduler, "fetch_public_feed_sync", _fake_fetch)
 
     def _fake_parse(content, feed_id, max_episodes=0):
+        parsed_limits.append(max_episodes)
         return []
 
     monkeypatch.setattr(scheduler, "parse_feed_content", _fake_parse)
@@ -254,6 +256,7 @@ def test_scheduler_calls_fetch_public_feed_sync(monkeypatch, tmp_path):
 
     scheduler._poll_feeds(conn, settings)
     assert fetched == ["https://feeds.example.com/x.rss"]
+    assert parsed_limits == [scheduler.DEFAULT_MAX_EPISODES_PER_FEED]
 
 
 # ---------------------------------------------------------------------------
