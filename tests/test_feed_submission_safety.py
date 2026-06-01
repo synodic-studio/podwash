@@ -4,13 +4,34 @@ from __future__ import annotations
 
 import pytest
 
-from src.feeds.fetcher import DEFAULT_MAX_BYTES, FeedFetchError, fetch_public_feed
+from src.feeds.fetcher import (
+    DEFAULT_MAX_BYTES,
+    FeedFetchError,
+    _trim_to_complete_rss_prefix,
+    fetch_public_feed,
+)
 
 
-def test_default_feed_size_limit_allows_large_publisher_back_catalogs():
-    # The Daily is currently ~18 MB and Ezra Klein ~7 MB. A 5 MB cap
-    # caused scheduled polls to fail indefinitely with "feed too large".
-    assert DEFAULT_MAX_BYTES >= 20_000_000
+def test_default_feed_size_limit_stays_small():
+    assert DEFAULT_MAX_BYTES == 5_000_000
+
+
+def test_trim_to_complete_rss_prefix_returns_well_formed_recent_items():
+    partial = (
+        b"<?xml version='1.0'?><rss><channel><title>x</title>"
+        b"<item><title>newest</title></item>"
+        b"<item><title>older</title></item>"
+        b"<item><title>truncated"
+    )
+
+    trimmed = _trim_to_complete_rss_prefix(partial)
+
+    assert trimmed == (
+        b"<?xml version='1.0'?><rss><channel><title>x</title>"
+        b"<item><title>newest</title></item>"
+        b"<item><title>older</title></item>"
+        b"</channel></rss>"
+    )
 
 
 @pytest.mark.asyncio

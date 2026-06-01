@@ -16,10 +16,7 @@ from urllib.parse import urlsplit
 
 import httpx
 
-# Large publisher feeds (The Daily, Ezra Klein) can be 7-18 MB because
-# Simplecast includes years of back-catalog metadata. Keep this below a
-# genuinely dangerous response size, but high enough for real podcast feeds.
-DEFAULT_MAX_BYTES = 25_000_000
+DEFAULT_MAX_BYTES = 5_000_000
 DEFAULT_TIMEOUT_SECONDS = 10.0
 MAX_REDIRECTS = 5
 
@@ -129,6 +126,10 @@ async def _fetch_one(
                 async for chunk in response.aiter_bytes():
                     size += len(chunk)
                     if size > max_bytes:
+                        partial = b"".join([*chunks, chunk])[:max_bytes]
+                        trimmed = _trim_to_complete_rss_prefix(partial)
+                        if trimmed is not None:
+                            return trimmed
                         raise FeedFetchError("feed too large")
                     chunks.append(chunk)
                 return b"".join(chunks)
@@ -153,3 +154,25 @@ def fetch_public_feed_sync(
             max_redirects=max_redirects,
         )
     )
+
+
+def _trim_to_complete_rss_prefix(content: bytes) -> bytes | None:
+    """Return newest-first RSS bytes ending at the last complete item.
+
+    Large podcast RSS feeds usually put newest episodes first and grow by
+    appending years of back-catalog ``<item>`` blocks. If a body crosses the
+    byte cap, keep the complete prefix instead of rejecting the whole poll.
+    Truncating raw XML is invalid, so this cuts at the last closed item and
+    adds the channel/rss closing tags needed by feedparser.
+    """
+    lower = content.lower()
+    if b"<rss" not in lower or b"<channel" not in lower:
+        return None
+    if b"</channel>" in lower and b"</rss>" in lower:
+        return content
+
+    last_item_end = lower.rfind(b"</item>")
+    if last_item_end == -1:
+        return None
+    last_item_end += len(b"</item>")
+    return content[:last_item_end] + b"</channel></rss>"
