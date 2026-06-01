@@ -16,7 +16,10 @@ from urllib.parse import urlsplit
 
 import httpx
 
-DEFAULT_MAX_BYTES = 5_000_000
+# Large publisher feeds (The Daily, Ezra Klein) can be 7-18 MB because
+# Simplecast includes years of back-catalog metadata. Keep this below a
+# genuinely dangerous response size, but high enough for real podcast feeds.
+DEFAULT_MAX_BYTES = 25_000_000
 DEFAULT_TIMEOUT_SECONDS = 10.0
 MAX_REDIRECTS = 5
 
