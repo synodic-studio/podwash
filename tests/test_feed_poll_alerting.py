@@ -71,6 +71,10 @@ def test_alert_fires_at_threshold(conn, monkeypatch):
     sent: list[dict] = []
     monkeypatch.setattr(scheduler, "send_alert", lambda **kw: sent.append(kw) or True)
 
+    # Other scheduler tests can exercise the module-level counter before
+    # this test in full-suite runs. Reset after DB setup so this case always
+    # verifies the exact threshold transition it owns.
+    scheduler._feed_failure_counts.clear()
     for _ in range(scheduler._FEED_POLL_FAIL_THRESHOLD - 1):
         scheduler._poll_feeds(conn, Settings())
     assert sent == []  # under threshold
