@@ -117,10 +117,13 @@ def test_completion_replaces_placeholder_publication_with_clean_publication(conn
     queries.mark_completed(conn, ep_id, "feed_1/ep_1/processed.mp3", None)
     episode2 = queries.get_episode_by_id(conn, ep_id)
     xml2 = generate_feed_xml(feed, [episode2], "http://podwash")
-    assert episode2.clean_token in xml2
     assert f"/audio/clean/{episode2.clean_token}.mp3" in xml2
-    # Placeholder GUID and placeholder enclosure URL gone:
-    assert "source-guid" not in xml2
+    # Keep the source GUID stable so podcast apps update one row instead of
+    # showing a stale ○ placeholder next to a fresh ● clean item.
+    assert "source-guid" in xml2
+    assert episode2.clean_token not in xml2.replace(
+        f"/audio/clean/{episode2.clean_token}.mp3", ""
+    )
     assert f"/audio/{feed_id}/{ep_id}.mp3" not in xml2
 
 
@@ -398,7 +401,7 @@ def test_repeated_polls_and_completion_produce_single_visible_item(conn):
     eps2 = queries.get_visible_episodes_for_feed(conn, feed_id)
     xml2 = generate_feed_xml(feed, eps2, "http://podwash")
     assert xml2.count("<item>") == 1
-    assert "g-original" not in xml2
+    assert "g-original" in xml2
 
     # Second poll: same audio URL different tracking + different guid.
     ep2 = Episode(

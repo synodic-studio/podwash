@@ -47,13 +47,13 @@ Episode titles in the proxy feed are prefixed with a status symbol:
 - `✘` — failed; tap to retry
 - `✂` — prefix on the channel title (not an episode status)
 
-When an episode completes, podwash intentionally publishes the cleaned
-audio as a **new RSS item** with a fresh `<guid>` (the episode's
-`clean_token`) and a `/audio/clean/{token}.mp3` enclosure URL. The
-placeholder item disappears from the generated feed — only the cleaned
-publication remains visible. Your podcast client downloads the cleaned
-audio as a new episode rather than replaying the cached placeholder.
-Old played items may still live in the client's history/archive.
+When an episode completes, podwash keeps the source episode's RSS
+`<guid>` stable so podcast apps update the existing row instead of
+showing a stale `○` placeholder next to a fresh `●` clean item. The
+enclosure URL changes to `/audio/clean/{token}.mp3`, and the placeholder
+enclosure disappears from the generated feed — only the current cleaned
+publication remains visible. Old played placeholder items may still live
+in the client's local history/archive.
 
 Feed identity is durable: source GUID or tracking-URL changes don't
 create duplicate items. Polls maintain an active window (`max_episodes`

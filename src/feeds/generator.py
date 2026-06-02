@@ -61,18 +61,15 @@ def generate_feed_xml(
         xml_parts.append("    </image>")
 
     for episode in episodes:
-        # A source episode has at most one current publication identity:
-        # placeholder (episode.guid + /audio/{feed}/{episode}.mp3) before
-        # completion, or clean (clean_token + /audio/clean/{token}.mp3)
-        # after. The placeholder must disappear from generated RSS once
-        # the clean publication is current. Dedup/currentness is enforced
-        # upstream via publication_state/is_active filtering.
+        # A source episode has one stable RSS identity (episode.guid).
+        # Before completion, the enclosure is /audio/{feed}/{episode}.mp3;
+        # after completion, the enclosure changes to /audio/clean/{token}.mp3.
+        # Keeping the GUID stable avoids podcast apps showing duplicate rows.
         if episode.status == EpisodeStatus.COMPLETED and episode.clean_token:
             audio_url = f"{base_url}/audio/clean/{episode.clean_token}.mp3"
-            feed_guid = episode.clean_token
         else:
             audio_url = f"{base_url}/audio/{feed.id}/{episode.id}.mp3"
-            feed_guid = episode.guid
+        feed_guid = episode.guid
         pub_date = _format_pub_date(episode.pub_date)
         desc = (
             escape(episode.description)

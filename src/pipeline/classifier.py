@@ -9,6 +9,12 @@ from anthropic import Anthropic
 from src.database.models import ProcessingLog
 
 PROMPTS_DIR = Path(__file__).parent.parent.parent / "prompts"
+_OBVIOUS_AD_PHRASES = (
+    "this message is brought to you by",
+    "this episode is brought to you by",
+    "today's sponsor is",
+    "todays sponsor is",
+)
 
 
 def _load_prompt() -> str:
@@ -38,6 +44,62 @@ def _clean_json_response(text: str) -> str:
     if start != -1 and end != -1:
         return text[start : end + 1]
     return text.strip()
+
+
+def _detect_obvious_ad_segments(segments: list[dict]) -> list[dict]:
+    """Catch high-confidence sponsor reads the model occasionally misses.
+
+    This is intentionally narrow: it only starts on explicit sponsor-read
+    phrases, then extends through nearby transcript segments until a CTA/URL
+    or a large timestamp gap. Editorial discussion of a company should not
+    match because it lacks the sponsor-read phrase.
+    """
+    ads: list[dict] = []
+    for idx, seg in enumerate(segments):
+        text = str(seg.get("text", ""))
+        lower = text.lower()
+        if not any(phrase in lower for phrase in _OBVIOUS_AD_PHRASES):
+            continue
+
+        start = float(seg["start"])
+        end = float(seg["end"])
+        for next_seg in segments[idx + 1 : idx + 8]:
+            gap = float(next_seg["start"]) - end
+            if gap > 12:
+                break
+            end = float(next_seg["end"])
+            next_text = str(next_seg.get("text", "")).lower()
+            if ".com" in next_text or "learn more" in next_text or "visit" in next_text:
+                break
+
+        ads.append(
+            {
+                "start": start,
+                "end": end,
+                "type": "pre_roll" if start < 180 else "mid_roll",
+                "confidence": 0.99,
+                "sponsor": "unknown",
+                "reason": "Obvious sponsor message matched deterministic ad phrase",
+            }
+        )
+    return ads
+
+
+def _merge_ad_segments(model_segments: list[dict], guardrail_segments: list[dict]) -> list[dict]:
+    merged = list(model_segments)
+    for guardrail in guardrail_segments:
+        overlaps = False
+        for existing in merged:
+            if guardrail["start"] <= existing["end"] and existing["start"] <= guardrail["end"]:
+                existing["start"] = min(existing["start"], guardrail["start"])
+                existing["end"] = max(existing["end"], guardrail["end"])
+                existing["confidence"] = max(existing.get("confidence", 0), guardrail["confidence"])
+                existing["reason"] = f"{existing.get('reason', '')}; {guardrail['reason']}".strip("; ")
+                overlaps = True
+                break
+        if not overlaps:
+            merged.append(guardrail)
+    return sorted(merged, key=lambda s: s["start"])
 
 
 async def classify_ads(
@@ -79,9 +141,16 @@ async def classify_ads(
     cleaned = _clean_json_response(raw_text)
     result = json.loads(cleaned)
 
-    # Filter by confidence threshold
+    # Filter by confidence threshold, then add narrow deterministic guardrails
+    # for obvious sponsor reads that are unacceptable to miss.
     all_segments = result.get("ad_segments", [])
-    filtered = [s for s in all_segments if s.get("confidence", 0) >= confidence_threshold]
+    model_filtered = [
+        s for s in all_segments if s.get("confidence", 0) >= confidence_threshold
+    ]
+    filtered = _merge_ad_segments(
+        model_filtered,
+        _detect_obvious_ad_segments(segments),
+    )
 
     elapsed_ms = int((time.monotonic() - start) * 1000)
     summary = result.get("summary", f"Found {len(filtered)} ad segments")
