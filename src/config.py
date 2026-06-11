@@ -13,6 +13,7 @@ class FeedConfig(BaseModel):
     slug: str
     poll_interval_minutes: int = 60
     max_episodes: int = 0  # 0 = unlimited
+    title_includes: list[str] = Field(default_factory=list)
 
 
 class ProcessingConfig(BaseModel):

@@ -99,7 +99,7 @@ def test_successful_poll_resets_streak(conn, monkeypatch):
 
     monkeypatch.setattr(scheduler, "fetch_public_feed_sync", _flaky)
     monkeypatch.setattr(
-        scheduler, "parse_feed_content", lambda content, fid, max_episodes=0: []
+        scheduler, "parse_feed_content", lambda content, fid, max_episodes=0, title_includes=None: []
     )
     sent: list[dict] = []
     monkeypatch.setattr(scheduler, "send_alert", lambda **kw: sent.append(kw) or True)

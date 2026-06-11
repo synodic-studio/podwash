@@ -244,7 +244,7 @@ def test_scheduler_calls_fetch_public_feed_sync(monkeypatch, tmp_path):
 
     monkeypatch.setattr(scheduler, "fetch_public_feed_sync", _fake_fetch)
 
-    def _fake_parse(content, feed_id, max_episodes=0):
+    def _fake_parse(content, feed_id, max_episodes=0, title_includes=None):
         parsed_limits.append(max_episodes)
         return []
 

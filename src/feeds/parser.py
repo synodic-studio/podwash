@@ -85,7 +85,12 @@ def extract_feed_image(url: str) -> str | None:
     return None
 
 
-def parse_feed(url: str, feed_id: int, max_episodes: int = 0) -> list[Episode]:
+def parse_feed(
+    url: str,
+    feed_id: int,
+    max_episodes: int = 0,
+    title_includes: list[str] | None = None,
+) -> list[Episode]:
     """Fetch and parse an RSS feed, returning Episode models per entry.
 
     Convenience wrapper around :func:`parse_feed_content`. Callers
@@ -95,15 +100,18 @@ def parse_feed(url: str, feed_id: int, max_episodes: int = 0) -> list[Episode]:
     surface that ``fetch_public_feed`` exists to close.
     """
     parsed = feedparser.parse(url)
-    return _episodes_from_parsed(parsed, feed_id, max_episodes)
+    return _episodes_from_parsed(parsed, feed_id, max_episodes, title_includes)
 
 
 def parse_feed_content(
-    content: bytes | str, feed_id: int, max_episodes: int = 0
+    content: bytes | str,
+    feed_id: int,
+    max_episodes: int = 0,
+    title_includes: list[str] | None = None,
 ) -> list[Episode]:
     """Parse RSS bytes/text already fetched via the SSRF-safe path."""
     parsed = feedparser.parse(content)
-    return _episodes_from_parsed(parsed, feed_id, max_episodes)
+    return _episodes_from_parsed(parsed, feed_id, max_episodes, title_includes)
 
 
 def extract_feed_image_from_content(content: bytes | str) -> str | None:
@@ -118,17 +126,26 @@ def extract_feed_image_from_content(content: bytes | str) -> str | None:
     return None
 
 
-def _episodes_from_parsed(parsed, feed_id: int, max_episodes: int) -> list[Episode]:
+def _episodes_from_parsed(
+    parsed,
+    feed_id: int,
+    max_episodes: int,
+    title_includes: list[str] | None = None,
+) -> list[Episode]:
     episodes: list[Episode] = []
+    include_terms = [term.casefold() for term in (title_includes or []) if term.strip()]
 
     for entry in parsed.entries:
+        title = entry.get("title", "Untitled")
+        if include_terms and not any(term in title.casefold() for term in include_terms):
+            continue
+
         # Find audio enclosure
         audio_url = _extract_audio_url(entry)
         if not audio_url:
             continue
 
         guid = entry.get("id") or entry.get("link") or audio_url
-        title = entry.get("title", "Untitled")
         description = entry.get("summary", "")
         pub_date = _parse_date(entry)
         duration = _parse_duration(entry)

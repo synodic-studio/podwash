@@ -188,15 +188,22 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
                 continue
 
         max_episodes = DEFAULT_MAX_EPISODES_PER_FEED
+        title_includes: list[str] = []
         for fc in settings.feeds:
             if fc.slug == feed.slug:
                 max_episodes = fc.max_episodes or DEFAULT_MAX_EPISODES_PER_FEED
+                title_includes = fc.title_includes
                 break
 
         print(f"[scheduler] Polling feed: {feed.name}")
         try:
             content = fetch_public_feed_sync(feed.source_url)
-            episodes = parse_feed_content(content, feed.id, max_episodes=max_episodes)
+            episodes = parse_feed_content(
+                content,
+                feed.id,
+                max_episodes=max_episodes,
+                title_includes=title_includes,
+            )
             new_count = 0
             seen_at = datetime.now()
             active_ids: list[int] = []

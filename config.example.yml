@@ -19,6 +19,12 @@ feeds:
   #   slug: "another-podcast"
   #   poll_interval_minutes: 120
 
+  # Optional: keep only source episodes whose title contains any of
+  # these case-insensitive substrings. Useful when a podcast host
+  # publishes multiple shows into one shared feed.
+  #   title_includes:
+  #     - "Midnight Boys"
+
 # Processing settings
 processing:
   # Whisper model: tiny, base, small, medium, large-v3

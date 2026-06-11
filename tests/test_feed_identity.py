@@ -17,7 +17,7 @@ from src.config import FeedConfig, Settings
 from src.database import db, queries
 from src.database.models import Episode, EpisodeStatus, Feed
 from src.feeds.generator import generate_feed_xml
-from src.feeds.parser import build_source_identity, normalize_audio_url
+from src.feeds.parser import build_source_identity, normalize_audio_url, parse_feed_content
 
 
 @pytest.fixture
@@ -98,6 +98,37 @@ def test_build_source_identity_uses_normalized_audio_url_when_guid_missing():
     url1 = "https://cdn.example/show/ep1.mp3?utm_source=a"
     url2 = "https://cdn.example/show/ep1.mp3?utm_source=b"
     assert build_source_identity(entry, url1) == build_source_identity(entry, url2)
+
+
+def test_parse_feed_content_filters_entries_by_title_include_before_limit():
+    rss = b"""
+    <rss version="2.0"><channel><title>The Ringer-Verse</title>
+      <item>
+        <title>Button Mash News</title>
+        <guid>button-1</guid>
+        <pubDate>Wed, 03 Jun 2026 00:00:00 +0000</pubDate>
+        <enclosure url="https://cdn.example/button.mp3" type="audio/mpeg" />
+      </item>
+      <item>
+        <title>Masters of the Universe Reactions | Midnight Boys</title>
+        <guid>midnight-1</guid>
+        <pubDate>Tue, 02 Jun 2026 00:00:00 +0000</pubDate>
+        <enclosure url="https://cdn.example/midnight-1.mp3" type="audio/mpeg" />
+      </item>
+      <item>
+        <title>Spider-Noir Premiere Reactions | The Midnight Boys</title>
+        <guid>midnight-2</guid>
+        <pubDate>Mon, 01 Jun 2026 00:00:00 +0000</pubDate>
+        <enclosure url="https://cdn.example/midnight-2.mp3" type="audio/mpeg" />
+      </item>
+    </channel></rss>
+    """
+
+    episodes = parse_feed_content(
+        rss, feed_id=1, max_episodes=1, title_includes=["midnight boys"]
+    )
+
+    assert [episode.guid for episode in episodes] == ["midnight-1"]
 
 
 # ---------------------------------------------------------------------------
