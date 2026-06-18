@@ -55,6 +55,7 @@ class Episode(BaseModel):
     publication_state: str = "placeholder"
     last_seen_at: datetime | None = None
     completed_at: datetime | None = None
+    auto_processed: bool = False
     created_at: datetime = Field(default_factory=datetime.now)
 
 

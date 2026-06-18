@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS episodes (
     publication_state TEXT NOT NULL DEFAULT 'placeholder',
     last_seen_at TEXT,
     completed_at TEXT,
+    auto_processed INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     UNIQUE(feed_id, guid)
 );
@@ -127,6 +128,10 @@ def _migrate(conn: sqlite3.Connection) -> None:
         ),
         ("last_seen_at", "ALTER TABLE episodes ADD COLUMN last_seen_at TEXT"),
         ("completed_at", "ALTER TABLE episodes ADD COLUMN completed_at TEXT"),
+        (
+            "auto_processed",
+            "ALTER TABLE episodes ADD COLUMN auto_processed INTEGER NOT NULL DEFAULT 0",
+        ),
     ):
         if name not in cols:
             conn.execute(ddl)

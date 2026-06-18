@@ -76,8 +76,11 @@ def generate_feed_xml(
             if episode.description
             else escape(episode.title)
         )
-        prefix = _STATUS_PREFIX.get(episode.status, "○")
-        title = f"{prefix} {episode.title}"
+        if episode.auto_processed and episode.status == EpisodeStatus.COMPLETED:
+            title = f"|{episode.title}"
+        else:
+            prefix = _STATUS_PREFIX.get(episode.status, "○")
+            title = f"{prefix} {episode.title}"
 
         xml_parts.append("    <item>")
         xml_parts.append(f"      <title>{escape(title)}</title>")

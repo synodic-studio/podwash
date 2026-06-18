@@ -261,6 +261,19 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
                 )
 
 
+def _row_datetime(row: sqlite3.Row, key: str) -> datetime | None:
+    value = row[key]
+    if not value:
+        return None
+    try:
+        dt = datetime.fromisoformat(value)
+    except ValueError:
+        return None
+    if dt.tzinfo is not None:
+        return dt.replace(tzinfo=None)
+    return dt
+
+
 def _cleanup_old(conn: sqlite3.Connection, settings: Settings) -> None:
     """Delete processed audio files older than retention period.
 
@@ -270,20 +283,48 @@ def _cleanup_old(conn: sqlite3.Connection, settings: Settings) -> None:
     re-processes. On-demand only — no automatic re-processing.
     """
     data_dir = Path(settings.data_dir)
-    cutoff = datetime.now() - timedelta(days=settings.processing.retention_days)
+    manual_cutoff = datetime.now() - timedelta(days=settings.processing.retention_days)
+    auto_cutoff = datetime.now() - timedelta(days=42)
 
-    # Cleanup keys off completed_at (when the row finished) rather than
-    # created_at (when the row was first discovered). A recently-
-    # completed episode that was discovered months ago should not be
-    # pruned. Older rows missing completed_at fall back to created_at
-    # so legacy DBs still tidy up.
-    rows = conn.execute(
-        """SELECT id, processed_audio_path FROM episodes
+    completed_rows = conn.execute(
+        """SELECT id, feed_id, processed_audio_path, auto_processed,
+                  pub_date, completed_at, created_at
+        FROM episodes
         WHERE status = 'completed'
-          AND processed_audio_path IS NOT NULL
-          AND COALESCE(completed_at, created_at) < ?""",
-        (cutoff.isoformat(),),
+          AND processed_audio_path IS NOT NULL"""
     ).fetchall()
+
+    auto_by_feed: dict[int, list[sqlite3.Row]] = {}
+    for row in completed_rows:
+        if row["auto_processed"]:
+            auto_by_feed.setdefault(row["feed_id"], []).append(row)
+
+    keep_auto_ids: set[int] = set()
+    for rows_for_feed in auto_by_feed.values():
+        latest = sorted(
+            rows_for_feed,
+            key=lambda r: (_row_datetime(r, "pub_date") or datetime.min, r["id"]),
+            reverse=True,
+        )[:8]
+        keep_auto_ids.update(row["id"] for row in latest)
+
+    rows = []
+    for row in completed_rows:
+        if row["auto_processed"]:
+            episode_date = _row_datetime(row, "pub_date") or _row_datetime(
+                row, "completed_at"
+            ) or _row_datetime(row, "created_at")
+            if row["id"] in keep_auto_ids or (
+                episode_date is not None and episode_date >= auto_cutoff
+            ):
+                continue
+            rows.append(row)
+        else:
+            completed_date = _row_datetime(row, "completed_at") or _row_datetime(
+                row, "created_at"
+            )
+            if completed_date is not None and completed_date < manual_cutoff:
+                rows.append(row)
 
     for row in rows:
         ep_id, path_str = row["id"], row["processed_audio_path"]
@@ -314,7 +355,8 @@ def _cleanup_old(conn: sqlite3.Connection, settings: Settings) -> None:
                     clean_token = NULL,
                     status = ?,
                     publication_state = 'placeholder',
-                    completed_at = NULL
+                    completed_at = NULL,
+                    auto_processed = 0
                 WHERE id = ?""",
                 (EpisodeStatus.NEW.value, ep_id),
             )

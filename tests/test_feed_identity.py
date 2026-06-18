@@ -43,14 +43,15 @@ def _insert_episode(
     duration=600,
     status=EpisodeStatus.NEW,
     source_identity=None,
+    auto_processed=False,
 ):
     pd = (pub_date or datetime(2026, 1, 1, tzinfo=timezone.utc)).isoformat()
     cur = conn.execute(
         """INSERT INTO episodes
         (feed_id, guid, title, source_audio_url, pub_date, duration_seconds,
          description, status, source_identity, last_seen_at, is_active,
-         publication_state)
-        VALUES (?, ?, ?, ?, ?, ?, '', ?, ?, ?, 1, 'placeholder')""",
+         publication_state, auto_processed)
+        VALUES (?, ?, ?, ?, ?, ?, '', ?, ?, ?, 1, 'placeholder', ?)""",
         (
             feed_id,
             guid,
@@ -61,6 +62,7 @@ def _insert_episode(
             status.value,
             source_identity,
             datetime.now(timezone.utc).isoformat(),
+            int(auto_processed),
         ),
     )
     conn.commit()
@@ -195,6 +197,49 @@ def test_get_visible_episodes_respects_limit(conn):
         )
     rows = queries.get_visible_episodes_for_feed(conn, feed_id, limit=2)
     assert len(rows) == 2
+
+
+def test_auto_processed_completion_uses_pipe_title_prefix(conn):
+    feed_id = _make_feed(conn)
+    ep_id = _insert_episode(
+        conn,
+        feed_id,
+        guid="auto-guid",
+        title="Fresh Episode",
+        auto_processed=True,
+    )
+    queries.mark_completed(conn, ep_id, "feed_1/ep_1/processed.mp3", None)
+
+    feed = queries.get_feed_by_id(conn, feed_id)
+    episode = queries.get_episode_by_id(conn, ep_id)
+    xml = generate_feed_xml(feed, [episode], "http://podwash")
+
+    assert "<title>|Fresh Episode</title>" in xml
+    assert "● Fresh Episode" not in xml
+
+
+def test_poll_inserted_episodes_are_hidden_pending_auto_processed(conn):
+    feed_id = _make_feed(conn)
+    ep = Episode(
+        feed_id=feed_id,
+        guid="new-auto",
+        title="Brand New",
+        source_audio_url="https://cdn.example/show/new-auto.mp3",
+        pub_date=datetime(2026, 1, 1, tzinfo=timezone.utc),
+        duration_seconds=600,
+        source_identity="https://cdn.example/show/new-auto.mp3",
+    )
+
+    ep_id, inserted = queries.upsert_episode_from_poll(
+        conn, ep, seen_at=datetime.now(timezone.utc)
+    )
+
+    assert inserted is True
+    row = queries.get_episode_by_id(conn, ep_id)
+    assert row.status == EpisodeStatus.PENDING
+    assert row.publication_state == "hidden"
+    assert row.auto_processed is True
+    assert queries.get_visible_episodes_for_feed(conn, feed_id) == []
 
 
 # ---------------------------------------------------------------------------
@@ -344,6 +389,44 @@ def test_cleanup_preserves_recently_completed(tmp_path, conn):
     assert row["status"] == "completed"
 
 
+def test_cleanup_keeps_latest_eight_auto_processed_even_when_old(tmp_path, conn):
+    from src import scheduler
+
+    feed_id = _make_feed(conn)
+    ids = []
+    base_date = datetime.now(timezone.utc) - timedelta(days=70)
+    for i in range(9):
+        ep_id = _insert_episode(
+            conn,
+            feed_id,
+            guid=f"auto-{i}",
+            pub_date=base_date + timedelta(days=i),
+            auto_processed=True,
+        )
+        rel_path = f"feed_1/ep_{ep_id}/processed.mp3"
+        queries.mark_completed(conn, ep_id, rel_path, None)
+        conn.execute(
+            "UPDATE episodes SET pub_date=?, auto_processed=1 WHERE id=?",
+            ((base_date + timedelta(days=i)).isoformat(), ep_id),
+        )
+        abs_path = tmp_path / rel_path
+        abs_path.parent.mkdir(parents=True, exist_ok=True)
+        abs_path.write_bytes(b"x")
+        ids.append(ep_id)
+    conn.commit()
+
+    settings = Settings()
+    settings.data_dir = str(tmp_path)
+    scheduler._cleanup_old(conn, settings)
+
+    oldest = queries.get_episode_by_id(conn, ids[0])
+    newest = [queries.get_episode_by_id(conn, ep_id) for ep_id in ids[1:]]
+    assert oldest.status == EpisodeStatus.NEW
+    assert oldest.auto_processed is False
+    assert all(ep.status == EpisodeStatus.COMPLETED for ep in newest)
+    assert all(ep.auto_processed is True for ep in newest)
+
+
 # ---------------------------------------------------------------------------
 # Feed route + max_episodes
 # ---------------------------------------------------------------------------
@@ -424,8 +507,7 @@ def test_repeated_polls_and_completion_produce_single_visible_item(conn):
     feed = queries.get_feed_by_id(conn, feed_id)
     eps = queries.get_visible_episodes_for_feed(conn, feed_id)
     xml1 = generate_feed_xml(feed, eps, "http://podwash")
-    assert xml1.count("<item>") == 1
-    assert "g-original" in xml1
+    assert xml1.count("<item>") == 0
 
     # Mark completed
     queries.mark_completed(conn, id1, "feed_1/ep_1/processed.mp3", None)

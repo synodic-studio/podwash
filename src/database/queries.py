@@ -193,8 +193,8 @@ def upsert_episode_from_poll(
             """INSERT INTO episodes
             (feed_id, guid, title, source_audio_url, pub_date,
              duration_seconds, description, status, source_identity,
-             last_seen_at, is_active, publication_state)
-            VALUES (?, ?, ?, ?, ?, ?, ?, 'new', ?, ?, 1, 'placeholder')""",
+             last_seen_at, is_active, publication_state, auto_processed)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, 1, 'hidden', 1)""",
             (
                 episode.feed_id,
                 episode.guid,
@@ -666,6 +666,11 @@ def mark_failed_if_claimed(
             failed_at = CASE
                 WHEN retry_count + 1 < ? THEN failed_at
                 ELSE ?
+            END,
+            publication_state = CASE
+                WHEN retry_count + 1 < ? THEN publication_state
+                WHEN auto_processed = 1 THEN 'placeholder'
+                ELSE publication_state
             END
         WHERE id = ?
           AND claimed_by = ?
@@ -677,6 +682,7 @@ def mark_failed_if_claimed(
             error_message[:500],
             max_retries,
             now_iso,
+            max_retries,
             episode_id,
             worker_id,
             claim_token,
@@ -725,9 +731,13 @@ def mark_failed(
         """UPDATE episodes
         SET status = ?, retry_count = ?, error_message = ?,
             claimed_at = NULL, claimed_by = NULL, claim_token = NULL,
-            failed_at = COALESCE(?, failed_at)
+            failed_at = COALESCE(?, failed_at),
+            publication_state = CASE
+                WHEN ? = 'failed' AND auto_processed = 1 THEN 'placeholder'
+                ELSE publication_state
+            END
         WHERE id = ?""",
-        (new_status.value, new_retry, error_message[:500], failed_at, episode_id),
+        (new_status.value, new_retry, error_message[:500], failed_at, new_status.value, episode_id),
     )
     conn.commit()
     return new_status
@@ -758,6 +768,8 @@ def _row_to_episode(row: sqlite3.Row) -> Episode:
             d[field] = datetime.fromisoformat(val)
     if "is_active" in d:
         d["is_active"] = bool(d["is_active"])
+    if "auto_processed" in d:
+        d["auto_processed"] = bool(d["auto_processed"])
     # Drop unmodeled columns (e.g. failed_at) so Pydantic doesn't choke.
     d.pop("failed_at", None)
     return Episode(**d)
