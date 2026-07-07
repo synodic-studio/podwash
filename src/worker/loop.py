@@ -74,15 +74,22 @@ async def run_once(client: QueueClient, settings: Settings) -> bool:
     tmp_root = Path(tempfile.mkdtemp(prefix=f"podwash-{job.episode_id}-"))
 
     try:
-        await _process_and_upload(client, job, settings, tmp_root)
+        await asyncio.wait_for(
+            _process_and_upload(client, job, settings, tmp_root),
+            timeout=settings.worker.stale_minutes * 60,
+        )
     except Exception as exc:
-        err = f"{type(exc).__name__}: {exc}"
+        if isinstance(exc, TimeoutError):
+            err = (
+                f"TimeoutError: pipeline exceeded stale_minutes="
+                f"{settings.worker.stale_minutes} without finishing"
+            )
+        else:
+            err = f"{type(exc).__name__}: {exc}"
         traceback.print_exc()
         print(f"[worker] Episode {job.episode_id} failed: {err}")
         try:
-            client.submit_failure(
-                job.episode_id, err, claim_token=job.claim_token
-            )
+            client.submit_failure(job.episode_id, err, claim_token=job.claim_token)
         except Exception as api_exc:
             print(f"[worker] Could not report failure to server: {api_exc}")
     finally:
