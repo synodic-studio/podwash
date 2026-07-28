@@ -45,7 +45,7 @@ Episode titles in the proxy feed are prefixed with a status symbol:
 - `◐` — currently downloading / transcribing / classifying / editing
 - `●` — **done, ad-free audio is ready**
 - `✘` — failed; tap to retry
-- `✂` — prefix on the channel title (not an episode status)
+- `🧼` — prefix on the channel title (not an episode status)
 
 When an episode completes, podwash keeps the source episode's RSS
 `<guid>` stable so podcast apps update the existing row instead of

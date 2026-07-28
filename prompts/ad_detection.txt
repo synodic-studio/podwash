@@ -10,6 +10,10 @@ INSTRUCTIONS:
    ADVERTISEMENTS:
    - Sponsor reads: "This episode is brought to you by...", "Today's sponsor is...", promo codes, discount URLs
    - Mid-roll ad breaks: sudden topic shifts to product pitches, often preceded by "let's take a quick break" or similar
+   - BREAK TRANSITIONS — treat these as PART OF the adjacent ad segment, not as separate segments and not as content. Extend the ad's start backward to include the hand-off into the break, and extend its end forward to include the hand-back:
+     * Going in: "we'll be right back", "after this break", "more in a moment", "stick around", "back after these messages", "let's take a quick break", "when we return..."
+     * Coming out: "and we're back", "welcome back", "okay, where were we"
+     A break transition is never its own segment — merge it into the ad it introduces or closes. If the transition and the ad are separated by music or silence, the whole span from the transition through the end of the ad is one removable segment.
    - Pre-roll ads: sponsor messages at the very beginning before the main content
    - Post-roll ads: sponsor messages after the main content ends
    - Self-promotion: "Subscribe to our Patreon", "check out our merch store", "rate and review"
@@ -24,9 +28,13 @@ INSTRUCTIONS:
    DO NOT REMOVE (these are content, not credits):
    - The actual show intro where hosts greet listeners, set up the topic, or do a recurring opening bit — even if it plays every episode
    - Conversations, interviews, or discussions — even if they mention companies or products editorially
-   - Teases or previews of what's coming up in the episode
+   - Teases or previews of the EPISODE's own upcoming content ("later on, we'll talk to...") — but NOT a hand-off into an ad break, which is removable (see BREAK TRANSITIONS above)
 
-3. For each segment, provide:
+3. Boundaries: mark segments by SPOKEN WORDS only. Do not try to account for music, silence, or other non-dialog audio between segments — a later stage automatically absorbs any non-dialog audio that touches a removed segment. So if the show ends, outro music plays, and then a post-roll ad runs, just mark the ad from its first spoken word; the music between will be removed for you.
+
+   If two removable segments are separated only by non-dialog audio, you may mark them separately — they will be joined automatically.
+
+4. For each segment, provide:
    - start: timestamp in seconds where the segment begins (use the EARLIEST word timestamp)
    - end: timestamp in seconds where the segment ends (use the LATEST word timestamp)
    - type: one of "pre_roll", "mid_roll", "post_roll", "self_promo", "intro_credits", "end_credits"
@@ -34,9 +42,9 @@ INSTRUCTIONS:
    - sponsor: the brand/company name if identifiable, or "unknown" (use "N/A" for credits)
    - reason: brief explanation of why this is classified as removable
 
-4. Be CONSERVATIVE. Only flag segments you are confident should be removed. Regular content discussion about products, reviews, or news is NOT an ad. A host mentioning a company in editorial context is NOT an ad. A recurring show intro where the host talks is NOT credits.
+5. Be CONSERVATIVE. Only flag segments you are confident should be removed. Regular content discussion about products, reviews, or news is NOT an ad. A host mentioning a company in editorial context is NOT an ad. A recurring show intro where the host talks is NOT credits.
 
-5. Return ONLY valid JSON in this exact format:
+6. Return ONLY valid JSON in this exact format:
 
 {{
   "ad_segments": [

@@ -6,12 +6,22 @@ from pathlib import Path
 
 from src.database.models import ProcessingLog
 
+# A gap between spoken words shorter than this is normal speech rhythm, not
+# the music/silence we want to absorb into an adjacent cut.
+_MIN_DEAD_SPACE = 0.35
+
+# Safety net: never let a single boundary walk more than this far across
+# non-speech audio. Real outro music runs ~30-60s; anything past this means
+# the transcript is broken, and we would rather under-cut than gut the file.
+_MAX_DEAD_SPACE_EXTEND = 600.0
+
 
 async def cut_ads(
     audio_path: Path,
     output_path: Path,
     ad_segments: list[dict],
     padding: float = 0.5,
+    transcript_segments: list[dict] | None = None,
 ) -> ProcessingLog:
     """
     Remove ad segments from audio using ffmpeg filter_complex.
@@ -24,6 +34,9 @@ async def cut_ads(
         output_path: Path for the processed output.
         ad_segments: List of ad segment dicts with 'start' and 'end' keys.
         padding: Seconds to trim extra around ad boundaries.
+        transcript_segments: Whisper transcript segments. When supplied, ad
+            boundaries that abut non-speech audio (outro music, silence,
+            stingers) are extended across it so the dead space goes too.
 
     Returns:
         ProcessingLog with editing stats.
@@ -49,8 +62,13 @@ async def cut_ads(
     # Get audio duration via ffprobe
     duration = await _get_duration(audio_path)
 
+    # Resolve each ad into a concrete cut range, absorbing abutting dead space
+    cut_ranges = _resolve_cut_ranges(
+        ads, _speech_intervals(transcript_segments), duration, padding
+    )
+
     # Build keep-segments (the parts we want to keep)
-    keep_segments = _compute_keep_segments(ads, duration, padding)
+    keep_segments = _compute_keep_segments(cut_ranges, duration)
 
     if not keep_segments:
         # Everything is an ad? Just copy original as safety measure
@@ -94,7 +112,9 @@ async def cut_ads(
         raise RuntimeError(f"ffmpeg failed: {stderr.decode()[:500]}")
     _assert_nonempty(output_path)
 
-    total_cut = sum(s["end"] - s["start"] for s in ads)
+    # Derive from what we actually keep — snapped ranges can overlap each
+    # other, so summing the ad spans would double-count.
+    total_cut = duration - sum(e - s for s, e in keep_segments)
     elapsed_ms = int((time.monotonic() - start_time) * 1000)
 
     return ProcessingLog(
@@ -106,22 +126,117 @@ async def cut_ads(
     )
 
 
-def _compute_keep_segments(
+def _speech_intervals(
+    transcript_segments: list[dict] | None,
+) -> list[tuple[float, float]]:
+    """Flatten a Whisper transcript into merged, sorted spoken-word intervals.
+
+    Whisper only emits timestamps where it heard speech, so the inverse of
+    these intervals is exactly the non-dialog audio (music, silence, stingers).
+    Word-level timing is preferred; segments transcribed without words fall
+    back to their own span.
+    """
+    if not transcript_segments:
+        return []
+
+    raw: list[tuple[float, float]] = []
+    for seg in transcript_segments:
+        words = seg.get("words") or []
+        spans = words if words else [seg]
+        for span in spans:
+            start, end = span.get("start"), span.get("end")
+            if start is None or end is None:
+                continue
+            start, end = float(start), float(end)
+            if end >= start:
+                raw.append((start, end))
+
+    raw.sort()
+    merged: list[tuple[float, float]] = []
+    for start, end in raw:
+        if merged and start <= merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(merged[-1][1], end))
+        else:
+            merged.append((start, end))
+    return merged
+
+
+def _resolve_cut_ranges(
     ads: list[dict],
+    speech: list[tuple[float, float]],
     duration: float,
     padding: float,
 ) -> list[tuple[float, float]]:
-    """Compute the segments to keep (inverse of ad segments with padding)."""
+    """Turn ad segments into the concrete time ranges to remove.
+
+    A boundary that lands in non-dialog audio is walked outward to the
+    nearest spoken word, so music or silence butting up against a cut is
+    removed with it. Padding is only applied to a boundary still sitting in
+    speech — extending across a gap already lands on the last real word, and
+    padding there would clip the words the listener wants to keep.
+    """
+    ranges = []
+    for ad in ads:
+        ad_start = float(ad["start"])
+        ad_end = float(ad["end"])
+
+        prev_speech_end = _speech_end_before(speech, ad_start)
+        if ad_start - prev_speech_end >= _MIN_DEAD_SPACE:
+            cut_start = max(ad_start - _MAX_DEAD_SPACE_EXTEND, prev_speech_end)
+        else:
+            cut_start = ad_start - padding
+
+        next_speech_start = _speech_start_after(speech, ad_end, duration)
+        if next_speech_start - ad_end >= _MIN_DEAD_SPACE:
+            cut_end = min(ad_end + _MAX_DEAD_SPACE_EXTEND, next_speech_start)
+        else:
+            cut_end = ad_end + padding
+
+        ranges.append((max(0.0, cut_start), min(duration, cut_end)))
+    return ranges
+
+
+def _speech_end_before(speech: list[tuple[float, float]], point: float) -> float:
+    """End of the last word finishing at or before `point` (0.0 if none).
+
+    A word straddling `point` returns `point` itself — the boundary is inside
+    speech, so there is no dead space to absorb.
+    """
+    last_end = 0.0
+    for start, end in speech:
+        if start >= point:
+            break
+        if end > point:
+            return point
+        last_end = end
+    return last_end
+
+
+def _speech_start_after(
+    speech: list[tuple[float, float]], point: float, duration: float
+) -> float:
+    """Start of the first word beginning at or after `point` (EOF if none)."""
+    for start, end in speech:
+        if end <= point:
+            continue
+        if start < point:
+            return point
+        return start
+    return duration
+
+
+def _compute_keep_segments(
+    cut_ranges: list[tuple[float, float]],
+    duration: float,
+) -> list[tuple[float, float]]:
+    """Compute the segments to keep (the inverse of the cut ranges)."""
     keep = []
     cursor = 0.0
 
-    for ad in ads:
-        ad_start = max(0.0, ad["start"] - padding)
-        ad_end = min(duration, ad["end"] + padding)
-
-        if ad_start > cursor:
-            keep.append((cursor, ad_start))
-        cursor = max(cursor, ad_end)
+    for cut_start, cut_end in sorted(cut_ranges):
+        if cut_start > cursor:
+            keep.append((cursor, cut_start))
+        cursor = max(cursor, cut_end)
 
     if cursor < duration:
         keep.append((cursor, duration))

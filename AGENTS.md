@@ -1,12 +1,12 @@
 # podwash
 
 Self-hosted podcast ad-skipping proxy. Fetches RSS feeds, transcribes
-episodes with Whisper, detects ads with Claude, cuts them out with
+episodes with Whisper, detects ads with Codex, cuts them out with
 ffmpeg, and re-serves clean RSS feeds.
 
 ## Architecture
 
-**Pipeline**: RSS poll → download MP3 → Whisper transcription → Claude
+**Pipeline**: RSS poll → download MP3 → Whisper transcription → Codex
 ad classification → ffmpeg ad removal → serve via proxy RSS feed.
 
 **Processing is hybrid**: new episodes discovered during RSS polling
@@ -16,7 +16,7 @@ episodes are processed on-demand when a podcast client requests audio
 
 **Two-host topology**: a thin server image (FastAPI, RSS, queue API,
 file serving) is meant to live on a small always-on host. The heavy
-pipeline (Whisper + Claude + ffmpeg) runs as a separate worker process
+pipeline (Whisper + Codex + ffmpeg) runs as a separate worker process
 that claims jobs from the server's queue API. Both halves can also run
 on a single machine for local development — the worker just polls
 `http://localhost:8080`.
@@ -30,9 +30,9 @@ on a single machine for local development — the worker just polls
 - `src/scheduler.py` — APScheduler background jobs (poll every 15min, cleanup every 6hr, watchdog every 5min)
 - `src/alerting.py` — Telegram alerter (env-configured, used by worker + watchdog)
 - `src/worker/` — Worker loop, preflight, crash wrapper, idle watchdog
-- `src/heal.py` — Headless self-heal CLI; spawns `claude -p` to fix the repo
+- `src/heal.py` — Headless self-heal CLI; spawns `Codex -p` to fix the repo
 - `src/config.py` — YAML config + env var overrides
-- `prompts/ad_detection.txt` — Claude prompt for ad + credits classification
+- `prompts/ad_detection.txt` — Codex prompt for ad + credits classification
 - `src/static/submit.html` — Web UI for submitting feeds
 
 ## Running
@@ -173,7 +173,7 @@ clearly-marked test message; the throttle is bypassed.
 ## Self-healing layers
 
 The recovery posture is **self-heal first, Telegram second** — operator
-attention is the expensive resource, a headless Claude Code session is
+attention is the expensive resource, a headless Codex session is
 the cheap one.
 
 1. **Worker preflight (`src/worker/preflight.py`)** — runs on every
@@ -193,7 +193,7 @@ the cheap one.
    - writes the stderr tail + exit code to an incident file under
      `/tmp/podwash-worker-wrapper/`,
    - shells out to `python -m src.heal --incident-file=… --telegram-on-escalate`,
-     which spawns headless `claude -p` (with
+     which spawns headless `Codex -p` (with
      `--permission-mode bypassPermissions` so the agent can run Bash
      without prompting, and `--max-budget-usd 5` so a confused agent
      can't burn dollars in a loop) and lets it diagnose + fix in-repo
@@ -205,7 +205,7 @@ the cheap one.
      then sleeps `SLEEP_AFTER_BURST_SECONDS` (default 1hr).
    - **Daily cap:** if there are already `PODWASH_HEAL_MAX_PER_DAY`
      (default 6) heal attempts in the last 24h, the next failure
-     escalates directly to Telegram instead of spawning Claude —
+     escalates directly to Telegram instead of spawning Codex —
      something is genuinely flapping.
 3. **Mac-side idle watchdog (`src/worker/idle_watchdog.py`)** —
    separate launchd job (`StartInterval=300`) that runs as a one-shot
@@ -264,7 +264,7 @@ Linting: `uv run ruff check src/`
 4. If not yet processed: serves a short "processing" clip and triggers
    the pipeline in the background.
 5. Pipeline: download → transcribe (Whisper) → classify ads+credits
-   (Claude) → cut (ffmpeg).
+   (Codex) → cut (ffmpeg).
 6. Next request serves the cleaned audio.
 7. Intermediate files (original MP3, transcript) are cleaned up after
    processing.

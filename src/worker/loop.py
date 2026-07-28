@@ -1,6 +1,7 @@
 """Main worker loop: claim → download → transcribe → classify → cut → upload."""
 
 import asyncio
+import json
 import shutil
 import tempfile
 import time
@@ -44,12 +45,17 @@ async def _process_and_upload(
         confidence_threshold=settings.processing.confidence_threshold,
     )
 
-    # Stage 4: ffmpeg cut
+    # Stage 4: ffmpeg cut. The transcript doubles as the speech map, letting
+    # the editor absorb outro music and silence that abuts a cut.
+    with open(transcript_path) as f:
+        transcript_segments = json.load(f)
+
     await cut_ads(
         original_path,
         processed_path,
         ad_segments,
         padding=settings.processing.ad_boundary_padding,
+        transcript_segments=transcript_segments,
     )
 
     # Upload — the server flips status to completed and owns the file.

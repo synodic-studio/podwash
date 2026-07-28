@@ -37,7 +37,7 @@ def generate_feed_xml(
     - ✘ = failed (tap to retry)
     """
     feed_url = f"{base_url}/feeds/{feed.slug}.xml"
-    display_name = f"\u2702 {feed.name}"  # ✂ scissors prefix
+    display_name = f"\U0001F9FC {feed.name}"  # 🧼 soap prefix
 
     xml_parts = [
         '<?xml version="1.0" encoding="UTF-8"?>',
