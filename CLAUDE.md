@@ -235,6 +235,33 @@ Alerts are throttled per `(subsystem, kind)` to one per hour (state in
 transcripts are kept in `~/Library/Logs/podwash-worker/heal/` for
 after-the-fact review.
 
+## Throughput and `worker.stale_minutes`
+
+`stale_minutes` is a **whole-pipeline budget** (download + Whisper +
+Claude + ffmpeg), not just a download timeout, and the server uses the
+same value to decide when an in-flight claim is stale enough to reset.
+Both copies of `config.yml` — the Mac worker's and the remote's at
+`/opt/podwash` — must agree.
+
+Measured on the M1 Air worker (2026-07-27): Whisper `base`/`int8` runs
+at **~6.8x realtime**. Download is not the bottleneck (~7.7 MB/s, so a
+353MB episode lands in under a minute). Transcription dominates:
+
+- 2h episode → ~18 min transcribe, ~25 min end-to-end
+- 3.3h episode → ~29 min transcribe, ~40 min end-to-end
+
+Feeds vary enormously in episode length — The Big Picture is ~2h
+median / 3.3h max, while Quanta is ~24 min median. `stale_minutes: 45`
+left a long episode almost no headroom and timed out mid-transcribe as
+soon as anything else contended for CPU; it is now 90. When adding a
+long-form feed, check its duration distribution against this budget.
+
+Note that a timed-out job is **not** stuck where its status says: the
+worker never reports intermediate stages, so an episode reads
+`downloading` for the entire pipeline. `status='downloading'` means
+"in flight", nothing more. `max_retries: 3` means a job that keeps
+timing out burns 3 full budgets before failing permanently.
+
 ## Dependencies
 
 Python 3.12, managed by uv. Key deps: FastAPI, faster-whisper,
