@@ -79,21 +79,30 @@ def test_speech_intervals_skips_words_missing_timestamps():
 
 
 def test_no_transcript_falls_back_to_plain_padding():
+    # No speech map at all: behave exactly like the pre-snapping editor.
     ranges = editor._resolve_cut_ranges(
         [{"start": 50, "end": 60}], speech=[], duration=100.0, padding=0.5
     )
-    # With no speech map, everything before is "dead space" and gets absorbed,
-    # so the boundary snaps to the file edges rather than padding.
-    assert ranges == [(0.0, 100.0)]
+    assert ranges == [(49.5, 60.5)]
 
 
 def test_boundary_inside_speech_keeps_padding():
-    # Ad runs 50-60 with words straddling both boundaries: no dead space.
+    # Ad runs 50-60 with words straddling both boundaries: no gap to cut in.
     speech = [(48.0, 52.0), (58.0, 62.0)]
     ranges = editor._resolve_cut_ranges(
         [{"start": 50, "end": 60}], speech, duration=100.0, padding=0.5
     )
     assert ranges == [(49.5, 60.5)]
+
+
+def test_padding_never_clips_neighboring_words():
+    # Whisper lines sit 0.2s apart; a blind 0.5s pad would eat 0.3s of the
+    # adjacent words. The cut must stop on the word edges instead.
+    speech = [(40.0, 49.8), (50.0, 60.0), (60.2, 70.0)]
+    ranges = editor._resolve_cut_ranges(
+        [{"start": 50, "end": 60}], speech, duration=100.0, padding=0.5
+    )
+    assert ranges == [(49.8, 60.2)]
 
 
 def test_outro_music_before_post_roll_is_absorbed():
@@ -115,13 +124,14 @@ def test_trailing_dead_space_absorbed_up_to_next_speech():
     assert ranges == [(200.0, 260.0)]
 
 
-def test_short_pause_is_not_dead_space():
-    # 0.2s gaps either side are normal speech rhythm, below _MIN_DEAD_SPACE.
-    speech = [(40.0, 49.8), (50.0, 60.0), (60.2, 70.0)]
+def test_short_and_long_gaps_use_the_same_rule():
+    # A 0.2s pause and a 30s music bed are both just "gap": cut on the word
+    # edge either way. No threshold to tune, no cliff between the two.
+    speech = [(40.0, 49.8), (50.0, 60.0), (90.0, 95.0)]
     ranges = editor._resolve_cut_ranges(
         [{"start": 50, "end": 60}], speech, duration=100.0, padding=0.5
     )
-    assert ranges == [(49.5, 60.5)]
+    assert ranges == [(49.8, 90.0)]
 
 
 def test_pre_roll_absorbs_leading_audio_to_zero():
@@ -156,6 +166,27 @@ def test_two_ads_split_by_dead_space_close_the_gap():
     # 1291.5 rather than 1292.0 because credits begin mid-speech, so the
     # normal padding still applies on that boundary.
     assert keep == [(0.0, 1291.5)]
+
+
+def test_boundary_rounded_to_one_decimal_still_snaps():
+    # The classifier prompt renders timestamps as "%.1f", so a word ending at
+    # 27.14 is reported as 27.1. That 0.04s shortfall must not read as
+    # "boundary is mid-word" and block absorbing the theme music that follows.
+    speech = [(0.0, 27.14), (43.3, 60.0)]
+    ranges = editor._resolve_cut_ranges(
+        [{"start": 0.0, "end": 27.1}], speech, duration=240.0, padding=0.5
+    )
+    assert ranges == [(0.0, 43.3)]
+
+
+def test_word_genuinely_spanning_boundary_is_not_snapped():
+    # A long word from 45 to 70 really does straddle a boundary at 60; that is
+    # beyond any rounding artifact, so fall back to padding.
+    speech = [(45.0, 70.0), (80.0, 90.0)]
+    ranges = editor._resolve_cut_ranges(
+        [{"start": 50, "end": 60}], speech, duration=100.0, padding=0.5
+    )
+    assert ranges == [(49.5, 60.5)]
 
 
 def test_extension_is_capped_by_max_dead_space():

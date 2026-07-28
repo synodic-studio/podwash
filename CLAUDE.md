@@ -254,6 +254,36 @@ uv run pytest
 
 Linting: `uv run ruff check src/`
 
+## What Gets Trimmed
+
+Ads, self-promo, intro credits and closing credits are all removable.
+Break transitions ("we'll be right back", "after this break", "and
+we're back") count as part of the ad they introduce or close, not as
+content — the prompt merges them into the adjacent segment rather than
+emitting them separately.
+
+**Non-dialog audio is trimmed only when it abuts a cut.** The
+transcript doubles as a speech map: Whisper only emits timestamps
+where it heard words, so the inverse of those intervals is exactly the
+music and silence. `_resolve_cut_ranges` in `src/pipeline/editor.py`
+walks each ad boundary outward to the nearest spoken word, so outro
+music sitting between the last real words and a post-roll ad goes with
+the ad, while music in the middle of an untouched episode is left
+alone.
+
+Consequence worth knowing: **a pre-roll ad takes the show's theme
+music with it**, because that music abuts the ad on one side and the
+first content word on the other. Playback then starts on the first
+spoken word.
+
+`ad_boundary_padding` (default 0.5s) now only applies to a boundary
+that lands mid-word. Where there is any gap, the cut lands exactly on
+the word edge — Whisper lines sit 0.1-0.7s apart, so blind padding
+used to clip the first or last words of surrounding content.
+`_SNAP_TOLERANCE` (0.3s) absorbs the fact that the classifier prompt
+renders timestamps to one decimal place, so a boundary reported as
+`27.1` still snaps to a word truly ending at `27.14`.
+
 ## Data Flow
 
 1. Scheduler polls RSS feeds, inserts new episodes as `pending`.
