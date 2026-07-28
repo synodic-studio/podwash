@@ -240,6 +240,27 @@ Alerts are throttled per `(subsystem, kind)` to one per hour (state in
 transcripts are kept in `~/Library/Logs/podwash-worker/heal/` for
 after-the-fact review.
 
+## Dynamic ad insertion (verification gotcha)
+
+Podcast CDNs re-insert ads per request. The same enclosure URL returns
+a **different file on every download** — different ads, at different
+offsets, with a different total duration. Measured on The Big Picture
+`GLT1624262930.mp3` on 2026-07-28: 353,714,483 bytes at one point and
+345,995,828 a few hours later, a difference of ~190s of audio. Size is
+stable across back-to-back fetches but not across hours.
+
+**This makes the obvious verification method wrong.** You cannot check
+a cut by re-downloading the source and comparing timestamps against the
+stored `ad_segments_json` — that compares a transcript of one rendition
+against the audio of another, and the mismatch looks exactly like a
+timestamp bug. This produced a completely bogus "ads are being left in"
+diagnosis once already.
+
+To verify a cut, transcribe the **published clean audio**
+(`/audio/clean/{token}.mp3`) and look for ad language in it. That file
+is a fixed artifact and is the only rendition-independent evidence.
+Note it is deleted by retention, so check before it ages out.
+
 ## Throughput and `worker.stale_minutes`
 
 `stale_minutes` is a **whole-pipeline budget** (download + Whisper +
