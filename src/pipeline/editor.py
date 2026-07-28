@@ -7,9 +7,10 @@ from pathlib import Path
 from src.database.models import ProcessingLog
 
 # How far a reported boundary may sit inside a word and still count as being
-# on that word's edge. The classifier prompt renders timestamps to one decimal
-# place, so a boundary is routinely off by up to 0.05s from the true word edge
-# before the model's own imprecision is added.
+# on that word's edge. Must stay comfortably above the rounding error from
+# `_TIMESTAMP_DECIMALS` in src/pipeline/classifier.py, which is what the model
+# sees: at one decimal place a boundary is already off by up to 0.05s before
+# the model's own imprecision is added.
 _SNAP_TOLERANCE = 0.3
 
 # Safety net: never let a single boundary walk more than this far across
@@ -155,9 +156,7 @@ def _speech_intervals(
 
     raw: list[tuple[float, float]] = []
     for seg in transcript_segments:
-        words = seg.get("words") or []
-        spans = words if words else [seg]
-        for span in spans:
+        for span in seg.get("words") or [seg]:
             start, end = span.get("start"), span.get("end")
             if start is None or end is None:
                 continue

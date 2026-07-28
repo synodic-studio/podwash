@@ -30,7 +30,13 @@ def generate_feed_xml(
     - In progress: serves a short notification clip
     - Pending: serves a short notification clip and triggers processing
 
-    Title prefixes indicate status:
+    Title prefixes indicate status.
+
+    Auto-processed episodes stay hidden until they finish, so the only
+    prefix a listener sees on one is:
+    - | = processed and ready
+
+    Tap-driven episodes pass through `_STATUS_PREFIX`:
     - ○ = not yet processed (tap to trigger)
     - ◐ = currently processing
     - ● = processed and ready

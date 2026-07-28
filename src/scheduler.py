@@ -39,6 +39,12 @@ _FAILED_BURST_THRESHOLD = 5  # alert if this many episodes failed in last 24h
 _FEED_POLL_FAIL_THRESHOLD = 3  # alert after this many consecutive feed errors
 DEFAULT_MAX_EPISODES_PER_FEED = 100
 
+# Retention for auto-processed episodes. These are queued by the poller rather
+# than requested by a listener, so they age out on publication date instead of
+# `processing.retention_days` (which tracks when someone actually asked).
+_AUTO_RETENTION_DAYS = 42
+_AUTO_KEEP_LATEST_PER_FEED = 8
+
 # In-memory consecutive-failure counter per feed_id, scoped to the
 # scheduler process. We don't persist it — restarts forgive a feed and
 # require it to fail _FEED_POLL_FAIL_THRESHOLD more times before alerting
@@ -262,16 +268,27 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
 
 
 def _row_datetime(row: sqlite3.Row, key: str) -> datetime | None:
+    """Parse one timestamp column as a naive datetime.
+
+    Cleanup compares against a naive `datetime.now()`, so tz-aware values are
+    flattened rather than allowed to raise on comparison.
+    """
     value = row[key]
     if not value:
         return None
     try:
-        dt = datetime.fromisoformat(value)
+        return datetime.fromisoformat(value).replace(tzinfo=None)
     except ValueError:
         return None
-    if dt.tzinfo is not None:
-        return dt.replace(tzinfo=None)
-    return dt
+
+
+def _first_row_datetime(row: sqlite3.Row, *keys: str) -> datetime | None:
+    """First parseable timestamp among `keys`, in preference order."""
+    for key in keys:
+        parsed = _row_datetime(row, key)
+        if parsed is not None:
+            return parsed
+    return None
 
 
 def _cleanup_old(conn: sqlite3.Connection, settings: Settings) -> None:
@@ -284,7 +301,7 @@ def _cleanup_old(conn: sqlite3.Connection, settings: Settings) -> None:
     """
     data_dir = Path(settings.data_dir)
     manual_cutoff = datetime.now() - timedelta(days=settings.processing.retention_days)
-    auto_cutoff = datetime.now() - timedelta(days=42)
+    auto_cutoff = datetime.now() - timedelta(days=_AUTO_RETENTION_DAYS)
 
     completed_rows = conn.execute(
         """SELECT id, feed_id, processed_audio_path, auto_processed,
@@ -294,36 +311,29 @@ def _cleanup_old(conn: sqlite3.Connection, settings: Settings) -> None:
           AND processed_audio_path IS NOT NULL"""
     ).fetchall()
 
+    rows = []
     auto_by_feed: dict[int, list[sqlite3.Row]] = {}
     for row in completed_rows:
         if row["auto_processed"]:
             auto_by_feed.setdefault(row["feed_id"], []).append(row)
+        else:
+            completed_date = _first_row_datetime(row, "completed_at", "created_at")
+            if completed_date is not None and completed_date < manual_cutoff:
+                rows.append(row)
 
-    keep_auto_ids: set[int] = set()
+    # An auto-processed episode survives if it is recent OR among the feed's
+    # newest few, so a slow-publishing feed always keeps a usable backlog.
     for rows_for_feed in auto_by_feed.values():
-        latest = sorted(
+        by_recency = sorted(
             rows_for_feed,
             key=lambda r: (_row_datetime(r, "pub_date") or datetime.min, r["id"]),
             reverse=True,
-        )[:8]
-        keep_auto_ids.update(row["id"] for row in latest)
-
-    rows = []
-    for row in completed_rows:
-        if row["auto_processed"]:
-            episode_date = _row_datetime(row, "pub_date") or _row_datetime(
-                row, "completed_at"
-            ) or _row_datetime(row, "created_at")
-            if row["id"] in keep_auto_ids or (
-                episode_date is not None and episode_date >= auto_cutoff
-            ):
-                continue
-            rows.append(row)
-        else:
-            completed_date = _row_datetime(row, "completed_at") or _row_datetime(
-                row, "created_at"
+        )
+        for row in by_recency[_AUTO_KEEP_LATEST_PER_FEED:]:
+            episode_date = _first_row_datetime(
+                row, "pub_date", "completed_at", "created_at"
             )
-            if completed_date is not None and completed_date < manual_cutoff:
+            if episode_date is None or episode_date < auto_cutoff:
                 rows.append(row)
 
     for row in rows:

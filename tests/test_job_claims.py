@@ -176,12 +176,9 @@ def test_mark_failed_if_claimed_returns_none_when_mismatched(app):
     assert out is None
 
 
-def test_claim_round_robins_across_feeds_newest_first(tmp_path):
+def test_claim_round_robins_across_feeds_newest_first(app):
     """A newly added feed must not sit behind another feed's whole backlog."""
-    from src.database import db as db_mod
-    from src.database import queries
-
-    conn = db_mod.init_db(tmp_path / "t.db")
+    conn = app.state.db
     old = queries.upsert_feed(conn, Feed(name="old", source_url="http://a", slug="a"))
     new = queries.upsert_feed(conn, Feed(name="new", source_url="http://b", slug="b"))
 
@@ -206,12 +203,9 @@ def test_claim_round_robins_across_feeds_newest_first(tmp_path):
     assert set(claimed[2:]) == {"old 3", "new 0"}
 
 
-def test_tapped_episode_preempts_background_backfill(tmp_path):
+def test_tapped_episode_preempts_background_backfill(app):
     """An episode a listener is actively waiting on jumps the queue."""
-    from src.database import db as db_mod
-    from src.database import queries
-
-    conn = db_mod.init_db(tmp_path / "t2.db")
+    conn = app.state.db
     fid = queries.upsert_feed(conn, Feed(name="f", source_url="http://a", slug="a"))
 
     # Fresh auto-queued episodes (nobody waiting) ...

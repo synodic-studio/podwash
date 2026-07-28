@@ -16,6 +16,21 @@ _OBVIOUS_AD_PHRASES = (
     "todays sponsor is",
 )
 
+# A sponsor read ends on its call to action, so these close the segment.
+_CTA_MARKERS = (".com", "learn more", "visit")
+
+# Bounds on how far a sponsor read may extend past its opening phrase.
+_MAX_LOOKAHEAD_SEGMENTS = 7
+_MAX_LOOKAHEAD_GAP_SECONDS = 12
+
+# An ad starting this early is a pre-roll rather than a mid-roll.
+_PRE_ROLL_CUTOFF_SECONDS = 180
+
+# Decimal places used when rendering timestamps for the prompt. The editor's
+# boundary snapping must tolerate at least this much rounding error — see
+# `_SNAP_TOLERANCE` in src/pipeline/editor.py before changing it.
+_TIMESTAMP_DECIMALS = 1
+
 
 def _load_prompt() -> str:
     """Load the ad detection prompt template."""
@@ -29,7 +44,9 @@ def _format_transcript_for_prompt(segments: list[dict]) -> str:
         start = seg["start"]
         end = seg["end"]
         text = seg["text"]
-        lines.append(f"[{start:.1f}s - {end:.1f}s] {text}")
+        lines.append(
+            f"[{start:.{_TIMESTAMP_DECIMALS}f}s - {end:.{_TIMESTAMP_DECIMALS}f}s] {text}"
+        )
     return "\n".join(lines)
 
 
@@ -63,20 +80,19 @@ def _detect_obvious_ad_segments(segments: list[dict]) -> list[dict]:
 
         start = float(seg["start"])
         end = float(seg["end"])
-        for next_seg in segments[idx + 1 : idx + 8]:
-            gap = float(next_seg["start"]) - end
-            if gap > 12:
+        for next_seg in segments[idx + 1 : idx + 1 + _MAX_LOOKAHEAD_SEGMENTS]:
+            if float(next_seg["start"]) - end > _MAX_LOOKAHEAD_GAP_SECONDS:
                 break
             end = float(next_seg["end"])
             next_text = str(next_seg.get("text", "")).lower()
-            if ".com" in next_text or "learn more" in next_text or "visit" in next_text:
+            if any(marker in next_text for marker in _CTA_MARKERS):
                 break
 
         ads.append(
             {
                 "start": start,
                 "end": end,
-                "type": "pre_roll" if start < 180 else "mid_roll",
+                "type": "pre_roll" if start < _PRE_ROLL_CUTOFF_SECONDS else "mid_roll",
                 "confidence": 0.99,
                 "sponsor": "unknown",
                 "reason": "Obvious sponsor message matched deterministic ad phrase",
@@ -88,22 +104,20 @@ def _detect_obvious_ad_segments(segments: list[dict]) -> list[dict]:
 def _merge_ad_segments(model_segments: list[dict], guardrail_segments: list[dict]) -> list[dict]:
     merged = list(model_segments)
     for guardrail in guardrail_segments:
-        overlaps = False
         for existing in merged:
             if guardrail["start"] <= existing["end"] and existing["start"] <= guardrail["end"]:
                 existing["start"] = min(existing["start"], guardrail["start"])
                 existing["end"] = max(existing["end"], guardrail["end"])
                 existing["confidence"] = max(existing.get("confidence", 0), guardrail["confidence"])
                 existing["reason"] = f"{existing.get('reason', '')}; {guardrail['reason']}".strip("; ")
-                overlaps = True
                 break
-        if not overlaps:
+        else:
             merged.append(guardrail)
     return sorted(merged, key=lambda s: s["start"])
 
 
 async def classify_ads(
-    transcript_path: Path,
+    segments: list[dict],
     api_key: str,
     model: str = "claude-sonnet-4-5-20250929",
     max_tokens: int = 4096,
@@ -113,7 +127,8 @@ async def classify_ads(
     Send transcript to Claude for ad segment classification.
 
     Args:
-        transcript_path: Path to transcript JSON file.
+        segments: Parsed Whisper transcript segments. The editor needs these
+            too as its speech map, so the caller owns loading them.
         api_key: Anthropic API key.
         model: Claude model to use.
         max_tokens: Max response tokens.
@@ -123,9 +138,6 @@ async def classify_ads(
         Tuple of (filtered_ad_segments, raw_json_response, ProcessingLog).
     """
     start = time.monotonic()
-
-    with open(transcript_path) as f:
-        segments = json.load(f)
 
     transcript_text = _format_transcript_for_prompt(segments)
     prompt_template = _load_prompt()

@@ -36,20 +36,22 @@ async def _process_and_upload(
         compute_type=settings.processing.whisper_compute_type,
     )
 
+    # Both remaining stages consume the transcript: the classifier renders it
+    # into the prompt, and the editor uses it as a speech map to absorb outro
+    # music and silence that abuts a cut.
+    with open(transcript_path) as f:
+        transcript_segments = json.load(f)
+
     # Stage 3: Claude ad classification
     ad_segments, raw_json, _ = await classify_ads(
-        transcript_path,
+        transcript_segments,
         api_key=settings.anthropic_api_key,
         model=settings.claude.model,
         max_tokens=settings.claude.max_tokens,
         confidence_threshold=settings.processing.confidence_threshold,
     )
 
-    # Stage 4: ffmpeg cut. The transcript doubles as the speech map, letting
-    # the editor absorb outro music and silence that abuts a cut.
-    with open(transcript_path) as f:
-        transcript_segments = json.load(f)
-
+    # Stage 4: ffmpeg cut
     await cut_ads(
         original_path,
         processed_path,

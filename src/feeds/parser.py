@@ -130,7 +130,7 @@ def _episodes_from_parsed(
     parsed,
     feed_id: int,
     max_episodes: int,
-    title_includes: list[str] | None = None,
+    title_includes: list[str] | None,
 ) -> list[Episode]:
     episodes: list[Episode] = []
     include_terms = [term.casefold() for term in (title_includes or []) if term.strip()]

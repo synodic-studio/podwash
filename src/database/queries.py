@@ -521,9 +521,13 @@ def claim_next_pending(
                 FROM episodes
             )
             WHERE status = 'pending'
-            -- auto_processed = 0 means a listener tapped this episode and
-            -- is waiting on the placeholder clip right now. Those always win
-            -- over background backfill, which nobody is watching.
+            -- auto_processed = 0 rows are never queued by the poller, so the
+            -- only way one reaches 'pending' is a listener tapping it (see
+            -- routes/audio.py). Those win over background backfill, which
+            -- nobody is waiting on. Note this is provenance, not a live
+            -- "someone is waiting" flag: an auto-processed episode that fails
+            -- terminally and is then tapped keeps auto_processed = 1 and
+            -- still sorts with the backfill.
             ORDER BY auto_processed ASC, feed_rank ASC,
                      pub_date IS NULL, pub_date DESC, id DESC
             LIMIT 1
@@ -689,9 +693,10 @@ def mark_failed_if_claimed(
                 WHEN retry_count + 1 < ? THEN failed_at
                 ELSE ?
             END,
+            -- A terminal failure un-hides an auto-processed episode so the
+            -- listener can at least tap it to retry.
             publication_state = CASE
-                WHEN retry_count + 1 < ? THEN publication_state
-                WHEN auto_processed = 1 THEN 'placeholder'
+                WHEN retry_count + 1 >= ? AND auto_processed = 1 THEN 'placeholder'
                 ELSE publication_state
             END
         WHERE id = ?
@@ -754,6 +759,8 @@ def mark_failed(
         SET status = ?, retry_count = ?, error_message = ?,
             claimed_at = NULL, claimed_by = NULL, claim_token = NULL,
             failed_at = COALESCE(?, failed_at),
+            -- Same rule as mark_failed_if_claimed: a terminal failure un-hides
+            -- an auto-processed episode so the listener can tap it to retry.
             publication_state = CASE
                 WHEN ? = 'failed' AND auto_processed = 1 THEN 'placeholder'
                 ELSE publication_state

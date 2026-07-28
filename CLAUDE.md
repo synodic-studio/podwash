@@ -24,7 +24,7 @@ on a single machine for local development — the worker just polls
 ### Key Modules
 
 - `src/api/` — FastAPI app, routes (feeds, audio, management, queue)
-- `src/pipeline/` — Processing stages: downloader, transcriber, classifier, editor, orchestrator
+- `src/pipeline/` — Processing stages: downloader, transcriber, classifier, editor
 - `src/feeds/` — RSS parsing (feedparser) and generation (feedgen)
 - `src/database/` — SQLite via raw sqlite3, Pydantic models, CRUD queries
 - `src/scheduler.py` — APScheduler background jobs (poll every 15min, cleanup every 6hr, watchdog every 5min)

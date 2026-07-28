@@ -405,10 +405,6 @@ def test_cleanup_keeps_latest_eight_auto_processed_even_when_old(tmp_path, conn)
         )
         rel_path = f"feed_1/ep_{ep_id}/processed.mp3"
         queries.mark_completed(conn, ep_id, rel_path, None)
-        conn.execute(
-            "UPDATE episodes SET pub_date=?, auto_processed=1 WHERE id=?",
-            ((base_date + timedelta(days=i)).isoformat(), ep_id),
-        )
         abs_path = tmp_path / rel_path
         abs_path.parent.mkdir(parents=True, exist_ok=True)
         abs_path.write_bytes(b"x")
