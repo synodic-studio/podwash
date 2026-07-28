@@ -130,10 +130,10 @@ async def submit_feed(
     # and pass the bytes to feedparser. Never let feedparser dereference
     # arbitrary URLs.
     try:
-        body = await fetch_public_feed(url)
+        feed_bytes = await fetch_public_feed(url)
     except FeedFetchError as exc:
         raise HTTPException(status_code=400, detail=f"Could not fetch feed: {exc}")
-    parsed = feedparser.parse(body)
+    parsed = feedparser.parse(feed_bytes)
     if parsed.bozo and not parsed.entries:
         raise HTTPException(
             status_code=400,

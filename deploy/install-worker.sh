@@ -49,6 +49,7 @@ mkdir -p "$LOGDIR" "$HOME/Library/LaunchAgents"
 install_one() {
     local template_basename="$1"   # podwash-worker | podwash-worker-watchdog
     local label_suffix="$2"        # worker | worker-watchdog
+    local restart="${3:-}"         # "restart" to force a fresh process
     local label="${LAUNCHD_PREFIX}.${label_suffix}"
     local src="$REPO/deploy/${template_basename}.plist"
     local dst="$HOME/Library/LaunchAgents/${label}.plist"
@@ -93,17 +94,49 @@ PY
         fi
     fi
 
-    if launchctl list | grep -q "$label"; then
-        echo "Unloading existing $label"
-        launchctl unload "$dst" 2>/dev/null || true
+    # `launchctl unload` refuses to stop a running KeepAlive job, and the
+    # failure was being swallowed by `|| true`. `launchctl load` then failed
+    # with "Load failed: 5: Input/output error" while the script still printed
+    # "Loaded" — leaving the OLD process alive running the OLD code, which is
+    # the worst possible outcome for a deploy step. The modern domain API
+    # actually waits for the job to exit, and every step is now checked.
+    local domain
+    domain="gui/$(id -u)"
+
+    if launchctl print "$domain/$label" >/dev/null 2>&1; then
+        echo "Booting out existing $label"
+        if ! launchctl bootout "$domain/$label" 2>/dev/null; then
+            # bootout returns non-zero if the job already exited on its own.
+            if launchctl print "$domain/$label" >/dev/null 2>&1; then
+                echo "error: could not bootout running $label" >&2
+                exit 1
+            fi
+        fi
     fi
 
-    launchctl load "$dst"
+    if ! launchctl bootstrap "$domain" "$dst"; then
+        echo "error: launchctl bootstrap failed for $label ($dst)" >&2
+        exit 1
+    fi
+
+    if ! launchctl print "$domain/$label" >/dev/null 2>&1; then
+        echo "error: $label is not loaded after bootstrap" >&2
+        exit 1
+    fi
+
+    # Belt and braces for the long-running job: guarantee the process now
+    # running is the newly-bootstrapped one. Skipped for the watchdog, which
+    # is a StartInterval one-shot and should keep its own schedule.
+    if [[ "$restart" == "restart" ]]; then
+        launchctl kickstart -k "$domain/$label" >/dev/null 2>&1 || true
+    fi
+
     echo "Loaded $label from $dst"
 }
 
-# The worker itself (long-running, KeepAlive).
-install_one "podwash-worker" "worker"
+# The worker itself (long-running, KeepAlive). Forced to restart so a
+# reinstall always picks up new repo code — the whole point of running it.
+install_one "podwash-worker" "worker" restart
 
 # The idle watchdog (one-shot every 5 min). First line of defense
 # against stuck-but-alive workers — see src/worker/idle_watchdog.py.
