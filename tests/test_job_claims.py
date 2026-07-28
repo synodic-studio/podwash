@@ -174,3 +174,33 @@ def test_mark_failed_if_claimed_returns_none_when_mismatched(app):
         conn, ep_id, "worker-b", "bad-token", "err"
     )
     assert out is None
+
+
+def test_claim_round_robins_across_feeds_newest_first(tmp_path):
+    """A newly added feed must not sit behind another feed's whole backlog."""
+    from src.database import db as db_mod
+    from src.database import queries
+
+    conn = db_mod.init_db(tmp_path / "t.db")
+    old = queries.upsert_feed(conn, Feed(name="old", source_url="http://a", slug="a"))
+    new = queries.upsert_feed(conn, Feed(name="new", source_url="http://b", slug="b"))
+
+    # 'old' has a deep backlog inserted first; 'new' is added afterwards.
+    for i in range(5):
+        conn.execute(
+            "INSERT INTO episodes (feed_id, guid, title, source_audio_url, status,"
+            " pub_date) VALUES (?,?,?,?,'pending',?)",
+            (old, f"o{i}", f"old {i}", "http://x", f"2026-01-0{i + 1}T00:00:00"),
+        )
+    for i in range(2):
+        conn.execute(
+            "INSERT INTO episodes (feed_id, guid, title, source_audio_url, status,"
+            " pub_date) VALUES (?,?,?,?,'pending',?)",
+            (new, f"n{i}", f"new {i}", "http://x", f"2026-02-0{i + 1}T00:00:00"),
+        )
+    conn.commit()
+
+    claimed = [queries.claim_next_pending(conn, "w").title for _ in range(4)]
+    # Each feed's newest lands before either feed's second-newest.
+    assert set(claimed[:2]) == {"old 4", "new 1"}
+    assert set(claimed[2:]) == {"old 3", "new 0"}

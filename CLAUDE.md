@@ -83,11 +83,16 @@ transferred by the deploy script.
 
 Episode titles in the proxy RSS feed are prefixed with a status symbol:
 
-- `○` — new, not yet processed (tapping triggers on-demand processing)
-- `◐` — currently in-progress (downloading / transcribing / classifying / editing)
-- `●` — **done, ad-free audio is ready** (this is the success state)
-- `✘` — failed (tapping retries)
-- `🧼` — feed-level prefix on the channel title (not episode status)
+- `|` — **done, ad-free audio is ready** (this is the success state)
+- `🫧` — feed-level prefix on the channel title (not episode status)
+
+Auto-processed episodes are `publication_state='hidden'` until they
+finish, so an unprocessed episode does not appear in the proxy feed at
+all — a freshly added feed publishes nothing until its first episode
+completes. The old tap-to-trigger status workflow (`○` new, `◐` in
+progress, `●` done, `✘` failed) was abandoned; `_STATUS_PREFIX` in
+`src/feeds/generator.py` is now only a fallback for rows that are not
+auto-processed.
 
 When an episode completes, the proxy feed publishes the cleaned audio
 as a **new RSS item** with a fresh GUID (`episodes.clean_token`) and a

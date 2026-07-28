@@ -486,10 +486,18 @@ def claim_next_pending(
     worker_id: str,
     stale_minutes: int = 45,
 ) -> Episode | None:
-    """Atomically claim the oldest pending episode for a worker.
+    """Atomically claim the next pending episode for a worker.
 
-    Sweeps stale claims first, then picks the oldest pending row and marks
-    it with status='downloading' + claimed_at=now + claimed_by=worker_id.
+    Ordering is round-robin across feeds, newest-first within each feed:
+    every feed's latest episode is processed before any feed's second-latest.
+    Plain `ORDER BY id ASC` starved whole feeds — adding a feed queued its
+    ~100 episodes behind the previous feed's backlog, so a newly subscribed
+    show published nothing for days while an older one worked through its
+    archive. Since unprocessed episodes are hidden from the proxy RSS, that
+    reads to a subscriber as an empty feed.
+
+    Sweeps stale claims first, then marks the chosen row with
+    status='downloading' + claimed_at=now + claimed_by=worker_id.
     Returns the claimed Episode, or None if the queue is empty.
     """
     reset_stale_claims(conn, stale_minutes)
@@ -501,9 +509,20 @@ def claim_next_pending(
         SET status = 'downloading', claimed_at = ?, claimed_by = ?,
             claim_token = ?
         WHERE id = (
-            SELECT id FROM episodes
+            SELECT id FROM (
+                -- Rank over ALL of a feed's episodes, not just its pending
+                -- ones, so the rank is stable as work completes. Ranking only
+                -- pending rows would re-rank after every claim and collapse
+                -- back into plain global newest-first.
+                SELECT id, pub_date, status,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY feed_id
+                           ORDER BY pub_date IS NULL, pub_date DESC, id DESC
+                       ) AS feed_rank
+                FROM episodes
+            )
             WHERE status = 'pending'
-            ORDER BY id ASC
+            ORDER BY feed_rank ASC, pub_date IS NULL, pub_date DESC, id DESC
             LIMIT 1
         )
         RETURNING *""",

@@ -41,15 +41,17 @@ worker that has more CPU/RAM than you want to pay for in the cloud).
 
 Episode titles in the proxy feed are prefixed with a status symbol:
 
-- `○` — not yet processed; tap in your app to queue it
-- `◐` — currently downloading / transcribing / classifying / editing
-- `●` — **done, ad-free audio is ready**
-- `✘` — failed; tap to retry
-- `🧼` — prefix on the channel title (not an episode status)
+- `|` — **done, ad-free audio is ready**
+- `🫧` — prefix on the channel title (not an episode status)
+
+Episodes are processed automatically and stay hidden from the proxy
+feed until they finish, so a newly added feed publishes nothing until
+its first episode completes. The earlier tap-to-trigger workflow
+(`○` new, `◐` in progress, `●` done, `✘` failed) is no longer used.
 
 When an episode completes, podwash keeps the source episode's RSS
 `<guid>` stable so podcast apps update the existing row instead of
-showing a stale `○` placeholder next to a fresh `●` clean item. The
+showing a stale placeholder next to a fresh clean item. The
 enclosure URL changes to `/audio/clean/{token}.mp3`, and the placeholder
 enclosure disappears from the generated feed — only the current cleaned
 publication remains visible. Old played placeholder items may still live
