@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+import json
+
+import pytest
+
+from src.pipeline import classifier
 from src.pipeline.classifier import _detect_obvious_ad_segments
 
 
@@ -35,3 +40,52 @@ def test_obvious_ad_detector_does_not_flag_editorial_mentions():
     ]
 
     assert _detect_obvious_ad_segments(segments) == []
+
+
+class _StubAnthropic:
+    """Records the rendered prompt and replays a canned classification."""
+
+    last_prompt: str | None = None
+
+    def __init__(self, api_key):
+        self.messages = self
+
+    def create(self, model, max_tokens, messages):
+        type(self).last_prompt = messages[0]["content"]
+        body = json.dumps(
+            {
+                "summary": "1 ad",
+                "ad_segments": [
+                    {"start": 100.2, "end": 128.2, "confidence": 0.95, "type": "pre_roll"},
+                    {"start": 200.0, "end": 210.0, "confidence": 0.10, "type": "mid_roll"},
+                ],
+            }
+        )
+        return type(
+            "R", (), {"content": [type("C", (), {"text": body})()]}
+        )()
+
+
+@pytest.mark.asyncio
+async def test_classify_ads_takes_parsed_segments_and_filters_by_confidence(monkeypatch):
+    """The worker parses the transcript once and hands the segments in."""
+    monkeypatch.setattr(classifier, "Anthropic", _StubAnthropic)
+    segments = [
+        {"start": 100.2, "end": 102.9, "text": "This message is brought to you by Mariner."},
+        {"start": 120.5, "end": 128.2, "text": "Take the next step at joinmariner.com."},
+        {"start": 200.0, "end": 210.0, "text": "Some ordinary discussion."},
+    ]
+
+    filtered, raw_json, log = await classifier.classify_ads(
+        segments, api_key="k", confidence_threshold=0.7
+    )
+
+    # Transcript reached the prompt at one decimal place — _SNAP_TOLERANCE in
+    # the editor is sized against exactly this rendering.
+    assert "[100.2s - 102.9s] This message is brought to you by Mariner." in (
+        _StubAnthropic.last_prompt
+    )
+    # The 0.10-confidence segment is dropped; the sponsor read survives.
+    assert [(s["start"], s["end"]) for s in filtered] == [(100.2, 128.2)]
+    assert json.loads(raw_json)["summary"] == "1 ad"
+    assert log.stage == "classify" and log.status == "success"
