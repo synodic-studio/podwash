@@ -490,11 +490,10 @@ def claim_next_pending(
 
     Ordering is round-robin across feeds, newest-first within each feed:
     every feed's latest episode is processed before any feed's second-latest.
-    Plain `ORDER BY id ASC` starved whole feeds — adding a feed queued its
-    ~100 episodes behind the previous feed's backlog, so a newly subscribed
-    show published nothing for days while an older one worked through its
-    archive. Since unprocessed episodes are hidden from the proxy RSS, that
-    reads to a subscriber as an empty feed.
+    Ordering by id or pub_date alone starves whole feeds — a newly added
+    feed's episodes queue behind the entire backlog of older feeds, and
+    since unprocessed episodes are hidden from the proxy RSS, a subscriber
+    just sees an empty feed.
 
     Sweeps stale claims first, then marks the chosen row with
     status='downloading' + claimed_at=now + claimed_by=worker_id.
@@ -522,11 +521,9 @@ def claim_next_pending(
                 FROM episodes
             )
             WHERE status = 'pending'
-            -- auto_processed = 0 means a listener tapped this episode in
-            -- their podcast app and is waiting on the placeholder clip right
-            -- now. Those always win over background backfill, which nobody
-            -- is watching — otherwise a tapped back-catalogue episode sits
-            -- behind every newer episode of every feed for hours.
+            -- auto_processed = 0 means a listener tapped this episode and
+            -- is waiting on the placeholder clip right now. Those always win
+            -- over background backfill, which nobody is watching.
             ORDER BY auto_processed ASC, feed_rank ASC,
                      pub_date IS NULL, pub_date DESC, id DESC
             LIMIT 1

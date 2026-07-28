@@ -89,10 +89,8 @@ Episode titles in the proxy RSS feed are prefixed with a status symbol:
 Auto-processed episodes are `publication_state='hidden'` until they
 finish, so an unprocessed episode does not appear in the proxy feed at
 all — a freshly added feed publishes nothing until its first episode
-completes. The old tap-to-trigger status workflow (`○` new, `◐` in
-progress, `●` done, `✘` failed) was abandoned; `_STATUS_PREFIX` in
-`src/feeds/generator.py` is now only a fallback for rows that are not
-auto-processed.
+completes. `_STATUS_PREFIX` in `src/feeds/generator.py` only applies to
+rows that are not auto-processed.
 
 When an episode completes, the proxy feed publishes the cleaned audio
 as a **new RSS item** with a fresh GUID (`episodes.clean_token`) and a

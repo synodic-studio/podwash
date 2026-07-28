@@ -89,10 +89,8 @@ Episode titles in the proxy RSS feed are prefixed with a status symbol:
 Auto-processed episodes are `publication_state='hidden'` until they
 finish, so an unprocessed episode does not appear in the proxy feed at
 all — a freshly added feed publishes nothing until its first episode
-completes. The old tap-to-trigger status workflow (`○` new, `◐` in
-progress, `●` done, `✘` failed) was abandoned; `_STATUS_PREFIX` in
-`src/feeds/generator.py` is now only a fallback for rows that are not
-auto-processed.
+completes. `_STATUS_PREFIX` in `src/feeds/generator.py` only applies to
+rows that are not auto-processed.
 
 When an episode completes, the proxy feed publishes the cleaned audio
 as a **new RSS item** with a fresh GUID (`episodes.clean_token`) and a
@@ -244,17 +242,15 @@ after-the-fact review.
 
 Podcast CDNs re-insert ads per request. The same enclosure URL returns
 a **different file on every download** — different ads, at different
-offsets, with a different total duration. Measured on The Big Picture
-`GLT1624262930.mp3` on 2026-07-28: 353,714,483 bytes at one point and
-345,995,828 a few hours later, a difference of ~190s of audio. Size is
-stable across back-to-back fetches but not across hours.
+offsets, with a different total duration. On one Big Picture episode
+that was a ~190s swing (353,714,483 vs 345,995,828 bytes) over a few
+hours; size is stable across back-to-back fetches but not across hours.
 
-**This makes the obvious verification method wrong.** You cannot check
-a cut by re-downloading the source and comparing timestamps against the
-stored `ad_segments_json` — that compares a transcript of one rendition
+**So the obvious verification method is wrong.** Never check a cut by
+re-downloading the source and comparing timestamps against the stored
+`ad_segments_json` — that compares a transcript of one rendition
 against the audio of another, and the mismatch looks exactly like a
-timestamp bug. This produced a completely bogus "ads are being left in"
-diagnosis once already.
+timestamp bug.
 
 Ad load also varies by **source IP**, and this is stable and
 reproducible rather than random. Measured on the same episode, same
@@ -281,18 +277,18 @@ same value to decide when an in-flight claim is stale enough to reset.
 Both copies of `config.yml` — the Mac worker's and the remote's at
 `/opt/podwash` — must agree.
 
-Measured on the M1 Air worker (2026-07-27): Whisper `base`/`int8` runs
-at **~6.8x realtime**. Download is not the bottleneck (~7.7 MB/s, so a
+On the M1 Air worker, Whisper `base`/`int8` runs at **~6.8x
+realtime**. Download is not the bottleneck (~7.7 MB/s, so a
 353MB episode lands in under a minute). Transcription dominates:
 
 - 2h episode → ~18 min transcribe, ~25 min end-to-end
 - 3.3h episode → ~29 min transcribe, ~40 min end-to-end
 
 Feeds vary enormously in episode length — The Big Picture is ~2h
-median / 3.3h max, while Quanta is ~24 min median. `stale_minutes: 45`
-left a long episode almost no headroom and timed out mid-transcribe as
-soon as anything else contended for CPU; it is now 90. When adding a
-long-form feed, check its duration distribution against this budget.
+median / 3.3h max, while Quanta is ~24 min median. `stale_minutes` is
+90, which leaves a long episode room to absorb CPU contention. When
+adding a long-form feed, check its duration distribution against this
+budget.
 
 Note that a timed-out job is **not** stuck where its status says: the
 worker never reports intermediate stages, so an episode reads
