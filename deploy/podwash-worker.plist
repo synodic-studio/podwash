@@ -33,11 +33,13 @@
     <key>RunAtLoad</key>
     <true/>
 
+    <!-- Unconditional: the wrapper returns exit 0 both to signal "clean
+         stop" and to signal "self-heal succeeded, restart to verify"
+         (see src/worker/wrapper.py). SuccessfulExit=false would only
+         restart on non-zero exit, silently killing the worker after
+         every successful heal until someone manually kickstarts it. -->
     <key>KeepAlive</key>
-    <dict>
-        <key>SuccessfulExit</key>
-        <false/>
-    </dict>
+    <true/>
 
     <!-- Throttle restarts so a crash loop doesn't hammer the API -->
     <key>ThrottleInterval</key>
