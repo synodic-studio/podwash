@@ -18,9 +18,23 @@
          throttle loop and an undetected outage. Runs under system
          Python so a broken project venv can't keep the wrapper itself
          from booting (the whole point is to detect and recover from a
-         broken venv). -->
+         broken venv).
+
+         Fronted by `caffeinate -i -s` because this host is a laptop with
+         idle sleep set to 1 minute on both battery and AC. A sleeping
+         host looks exactly like a hung worker to the idle watchdog: the
+         worker takes a SIGTERM, the queue goes silent, and the 30-min
+         threshold trips. (Observed 2026-07-28: host slept 06:15-06:49,
+         woke only when the power adapter was reattached.) `-i` blocks
+         idle sleep for the whole life of the worker; `-s` additionally
+         holds it on AC. Neither needs sudo. This does NOT cover
+         lid-close sleep — `sudo pmset -c sleep 0 disksleep 0 standby 0`
+         is still the durable host-level fix. -->
     <key>ProgramArguments</key>
     <array>
+        <string>/usr/bin/caffeinate</string>
+        <string>-i</string>
+        <string>-s</string>
         <string>/usr/bin/python3</string>
         <string>-u</string>
         <string>-m</string>
