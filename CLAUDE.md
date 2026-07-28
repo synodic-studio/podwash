@@ -256,6 +256,18 @@ against the audio of another, and the mismatch looks exactly like a
 timestamp bug. This produced a completely bogus "ads are being left in"
 diagnosis once already.
 
+Ad load also varies by **source IP**, and this is stable and
+reproducible rather than random. Measured on the same episode, same
+minute: home residential (Comcast, Colorado) 345,995,828 bytes vs the
+Vultr datacenter (Illinois) 347,805,589 — the datacenter pulls ~45s
+more ads. A Tor exit in Norway returned byte-identical content to the
+home IP, so geo-shifting to Europe does nothing for this publisher.
+
+This is a reason to keep the download in the worker (on the home
+network) rather than moving it to the server: pulling episodes from the
+Vultr box would add ~45s of ads to every episode before Whisper ever
+sees them.
+
 To verify a cut, transcribe the **published clean audio**
 (`/audio/clean/{token}.mp3`) and look for ad language in it. That file
 is a fixed artifact and is the only rendition-independent evidence.
