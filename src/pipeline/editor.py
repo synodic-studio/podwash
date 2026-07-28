@@ -64,6 +64,18 @@ async def cut_ads(
     # Get audio duration via ffprobe
     duration = await _get_duration(audio_path)
 
+    # Whisper timestamps can drift on long files — measured ~88s (1%) over a
+    # 2.4h episode — which pushes trailing segments past the true end of the
+    # audio. Those used to clamp to zero length and vanish silently, leaving
+    # real post-roll ads in the output with nothing to show for it. Surface it.
+    for dropped in [a for a in ads if float(a["start"]) >= duration]:
+        print(
+            f"[edit] WARNING: ad segment {dropped['start']:.1f}-{dropped['end']:.1f}s "
+            f"starts past end of audio ({duration:.1f}s) and cannot be cut — "
+            f"likely transcript timestamp drift. type={dropped.get('type')} "
+            f"reason={dropped.get('reason', '')[:80]}"
+        )
+
     # Resolve each ad into a concrete cut range, absorbing abutting dead space
     cut_ranges = _resolve_cut_ranges(
         ads, _speech_intervals(transcript_segments), duration, padding

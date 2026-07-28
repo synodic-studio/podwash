@@ -267,3 +267,25 @@ async def test_no_ad_copy_raises_on_empty_output(monkeypatch, tmp_path):
     monkeypatch.setattr(asyncio, "create_subprocess_exec", _exec)
     with pytest.raises(RuntimeError, match="empty output"):
         await editor.cut_ads(tmp_path / "in.mp3", out, ad_segments=[])
+
+
+@pytest.mark.asyncio
+async def test_segment_past_end_of_audio_is_reported(monkeypatch, tmp_path, capsys):
+    # Whisper timestamp drift can push trailing segments past the true end of
+    # the audio. They cannot be cut, but the operator must not be left
+    # believing the ad was removed.
+    out = tmp_path / "out.mp3"
+
+    async def _exec(*args, **kw):
+        out.write_bytes(b"x")
+        return _FakeProc(0, b"100.0\n", b"")
+
+    monkeypatch.setattr(asyncio, "create_subprocess_exec", _exec)
+    await editor.cut_ads(
+        tmp_path / "in.mp3",
+        out,
+        [{"start": 150.0, "end": 180.0, "type": "post_roll", "reason": "White Claw"}],
+    )
+    captured = capsys.readouterr().out
+    assert "starts past end of audio" in captured
+    assert "150.0-180.0s" in captured
