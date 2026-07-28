@@ -204,3 +204,30 @@ def test_claim_round_robins_across_feeds_newest_first(tmp_path):
     # Each feed's newest lands before either feed's second-newest.
     assert set(claimed[:2]) == {"old 4", "new 1"}
     assert set(claimed[2:]) == {"old 3", "new 0"}
+
+
+def test_tapped_episode_preempts_background_backfill(tmp_path):
+    """An episode a listener is actively waiting on jumps the queue."""
+    from src.database import db as db_mod
+    from src.database import queries
+
+    conn = db_mod.init_db(tmp_path / "t2.db")
+    fid = queries.upsert_feed(conn, Feed(name="f", source_url="http://a", slug="a"))
+
+    # Fresh auto-queued episodes (nobody waiting) ...
+    for i in range(3):
+        conn.execute(
+            "INSERT INTO episodes (feed_id, guid, title, source_audio_url, status,"
+            " pub_date, auto_processed) VALUES (?,?,?,?,'pending',?,1)",
+            (fid, f"a{i}", f"auto {i}", "http://x", f"2026-07-0{i + 1}T00:00:00"),
+        )
+    # ... and one old back-catalogue episode the user just tapped.
+    conn.execute(
+        "INSERT INTO episodes (feed_id, guid, title, source_audio_url, status,"
+        " pub_date, auto_processed) VALUES (?,?,?,?,'pending',?,0)",
+        (fid, "tap", "tapped", "http://x", "2026-01-01T00:00:00"),
+    )
+    conn.commit()
+
+    # Oldest pub_date and worst feed_rank, but claimed first regardless.
+    assert queries.claim_next_pending(conn, "w").title == "tapped"

@@ -514,7 +514,7 @@ def claim_next_pending(
                 -- ones, so the rank is stable as work completes. Ranking only
                 -- pending rows would re-rank after every claim and collapse
                 -- back into plain global newest-first.
-                SELECT id, pub_date, status,
+                SELECT id, pub_date, status, auto_processed,
                        ROW_NUMBER() OVER (
                            PARTITION BY feed_id
                            ORDER BY pub_date IS NULL, pub_date DESC, id DESC
@@ -522,7 +522,13 @@ def claim_next_pending(
                 FROM episodes
             )
             WHERE status = 'pending'
-            ORDER BY feed_rank ASC, pub_date IS NULL, pub_date DESC, id DESC
+            -- auto_processed = 0 means a listener tapped this episode in
+            -- their podcast app and is waiting on the placeholder clip right
+            -- now. Those always win over background backfill, which nobody
+            -- is watching — otherwise a tapped back-catalogue episode sits
+            -- behind every newer episode of every feed for hours.
+            ORDER BY auto_processed ASC, feed_rank ASC,
+                     pub_date IS NULL, pub_date DESC, id DESC
             LIMIT 1
         )
         RETURNING *""",
