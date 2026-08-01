@@ -213,9 +213,10 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
             new_count = 0
             seen_at = datetime.now()
             active_ids: list[int] = []
-            for episode in episodes:
+            auto_flags = _auto_process_flags(episodes, now=seen_at)
+            for episode, auto in zip(episodes, auto_flags):
                 ep_id, inserted = queries.upsert_episode_from_poll(
-                    conn, episode, seen_at=seen_at
+                    conn, episode, seen_at=seen_at, auto_process=auto
                 )
                 active_ids.append(ep_id)
                 if inserted:
@@ -265,6 +266,32 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
                         "error": f"{type(e).__name__}: {e}",
                     },
                 )
+
+
+def _auto_process_flags(episodes: list, *, now: datetime) -> list[bool]:
+    """Decide which freshly discovered episodes to queue for the worker.
+
+    Mirrors the retention rule in `_cleanup_old`: an episode is worth
+    processing up front if it is recent, or among the feed's newest few.
+    Processing anything else would spend a full pipeline on audio that the
+    next cleanup pass deletes, so the back catalogue waits to be tapped.
+    """
+    cutoff = now - timedelta(days=_AUTO_RETENTION_DAYS)
+
+    def sort_key(item):
+        _, ep = item
+        pub = getattr(ep, "pub_date", None)
+        return (pub is not None, pub.replace(tzinfo=None) if pub else datetime.min)
+
+    newest_first = sorted(enumerate(episodes), key=sort_key, reverse=True)
+    keep = {idx for idx, _ in newest_first[:_AUTO_KEEP_LATEST_PER_FEED]}
+
+    flags = []
+    for idx, ep in enumerate(episodes):
+        pub = getattr(ep, "pub_date", None)
+        recent = pub is not None and pub.replace(tzinfo=None) >= cutoff
+        flags.append(idx in keep or recent)
+    return flags
 
 
 def _row_datetime(row: sqlite3.Row, key: str) -> datetime | None:

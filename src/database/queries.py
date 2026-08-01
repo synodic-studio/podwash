@@ -160,9 +160,18 @@ def get_visible_episodes_for_feed(
 
 
 def upsert_episode_from_poll(
-    conn: sqlite3.Connection, episode: Episode, *, seen_at: datetime
+    conn: sqlite3.Connection,
+    episode: Episode,
+    *,
+    seen_at: datetime,
+    auto_process: bool = True,
 ) -> tuple[int, bool]:
     """Insert or update an episode discovered during a poll.
+
+    `auto_process` decides whether a newly discovered episode is queued for
+    the worker immediately (hidden until its clean audio is ready) or left
+    for the listener to request. Back-catalogue episodes stay visible and
+    tappable either way — only the queueing differs.
 
     Returns ``(episode_id, inserted)``. Match order:
       1. ``feed_id + source_identity`` when set (preferred — survives
@@ -189,12 +198,18 @@ def upsert_episode_from_poll(
         ).fetchone()
 
     if existing is None:
+        # Auto-queued rows hide until their clean audio exists, so the feed
+        # never publishes a placeholder that is about to be replaced. Rows
+        # left for on-demand processing publish right away so they can be
+        # tapped.
+        status = "pending" if auto_process else "new"
+        pub_state = "hidden" if auto_process else "placeholder"
         cur = conn.execute(
             """INSERT INTO episodes
             (feed_id, guid, title, source_audio_url, pub_date,
              duration_seconds, description, status, source_identity,
              last_seen_at, is_active, publication_state, auto_processed)
-            VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, 1, 'hidden', 1)""",
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)""",
             (
                 episode.feed_id,
                 episode.guid,
@@ -203,8 +218,11 @@ def upsert_episode_from_poll(
                 pub_iso,
                 episode.duration_seconds,
                 episode.description,
+                status,
                 episode.source_identity,
                 seen_iso,
+                pub_state,
+                1 if auto_process else 0,
             ),
         )
         conn.commit()

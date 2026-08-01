@@ -531,3 +531,49 @@ def test_repeated_polls_and_completion_produce_single_visible_item(conn):
     eps3 = queries.get_visible_episodes_for_feed(conn, feed_id)
     xml3 = generate_feed_xml(feed, eps3, "http://podwash")
     assert xml3.count("<item>") == 1
+
+
+def test_poll_only_auto_queues_recent_episodes(conn):
+    """Back catalogue stays visible and tappable but is not auto-queued."""
+    from src import scheduler
+
+    feed_id = _make_feed(conn)
+    now = datetime.now(timezone.utc)
+    # Two recent episodes, then a deep back catalogue well past the window.
+    eps = [
+        Episode(feed_id=feed_id, guid=f"r{i}", title=f"recent {i}",
+                source_audio_url=f"http://x/r{i}.mp3",
+                pub_date=now - timedelta(days=i))
+        for i in range(2)
+    ] + [
+        Episode(feed_id=feed_id, guid=f"o{i}", title=f"old {i}",
+                source_audio_url=f"http://x/o{i}.mp3",
+                pub_date=now - timedelta(days=400 + i))
+        for i in range(20)
+    ]
+
+    flags = scheduler._auto_process_flags(eps, now=now.replace(tzinfo=None))
+    for ep, auto in zip(eps, flags):
+        queries.upsert_episode_from_poll(
+            conn, ep, seen_at=datetime.now(), auto_process=auto
+        )
+
+    rows = {
+        r["guid"]: r
+        for r in conn.execute(
+            "SELECT guid, status, auto_processed, publication_state,"
+            " is_active FROM episodes WHERE feed_id = ?", (feed_id,)
+        ).fetchall()
+    }
+
+    # Recent ones are queued for the worker and hidden until clean.
+    assert rows["r0"]["status"] == "pending" and rows["r0"]["auto_processed"] == 1
+    # The newest-8 rule still admits a few of the old ones...
+    assert sum(r["auto_processed"] for r in rows.values()) == 8
+    # ...but the deep tail is left for on-demand, and stays visible.
+    assert rows["o19"]["status"] == "new"
+    assert rows["o19"]["auto_processed"] == 0
+    assert rows["o19"]["publication_state"] == "placeholder"
+    assert rows["o19"]["is_active"] == 1
+    # Nothing was dropped from the feed.
+    assert len(rows) == 22
