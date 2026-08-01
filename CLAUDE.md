@@ -92,13 +92,19 @@ all — a freshly added feed publishes nothing until its first episode
 completes. `_STATUS_PREFIX` in `src/feeds/generator.py` only applies to
 rows that are not auto-processed.
 
-When an episode completes, the proxy feed publishes the cleaned audio
-as a **new RSS item** with a fresh GUID (`episodes.clean_token`) and a
-`/audio/clean/{uuid}.mp3` enclosure. The placeholder publication is
-removed from the generated RSS — only the current cleaned item is
-visible. Old placeholder/clean rows that point at the same source
-episode are marked `publication_state='hidden'` (or `is_active=0`)
-during merge and never re-appear in `/feeds/{slug}.xml`.
+An episode keeps **one stable RSS GUID** (`episodes.guid`) for its whole
+life. Only the enclosure changes: `/audio/{feed_id}/{episode_id}.mp3`
+before completion, `/audio/clean/{clean_token}.mp3` after. A stable GUID
+means podcast apps update the existing row instead of showing a second
+one. Old placeholder/clean rows pointing at the same source episode are
+marked `publication_state='hidden'` (or `is_active=0`) during merge and
+never re-appear in `/feeds/{slug}.xml`.
+
+Consequence worth knowing: because the GUID never changes, an episode
+the app has already archived stays archived when its clean audio lands.
+If the placeholder clip played to the end while processing was still
+running, the finished episode reappears in the archive/history rather
+than the main list.
 
 Feed identity is durable. Polling matches existing rows by
 `source_identity` (normalized audio URL with tracking params stripped)
