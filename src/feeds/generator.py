@@ -13,7 +13,6 @@ _STATUS_PREFIX = {
     EpisodeStatus.TRANSCRIBING: "\u25d0",  # ◐
     EpisodeStatus.CLASSIFYING: "\u25d0",  # ◐
     EpisodeStatus.EDITING: "\u25d0",  # ◐
-    EpisodeStatus.COMPLETED: "\u25cf",  # ●
     EpisodeStatus.FAILED: "\u2718",  # ✘
 }
 
@@ -30,17 +29,14 @@ def generate_feed_xml(
     - In progress: serves a short notification clip
     - Pending: serves a short notification clip and triggers processing
 
-    Title prefixes indicate status.
-
-    Auto-processed episodes stay hidden until they finish, so the only
-    prefix a listener sees on one is:
-    - | = processed and ready
-
-    Tap-driven episodes pass through `_STATUS_PREFIX`:
+    Title prefixes indicate status:
+    - | = ad-free audio is ready
     - ○ = not yet processed (tap to trigger)
     - ◐ = currently processing
-    - ● = processed and ready
     - ✘ = failed (tap to retry)
+
+    Auto-processed episodes stay hidden until they finish, so in practice
+    the only prefix ever seen on one is `|`.
     """
     feed_url = f"{base_url}/feeds/{feed.slug}.xml"
     display_name = f"\U0001FAE7 {feed.name}"  # 🫧 bubbles prefix
@@ -82,7 +78,9 @@ def generate_feed_xml(
             if episode.description
             else escape(episode.title)
         )
-        if episode.auto_processed and episode.status == EpisodeStatus.COMPLETED:
+        # Completed means the same thing to a listener however the episode got
+        # queued, so it gets one marker regardless of how it was requested.
+        if episode.status == EpisodeStatus.COMPLETED:
             title = f"|{episode.title}"
         else:
             prefix = _STATUS_PREFIX.get(episode.status, "○")

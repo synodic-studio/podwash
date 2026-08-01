@@ -577,3 +577,20 @@ def test_poll_only_auto_queues_recent_episodes(conn):
     assert rows["o19"]["is_active"] == 1
     # Nothing was dropped from the feed.
     assert len(rows) == 22
+
+
+def test_tap_requested_completion_uses_same_pipe_prefix(conn):
+    """A completed episode reads the same whether tapped or auto-queued."""
+    feed_id = _make_feed(conn)
+    ep_id = _insert_episode(
+        conn, feed_id, guid="tapped-guid", title="Tapped Episode",
+        auto_processed=False,
+    )
+    queries.mark_completed(conn, ep_id, "feed_1/ep_9/processed.mp3", None)
+
+    feed = queries.get_feed_by_id(conn, feed_id)
+    episode = queries.get_episode_by_id(conn, ep_id)
+    xml = generate_feed_xml(feed, [episode], "http://podwash")
+
+    assert "<title>|Tapped Episode</title>" in xml
+    assert "●" not in xml  # no legacy ● marker for a ready episode
