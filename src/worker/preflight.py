@@ -52,7 +52,7 @@ def _check_secrets(settings: Settings) -> CheckResult:
     missing: list[str] = []
     if not settings.worker.token:
         missing.append("WORKER_TOKEN (or `pass show podwash-worker-token`)")
-    if not settings.anthropic_api_key:
+    if settings.processing.classifier_backend == "claude" and not settings.anthropic_api_key:
         missing.append("ANTHROPIC_API_KEY (or `pass show anthropic-api-key`)")
     if missing:
         return (
@@ -89,12 +89,15 @@ def _check_server(settings: Settings) -> CheckResult:
     return True, "", ""
 
 
-def _check_anthropic(settings: Settings) -> CheckResult:
-    """Verify the Anthropic API key actually authenticates.
+def _check_classifier(settings: Settings) -> CheckResult:
+    """Verify the configured classifier backend is reachable and answers.
 
-    Uses `messages.count_tokens` because it's free, fast, and exercises
-    the same auth path as the real classifier call.
+    Whichever backend is selected, a worker that boots without it just
+    claims jobs and fails them one at a time, burning retries. Fail here
+    instead so the crash wrapper can escalate.
     """
+    if settings.processing.classifier_backend != "claude":
+        return _check_openai_compatible(settings)
     try:
         from anthropic import Anthropic
     except Exception as exc:
@@ -120,11 +123,54 @@ def _check_anthropic(settings: Settings) -> CheckResult:
     return True, "", ""
 
 
+def _check_openai_compatible(settings: Settings) -> CheckResult:
+    """Verify the OpenAI-compatible endpoint is up and serving the model."""
+    cfg = settings.litellm
+    try:
+        import httpx
+
+        headers = (
+            {"Authorization": f"Bearer {cfg.api_key}"} if cfg.api_key else {}
+        )
+        with httpx.Client(timeout=30) as client:
+            resp = client.post(
+                f"{cfg.base_url.rstrip('/')}/chat/completions",
+                headers=headers,
+                json={
+                    "model": cfg.model,
+                    "max_tokens": 16,
+                    "messages": [{"role": "user", "content": "Reply with OK."}],
+                    "thinking": {"type": "disabled"},
+                    "extra_body": {"thinking": {"type": "disabled"}},
+                },
+            )
+        resp.raise_for_status()
+        if not (resp.json()["choices"][0]["message"].get("content") or ""):
+            return (
+                False,
+                f"Model `{cfg.model}` returned empty content on a ping.",
+                "The model is likely spending its whole budget on reasoning. "
+                "Confirm reasoning is disabled for this model in the proxy "
+                "config, or raise processing max_tokens.",
+            )
+    except Exception as exc:
+        return (
+            False,
+            f"Classifier endpoint failed: {type(exc).__name__}: {exc}",
+            f"Confirm the proxy at {cfg.base_url} is running and serving "
+            f"`{cfg.model}`. For a local LiteLLM proxy check it is up on "
+            "that port; `curl {base}/models` lists what it serves.".format(
+                base=cfg.base_url.rstrip("/")
+            ),
+        )
+    return True, "", ""
+
+
 CHECKS: list[tuple[str, Check]] = [
     ("imports", _check_imports),
     ("secrets", _check_secrets),
     ("server", _check_server),
-    ("anthropic", _check_anthropic),
+    ("classifier", _check_classifier),
 ]
 
 

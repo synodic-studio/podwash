@@ -89,3 +89,82 @@ async def test_classify_ads_takes_parsed_segments_and_filters_by_confidence(monk
     assert [(s["start"], s["end"]) for s in filtered] == [(100.2, 128.2)]
     assert json.loads(raw_json)["summary"] == "1 ad"
     assert log.stage == "classify" and log.status == "success"
+
+
+class _StubResponse:
+    def __init__(self, payload):
+        self._payload = payload
+
+    def raise_for_status(self):
+        pass
+
+    def json(self):
+        return self._payload
+
+
+def _stub_httpx(monkeypatch, payload, captured=None):
+    class _Client:
+        def __init__(self, *a, **k):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+        def post(self, url, json=None, headers=None):
+            if captured is not None:
+                captured["url"] = url
+                captured["body"] = json
+            return _StubResponse(payload)
+
+    monkeypatch.setattr(classifier.httpx, "Client", _Client)
+
+
+@pytest.mark.asyncio
+async def test_openai_backend_disables_reasoning_and_parses(monkeypatch):
+    """A reasoning model must be told not to think, or it emits no answer."""
+    captured = {}
+    body = json.dumps({"summary": "1", "ad_segments": [
+        {"start": 5.2, "end": 33.7, "confidence": 0.99, "type": "pre_roll"}
+    ]})
+    _stub_httpx(
+        monkeypatch,
+        {"choices": [{"message": {"content": body}, "finish_reason": "stop"}]},
+        captured,
+    )
+
+    filtered, _, log = await classifier.classify_ads(
+        [{"start": 5.2, "end": 33.7, "text": "sponsor read"}],
+        api_key="",
+        backend="litellm",
+        base_url="http://localhost:4000/v1",
+        model="dsf",
+    )
+
+    assert captured["url"] == "http://localhost:4000/v1/chat/completions"
+    assert captured["body"]["thinking"] == {"type": "disabled"}
+    assert [(s["start"], s["end"]) for s in filtered] == [(5.2, 33.7)]
+    assert log.status == "success"
+
+
+@pytest.mark.asyncio
+async def test_openai_backend_raises_on_empty_content(monkeypatch):
+    """Budget exhausted by reasoning yields empty content -- fail loudly."""
+    _stub_httpx(
+        monkeypatch,
+        {
+            "choices": [{"message": {"content": ""}, "finish_reason": "length"}],
+            "usage": {"completion_tokens": 4096},
+        },
+    )
+
+    with pytest.raises(RuntimeError, match="empty content"):
+        await classifier.classify_ads(
+            [{"start": 0.0, "end": 1.0, "text": "hi"}],
+            api_key="",
+            backend="litellm",
+            base_url="http://localhost:4000/v1",
+            model="dsf",
+        )

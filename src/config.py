@@ -22,7 +22,7 @@ class ProcessingConfig(BaseModel):
     confidence_threshold: float = 0.7
     ad_boundary_padding: float = 0.5
     retention_days: int = 30
-    classifier_backend: str = "claude"  # "claude" or "ollama"
+    classifier_backend: str = "claude"  # "claude" or "litellm"
 
 
 class ClaudeConfig(BaseModel):
@@ -30,10 +30,17 @@ class ClaudeConfig(BaseModel):
     max_tokens: int = 4096
 
 
-class OllamaConfig(BaseModel):
-    model: str = "llama3.1"
-    base_url: str = "http://localhost:11434"
+class LiteLLMConfig(BaseModel):
+    """OpenAI-compatible classifier backend (a LiteLLM proxy, Ollama, etc).
+
+    Runs alongside the worker, so `base_url` is local to the worker host,
+    not the server. Reasoning is disabled per request by the classifier.
+    """
+
+    model: str = "dsf"
+    base_url: str = "http://localhost:4000/v1"
     max_tokens: int = 4096
+    api_key: str = ""
 
 
 class WorkerConfig(BaseModel):
@@ -71,7 +78,7 @@ class Settings(BaseModel):
     feeds: list[FeedConfig] = Field(default_factory=list)
     processing: ProcessingConfig = Field(default_factory=ProcessingConfig)
     claude: ClaudeConfig = Field(default_factory=ClaudeConfig)
-    ollama: OllamaConfig = Field(default_factory=OllamaConfig)
+    litellm: LiteLLMConfig = Field(default_factory=LiteLLMConfig)
     worker: WorkerConfig = Field(default_factory=WorkerConfig)
     admin: AdminConfig = Field(default_factory=AdminConfig)
     anthropic_api_key: str = ""

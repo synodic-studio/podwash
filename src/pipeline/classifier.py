@@ -1,9 +1,10 @@
-"""Classify ad segments in transcripts using Claude API."""
+"""Classify ad segments in transcripts via Claude or an OpenAI-compatible API."""
 
 import json
 import time
 from pathlib import Path
 
+import httpx
 from anthropic import Anthropic
 
 from src.database.models import ProcessingLog
@@ -116,23 +117,74 @@ def _merge_ad_segments(model_segments: list[dict], guardrail_segments: list[dict
     return sorted(merged, key=lambda s: s["start"])
 
 
+def _call_anthropic(prompt: str, *, api_key: str, model: str, max_tokens: int) -> str:
+    client = Anthropic(api_key=api_key)
+    response = client.messages.create(
+        model=model,
+        max_tokens=max_tokens,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return response.content[0].text
+
+
+def _call_openai_compatible(
+    prompt: str, *, base_url: str, model: str, max_tokens: int, api_key: str = ""
+) -> str:
+    """Classify via an OpenAI-compatible /chat/completions endpoint.
+
+    Reasoning is explicitly disabled. A reasoning model asked to emit JSON
+    will happily spend the entire output budget thinking and return empty
+    content with finish_reason='length' -- the answer never gets written.
+    Disabling it is also faster and produces better segments here.
+    """
+    body = {
+        "model": model,
+        "max_tokens": max_tokens,
+        "messages": [{"role": "user", "content": prompt}],
+        "thinking": {"type": "disabled"},
+        "extra_body": {"thinking": {"type": "disabled"}},
+    }
+    headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
+    with httpx.Client(timeout=600) as client:
+        resp = client.post(
+            f"{base_url.rstrip('/')}/chat/completions", json=body, headers=headers
+        )
+    resp.raise_for_status()
+    payload = resp.json()
+    choice = payload["choices"][0]
+    text = choice["message"].get("content") or ""
+    if not text:
+        raise RuntimeError(
+            f"{model} returned empty content "
+            f"(finish_reason={choice.get('finish_reason')}, "
+            f"completion_tokens={payload.get('usage', {}).get('completion_tokens')}). "
+            "Raise max_tokens or confirm reasoning is disabled."
+        )
+    return text
+
+
 async def classify_ads(
     segments: list[dict],
     api_key: str,
     model: str = "claude-sonnet-4-5-20250929",
     max_tokens: int = 4096,
     confidence_threshold: float = 0.7,
+    backend: str = "claude",
+    base_url: str = "",
 ) -> tuple[list[dict], str, ProcessingLog]:
     """
-    Send transcript to Claude for ad segment classification.
+    Send transcript to a model for ad segment classification.
 
     Args:
         segments: Parsed Whisper transcript segments. The editor needs these
             too as its speech map, so the caller owns loading them.
-        api_key: Anthropic API key.
-        model: Claude model to use.
+        api_key: API key for the selected backend.
+        model: Model identifier.
         max_tokens: Max response tokens.
         confidence_threshold: Minimum confidence to keep a segment.
+        backend: "claude" for the Anthropic SDK, or "litellm"/"openai" for an
+            OpenAI-compatible endpoint at `base_url`.
+        base_url: Endpoint root for the OpenAI-compatible backend.
 
     Returns:
         Tuple of (filtered_ad_segments, raw_json_response, ProcessingLog).
@@ -143,13 +195,18 @@ async def classify_ads(
     prompt_template = _load_prompt()
     prompt = prompt_template.format(transcript=transcript_text)
 
-    client = Anthropic(api_key=api_key)
-    response = client.messages.create(
-        model=model,
-        max_tokens=max_tokens,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    raw_text = response.content[0].text
+    if backend == "claude":
+        raw_text = _call_anthropic(
+            prompt, api_key=api_key, model=model, max_tokens=max_tokens
+        )
+    else:
+        raw_text = _call_openai_compatible(
+            prompt,
+            base_url=base_url,
+            model=model,
+            max_tokens=max_tokens,
+            api_key=api_key,
+        )
     cleaned = _clean_json_response(raw_text)
     result = json.loads(cleaned)
 

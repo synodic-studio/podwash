@@ -17,6 +17,25 @@ from src.pipeline.transcriber import transcribe_episode
 from .client import Job, QueueClient
 
 
+def _classifier_kwargs(settings: Settings) -> dict:
+    """Resolve which model the classifier talks to, and how."""
+    backend = settings.processing.classifier_backend
+    if backend == "claude":
+        return {
+            "backend": "claude",
+            "api_key": settings.anthropic_api_key,
+            "model": settings.claude.model,
+            "max_tokens": settings.claude.max_tokens,
+        }
+    return {
+        "backend": backend,
+        "api_key": settings.litellm.api_key,
+        "base_url": settings.litellm.base_url,
+        "model": settings.litellm.model,
+        "max_tokens": settings.litellm.max_tokens,
+    }
+
+
 async def _process_and_upload(
     client: QueueClient, job: Job, settings: Settings, tmp_root: Path
 ) -> None:
@@ -42,13 +61,11 @@ async def _process_and_upload(
     with open(transcript_path) as f:
         transcript_segments = json.load(f)
 
-    # Stage 3: Claude ad classification
+    # Stage 3: ad classification
     ad_segments, raw_json, _ = await classify_ads(
         transcript_segments,
-        api_key=settings.anthropic_api_key,
-        model=settings.claude.model,
-        max_tokens=settings.claude.max_tokens,
         confidence_threshold=settings.processing.confidence_threshold,
+        **_classifier_kwargs(settings),
     )
 
     # Stage 4: ffmpeg cut
