@@ -386,6 +386,9 @@ def _cleanup_old(conn: sqlite3.Connection, settings: Settings) -> None:
             # Clear clean_token so the stale /audio/clean/{token}.mp3
             # URL stops resolving once we've removed the file; reset
             # the row to NEW with placeholder publication state.
+            # publication_guid is deliberately left alone: the episode keeps
+            # the RSS identity it was published under, so expiring its audio
+            # does not resurface it in the listener's app as something new.
             conn.execute(
                 """UPDATE episodes
                 SET processed_audio_path = NULL,

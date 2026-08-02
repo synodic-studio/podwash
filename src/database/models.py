@@ -47,6 +47,10 @@ class Episode(BaseModel):
     ad_segments_json: str | None = None
     processed_audio_path: str | None = None
     clean_token: str | None = None
+    # RSS GUID this episode publishes under. Minted on each completion so a
+    # finished episode reads as new; survives retention so an expired one
+    # does not. Falls back to `guid` before the first completion.
+    publication_guid: str | None = None
     claimed_at: datetime | None = None
     claimed_by: str | None = None
     claim_token: str | None = None

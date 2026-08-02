@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS episodes (
     ad_segments_json TEXT,
     processed_audio_path TEXT,
     clean_token TEXT UNIQUE,
+    publication_guid TEXT,
     claimed_at TEXT,
     claimed_by TEXT,
     claim_token TEXT,
@@ -116,6 +117,14 @@ def _migrate(conn: sqlite3.Connection) -> None:
         # episode and we'd never know.
         ("failed_at", "ALTER TABLE episodes ADD COLUMN failed_at TEXT"),
         ("clean_token", "ALTER TABLE episodes ADD COLUMN clean_token TEXT"),
+        # The RSS GUID an episode publishes under. Minted fresh on each
+        # completion so a finished episode surfaces as new, and deliberately
+        # NOT cleared when retention expires the audio -- an expired episode
+        # keeps its identity instead of re-announcing itself.
+        (
+            "publication_guid",
+            "ALTER TABLE episodes ADD COLUMN publication_guid TEXT",
+        ),
         ("claim_token", "ALTER TABLE episodes ADD COLUMN claim_token TEXT"),
         ("source_identity", "ALTER TABLE episodes ADD COLUMN source_identity TEXT"),
         (

@@ -570,6 +570,13 @@ def mark_completed(
     Generates a fresh clean_token (UUID) so the feed URL changes from the
     placeholder path to a new path that podcast clients haven't cached.
     Returns the token.
+
+    Also mints a fresh `publication_guid`. A podcast app keys played and
+    archived state off the GUID, so reusing one would leave a finished
+    episode sitting in the archive where nobody sees it. Each completion
+    therefore republishes under a new identity. Retention deliberately does
+    not clear this: an episode whose audio expired keeps its GUID and stays
+    where it is, rather than re-announcing itself as new.
     """
     token = str(uuid.uuid4())
     now_iso = datetime.now().isoformat()
@@ -578,6 +585,7 @@ def mark_completed(
         SET status = 'completed',
             processed_audio_path = ?,
             clean_token = ?,
+            publication_guid = ?,
             ad_segments_json = COALESCE(?, ad_segments_json),
             original_audio_path = NULL,
             transcript_json_path = NULL,
@@ -588,7 +596,14 @@ def mark_completed(
             publication_state = 'clean',
             completed_at = ?
         WHERE id = ?""",
-        (processed_audio_path, token, ad_segments_json, now_iso, episode_id),
+        (
+            processed_audio_path,
+            token,
+            str(uuid.uuid4()),
+            ad_segments_json,
+            now_iso,
+            episode_id,
+        ),
     )
     conn.commit()
     # Hide any other publication (placeholder OR earlier completed) that

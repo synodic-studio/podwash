@@ -151,12 +151,13 @@ def test_completion_replaces_placeholder_publication_with_clean_publication(conn
     episode2 = queries.get_episode_by_id(conn, ep_id)
     xml2 = generate_feed_xml(feed, [episode2], "http://podwash")
     assert f"/audio/clean/{episode2.clean_token}.mp3" in xml2
-    # Keep the source GUID stable so podcast apps update one row instead of
-    # showing a stale ○ placeholder next to a fresh ● clean item.
-    assert "source-guid" in xml2
-    assert episode2.clean_token not in xml2.replace(
-        f"/audio/clean/{episode2.clean_token}.mp3", ""
-    )
+    # Completion republishes under a new GUID so an episode the app already
+    # archived surfaces again as unplayed.
+    assert episode2.publication_guid is not None
+    assert f"<guid isPermaLink=\"false\">{episode2.publication_guid}</guid>" in xml2
+    assert "source-guid" not in xml2
+    # Still exactly one item — the placeholder publication is gone.
+    assert xml2.count("<item>") == 1
     assert f"/audio/{feed_id}/{ep_id}.mp3" not in xml2
 
 
@@ -510,7 +511,10 @@ def test_repeated_polls_and_completion_produce_single_visible_item(conn):
     eps2 = queries.get_visible_episodes_for_feed(conn, feed_id)
     xml2 = generate_feed_xml(feed, eps2, "http://podwash")
     assert xml2.count("<item>") == 1
-    assert "g-original" in xml2
+    # Republished under the completion GUID, not the source GUID.
+    completed = queries.get_episode_by_id(conn, id1)
+    assert completed.publication_guid in xml2
+    assert "g-original" not in xml2
 
     # Second poll: same audio URL different tracking + different guid.
     ep2 = Episode(
@@ -594,3 +598,43 @@ def test_tap_requested_completion_uses_same_pipe_prefix(conn):
 
     assert "<title>|Tapped Episode</title>" in xml
     assert "●" not in xml  # no legacy ● marker for a ready episode
+
+
+def test_publication_guid_survives_expiry_but_changes_on_reprocess(tmp_path, conn):
+    """Expiry keeps the episode where it is; a new request resurfaces it."""
+    from src import scheduler
+
+    feed_id = _make_feed(conn)
+    ep_id = _insert_episode(conn, feed_id, guid="src-guid")
+    settings = Settings()
+    settings.data_dir = str(tmp_path)
+    settings.processing.retention_days = 30
+
+    # First completion mints a GUID distinct from the source GUID.
+    queries.mark_completed(conn, ep_id, f"feed_1/ep_{ep_id}/processed.mp3", None)
+    first = queries.get_episode_by_id(conn, ep_id).publication_guid
+    assert first and first != "src-guid"
+
+    abs_path = tmp_path / f"feed_1/ep_{ep_id}/processed.mp3"
+    abs_path.parent.mkdir(parents=True, exist_ok=True)
+    abs_path.write_bytes(b"x")
+    conn.execute(
+        "UPDATE episodes SET completed_at = ?, auto_processed = 0 WHERE id = ?",
+        ((datetime.now(timezone.utc) - timedelta(days=90)).isoformat(), ep_id),
+    )
+    conn.commit()
+
+    # Retention expires the audio but must NOT re-announce the episode.
+    scheduler._cleanup_old(conn, settings)
+    expired = queries.get_episode_by_id(conn, ep_id)
+    assert expired.status == EpisodeStatus.NEW
+    assert expired.clean_token is None          # dead URL stops resolving
+    assert expired.publication_guid == first    # identity unchanged
+
+    feed = queries.get_feed_by_id(conn, feed_id)
+    assert first in generate_feed_xml(feed, [expired], "http://podwash")
+
+    # Requested again → new GUID, so it lifts back out of the archive.
+    queries.mark_completed(conn, ep_id, f"feed_1/ep_{ep_id}/processed.mp3", None)
+    second = queries.get_episode_by_id(conn, ep_id).publication_guid
+    assert second and second != first

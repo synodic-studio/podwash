@@ -89,22 +89,29 @@ Episode titles in the proxy RSS feed are prefixed with a status symbol:
 Auto-processed episodes are `publication_state='hidden'` until they
 finish, so an unprocessed episode does not appear in the proxy feed at
 all — a freshly added feed publishes nothing until its first episode
-completes. `_STATUS_PREFIX` in `src/feeds/generator.py` only applies to
-rows that are not auto-processed.
+completes. `_STATUS_PREFIX` in `src/feeds/generator.py` covers only the
+non-completed states; every completed episode gets `|` regardless of how
+it was queued.
 
-An episode keeps **one stable RSS GUID** (`episodes.guid`) for its whole
-life. Only the enclosure changes: `/audio/{feed_id}/{episode_id}.mp3`
-before completion, `/audio/clean/{clean_token}.mp3` after. A stable GUID
-means podcast apps update the existing row instead of showing a second
-one. Old placeholder/clean rows pointing at the same source episode are
-marked `publication_state='hidden'` (or `is_active=0`) during merge and
-never re-appear in `/feeds/{slug}.xml`.
+An episode publishes under `episodes.publication_guid`, falling back to
+`episodes.guid` before it has ever completed. Podcast apps key played and
+archived state off the GUID, so this column is what decides whether a
+finished episode surfaces or stays buried:
 
-Consequence worth knowing: because the GUID never changes, an episode
-the app has already archived stays archived when its clean audio lands.
-If the placeholder clip played to the end while processing was still
-running, the finished episode reappears in the archive/history rather
-than the main list.
+- **On completion** a fresh `publication_guid` is minted. The episode
+  reads as a new item, which lifts it out of the archive if the listener
+  played the placeholder clip to the end while it was still processing.
+- **On retention expiry** it is deliberately left alone. `clean_token` is
+  cleared so the stale `/audio/clean/{token}.mp3` stops resolving, but the
+  episode keeps its identity and stays put instead of re-announcing itself.
+- **On a second request** the next completion mints another one, so a
+  re-requested episode surfaces again.
+
+The enclosure tracks the same lifecycle: `/audio/{feed_id}/{episode_id}.mp3`
+before completion, `/audio/clean/{clean_token}.mp3` after. Old
+placeholder/clean rows pointing at the same source episode are marked
+`publication_state='hidden'` (or `is_active=0`) during merge, so only one
+item per episode is ever emitted.
 
 Feed identity is durable. Polling matches existing rows by
 `source_identity` (normalized audio URL with tracking params stripped)
@@ -117,10 +124,6 @@ Retention cleanup keys off `episodes.completed_at` (not `created_at`):
 a recently-completed episode discovered months ago is preserved. When
 a row is reset, the stale `clean_token` is cleared so old
 `/audio/clean/{token}.mp3` URLs stop resolving.
-
-Note: if the placeholder clip played all the way through before the
-episode finished, some apps auto-archive the episode and it ends up in
-the archive/history rather than the main list.
 
 ## Key URLs
 
