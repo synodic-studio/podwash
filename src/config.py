@@ -39,7 +39,11 @@ class LiteLLMConfig(BaseModel):
 
     model: str = "dsf"
     base_url: str = "http://localhost:4000/v1"
-    max_tokens: int = 4096
+    # A reasoning model sizes its answer to this budget rather than merely
+    # truncating at it, so a small value quietly costs ad segments while
+    # still returning valid JSON. Keep it generous -- real output is ~350
+    # tokens, so this bounds quality, not spend.
+    max_tokens: int = 16000
     api_key: str = ""
 
 
