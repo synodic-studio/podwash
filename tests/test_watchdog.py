@@ -37,20 +37,28 @@ _guid_counter = 0
 
 
 def _insert_episode(
-    conn, *, status="pending", claimed_at=None, claimed_by=None, failed_at=None
+    conn,
+    *,
+    status="pending",
+    claimed_at=None,
+    claimed_by=None,
+    failed_at=None,
+    completed_at=None,
 ):
     global _guid_counter
     _guid_counter += 1
     cur = conn.execute(
         """INSERT INTO episodes
-        (feed_id, guid, title, source_audio_url, status, claimed_at, claimed_by, failed_at)
-        VALUES (1, ?, 'T', 'http://a', ?, ?, ?, ?)""",
+        (feed_id, guid, title, source_audio_url, status, claimed_at, claimed_by,
+         failed_at, completed_at)
+        VALUES (1, ?, 'T', 'http://a', ?, ?, ?, ?, ?)""",
         (
             f"guid-{_guid_counter}-{status}",
             status,
             claimed_at,
             claimed_by,
             failed_at,
+            completed_at,
         ),
     )
     conn.commit()
@@ -92,6 +100,36 @@ def test_snapshot_picks_most_recent_claim(conn):
     s = queries.queue_health_snapshot(conn)
     assert s["last_claim_at"] == newer
     assert s["last_claim_by"] == "new"
+
+
+def test_snapshot_reports_completion_when_nothing_in_flight(conn):
+    """Completion NULLs claimed_at. A drained queue must still read as
+    recently active, or every gap between episodes looks like a stall."""
+    done_at = (datetime.now() - timedelta(minutes=2)).isoformat()
+    _insert_episode(conn, status="completed", completed_at=done_at)
+    _insert_episode(conn, status="pending")
+    s = queries.queue_health_snapshot(conn)
+    assert s["last_claim_at"] == done_at
+    assert s["in_flight_count"] == 0
+
+
+def test_snapshot_reports_failure_as_activity(conn):
+    failed_at = (datetime.now() - timedelta(minutes=3)).isoformat()
+    _insert_episode(conn, status="failed", failed_at=failed_at)
+    s = queries.queue_health_snapshot(conn)
+    assert s["last_claim_at"] == failed_at
+
+
+def test_snapshot_prefers_newest_activity_of_any_kind(conn):
+    old_claim = (datetime.now() - timedelta(hours=3)).isoformat()
+    recent_done = (datetime.now() - timedelta(minutes=1)).isoformat()
+    _insert_episode(
+        conn, status="downloading", claimed_at=old_claim, claimed_by="w1"
+    )
+    _insert_episode(conn, status="completed", completed_at=recent_done)
+    s = queries.queue_health_snapshot(conn)
+    assert s["last_claim_at"] == recent_done
+    assert s["last_claim_by"] == "w1"
 
 
 def test_watchdog_quiet_when_queue_empty(conn, monkeypatch):

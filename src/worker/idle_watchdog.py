@@ -42,6 +42,12 @@ DEFAULT_NO_CLAIM_MINUTES = 30
 # itself has a daily cap, but each run costs Anthropic credits and
 # spawns a Claude session, so we add a per-process throttle too.
 DEFAULT_COOLDOWN_SECONDS = 1800
+# A trip has to survive two consecutive ticks before we heal. The worker
+# idles 120s between polls and ticks are 300s apart, so a single tick can
+# land in the gap between one episode completing and the next being
+# claimed — a healthy state that looks identical to a stall. Window is
+# wide enough that one skipped tick doesn't reset the streak.
+DEFAULT_CONFIRM_WINDOW_SECONDS = 1200
 
 
 def _env_int(name: str, default: int) -> int:
@@ -146,6 +152,36 @@ def _stamp_now(stamp_file: Path) -> None:
     stamp_file.write_text(f"{time.time():.0f}\n")
 
 
+def _confirm_repeat_trip(
+    trip_file: Path,
+    snapshot: dict,
+    *,
+    window_seconds: int,
+    now: float | None = None,
+) -> bool:
+    """True when the previous tick tripped on the same backlog.
+
+    Records this tick's trip either way, so the streak builds up across
+    runs of this one-shot process. A different `oldest_pending_id` means
+    the queue moved on, which is evidence the worker is alive, so the
+    streak restarts rather than carrying over.
+    """
+    now = time.time() if now is None else now
+    current = snapshot.get("oldest_pending_id")
+    previous = None
+    if trip_file.exists():
+        try:
+            prior = json.loads(trip_file.read_text())
+            if now - float(prior["at"]) <= window_seconds:
+                previous = prior.get("oldest_pending_id")
+        except (OSError, ValueError, KeyError, TypeError):
+            previous = None
+
+    trip_file.parent.mkdir(parents=True, exist_ok=True)
+    trip_file.write_text(json.dumps({"oldest_pending_id": current, "at": now}))
+    return previous is not None and previous == current
+
+
 def _write_incident(state_dir: Path, snapshot: dict, reason: str) -> Path:
     state_dir.mkdir(parents=True, exist_ok=True)
     now = time.time()
@@ -170,6 +206,13 @@ def _write_incident(state_dir: Path, snapshot: dict, reason: str) -> Path:
         "  - is the worker process hung mid-Whisper / mid-HTTP?\n"
         "Possible fixes: kickstart the worker launchd job,\n"
         "uv sync --extra worker, restore network, fix config.yml.\n"
+        "\n"
+        "Confirm the worker is actually idle before restarting anything.\n"
+        "A busy worker is mid-Whisper, not hung: it burns whole cores and\n"
+        "holds a $TMPDIR/podwash-<episode_id>-* directory. Sample its CPU\n"
+        "over ~20s and list that directory before you kickstart — a restart\n"
+        "throws away an in-flight episode. Worker stdout is block-buffered,\n"
+        "so a quiet log is not evidence of a stalled worker.\n"
     )
     path.write_text(body)
     return path
@@ -269,6 +312,13 @@ def main(argv: list[str] | None = None) -> int:
         default=_env_int("IDLE_COOLDOWN_SECONDS", DEFAULT_COOLDOWN_SECONDS),
     )
     parser.add_argument(
+        "--confirm-window-seconds",
+        type=int,
+        default=_env_int(
+            "IDLE_CONFIRM_WINDOW_SECONDS", DEFAULT_CONFIRM_WINDOW_SECONDS
+        ),
+    )
+    parser.add_argument(
         "--heal-timeout",
         type=int,
         default=_env_int("HEAL_TIMEOUT_SECONDS", 600),
@@ -300,7 +350,19 @@ def main(argv: list[str] | None = None) -> int:
         snapshot, no_claim_minutes=args.no_claim_minutes
     )
     print(f"[idle-watchdog] {reason}", file=sys.stderr)
+    trip_file = args.state_dir / "last-trip.json"
     if not should_heal:
+        trip_file.unlink(missing_ok=True)
+        return 0
+
+    if not _confirm_repeat_trip(
+        trip_file, snapshot, window_seconds=args.confirm_window_seconds
+    ):
+        print(
+            "[idle-watchdog] first tick to trip — waiting for a second "
+            "before healing",
+            file=sys.stderr,
+        )
         return 0
 
     stamp = args.state_dir / "last-heal.stamp"

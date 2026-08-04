@@ -81,6 +81,57 @@ def test_cooldown_stamp_handles_corrupt_file(tmp_path: Path) -> None:
     assert idle_watchdog._within_cooldown(stamp, 1800) is False
 
 
+def test_first_trip_does_not_confirm(tmp_path: Path) -> None:
+    trip = tmp_path / "last-trip.json"
+    snap = _snapshot(pending=1)
+    assert (
+        idle_watchdog._confirm_repeat_trip(trip, snap, window_seconds=1200) is False
+    )
+
+
+def test_second_trip_on_same_backlog_confirms(tmp_path: Path) -> None:
+    trip = tmp_path / "last-trip.json"
+    snap = _snapshot(pending=1)
+    idle_watchdog._confirm_repeat_trip(trip, snap, window_seconds=1200)
+    assert (
+        idle_watchdog._confirm_repeat_trip(trip, snap, window_seconds=1200) is True
+    )
+
+
+def test_queue_moving_on_restarts_the_streak(tmp_path: Path) -> None:
+    trip = tmp_path / "last-trip.json"
+    first = _snapshot(pending=1)
+    idle_watchdog._confirm_repeat_trip(trip, first, window_seconds=1200)
+    moved = dict(first, oldest_pending_id=99)
+    assert (
+        idle_watchdog._confirm_repeat_trip(trip, moved, window_seconds=1200) is False
+    )
+
+
+def test_stale_trip_record_does_not_confirm(tmp_path: Path) -> None:
+    trip = tmp_path / "last-trip.json"
+    snap = _snapshot(pending=1)
+    now = time.time()
+    idle_watchdog._confirm_repeat_trip(trip, snap, window_seconds=1200, now=now)
+    assert (
+        idle_watchdog._confirm_repeat_trip(
+            trip, snap, window_seconds=1200, now=now + 1201
+        )
+        is False
+    )
+
+
+def test_corrupt_trip_record_does_not_confirm(tmp_path: Path) -> None:
+    trip = tmp_path / "last-trip.json"
+    trip.write_text("not json")
+    assert (
+        idle_watchdog._confirm_repeat_trip(
+            trip, _snapshot(pending=1), window_seconds=1200
+        )
+        is False
+    )
+
+
 def test_evaluate_handles_aware_last_claim_with_naive_now() -> None:
     now = datetime(2026, 4, 27, 12, 0, 0)  # naive
     old = "2026-04-27T10:00:00+00:00"  # aware

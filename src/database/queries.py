@@ -447,9 +447,16 @@ def queue_health_snapshot(conn: sqlite3.Connection) -> dict:
     Keys:
       pending_count       — rows currently waiting for a worker
       in_flight_count     — rows a worker has claimed (downloading/...)
-      last_claim_at       — most recent claim across the table (str or None)
-      last_claim_by       — worker id on that most-recent claim
+      last_claim_at       — most recent sign of worker activity (str or None)
+      last_claim_by       — worker id, only while a claim is in flight
       oldest_pending_id   — id of the longest-waiting pending row
+
+    `last_claim_at` takes the newest of `claimed_at`, `completed_at` and
+    `failed_at`, not `claimed_at` alone. Completion, failure and the
+    stale sweep all NULL out `claimed_at`, so an in-flight-only reading
+    reports "never claimed" every time the queue drains — and the
+    watchdogs would trip on the ordinary gap between one episode
+    finishing and the next being claimed.
     """
     pending_row = conn.execute(
         "SELECT COUNT(*) AS n FROM episodes WHERE status = 'pending'"
@@ -458,8 +465,15 @@ def queue_health_snapshot(conn: sqlite3.Connection) -> dict:
         """SELECT COUNT(*) AS n FROM episodes
         WHERE status IN ('downloading','transcribing','classifying','editing')"""
     ).fetchone()
-    last_row = conn.execute(
-        """SELECT claimed_at, claimed_by FROM episodes
+    activity_row = conn.execute(
+        """SELECT MAX(ts) AS ts FROM (
+            SELECT MAX(claimed_at) AS ts FROM episodes
+            UNION ALL SELECT MAX(completed_at) FROM episodes
+            UNION ALL SELECT MAX(failed_at) FROM episodes
+        )"""
+    ).fetchone()
+    claim_row = conn.execute(
+        """SELECT claimed_by FROM episodes
         WHERE claimed_at IS NOT NULL
         ORDER BY claimed_at DESC LIMIT 1"""
     ).fetchone()
@@ -470,8 +484,8 @@ def queue_health_snapshot(conn: sqlite3.Connection) -> dict:
     return {
         "pending_count": int(pending_row["n"]) if pending_row else 0,
         "in_flight_count": int(in_flight_row["n"]) if in_flight_row else 0,
-        "last_claim_at": last_row["claimed_at"] if last_row else None,
-        "last_claim_by": last_row["claimed_by"] if last_row else None,
+        "last_claim_at": activity_row["ts"] if activity_row else None,
+        "last_claim_by": claim_row["claimed_by"] if claim_row else None,
         "oldest_pending_id": oldest_row["id"] if oldest_row else None,
     }
 

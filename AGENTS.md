@@ -229,9 +229,14 @@ the cheap one.
    uses, and on trip writes an incident and shells out to
    `python -m src.heal --telegram-on-escalate`. Stdlib-only under
    `/usr/bin/python3` so a broken project venv can't keep the watchdog
-   from booting. Per-process cooldown (default 30 min,
-   `IDLE_COOLDOWN_SECONDS`) keeps it from re-firing every tick during
-   an outage; the heal CLI's daily cap still applies on top.
+   from booting. A trip must repeat on two consecutive ticks with the
+   same `oldest_pending_id` before it heals (state in
+   `last-trip.json`, window `IDLE_CONFIRM_WINDOW_SECONDS`, default
+   1200s) — a single tick can land in the worker's ordinary 120s idle
+   gap between episodes, which is indistinguishable from a stall.
+   Per-process cooldown (default 30 min, `IDLE_COOLDOWN_SECONDS`) keeps
+   it from re-firing every tick during an outage; the heal CLI's daily
+   cap still applies on top.
 4. **Server-side watchdog (`_watchdog` in `src/scheduler.py`)** — runs
    every 5 min on the server as the **backstop**. By the time it
    fires, both the worker AND the Mac-side idle watchdog have failed
