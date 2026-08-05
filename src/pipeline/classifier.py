@@ -1,6 +1,7 @@
 """Classify ad segments in transcripts via Claude or an OpenAI-compatible API."""
 
 import json
+import re
 import time
 from pathlib import Path
 
@@ -16,6 +17,30 @@ _OBVIOUS_AD_PHRASES = (
     "today's sponsor is",
     "todays sponsor is",
 )
+
+# The other standard sponsor-read opener, which names the show between the
+# two halves ("Support for The Daily comes from Instagram"). The show name
+# varies per feed, so this needs a pattern rather than a literal.
+#
+# What sits between the halves is the discriminator and why this is
+# case-sensitive: a sponsor read names a show ("The Daily", "this podcast"),
+# while ordinary speech names a thing ("support for the bill comes from
+# both parties"). Matching case-insensitively would flag the latter.
+_OBVIOUS_AD_PATTERNS = (
+    re.compile(
+        r"[Ss]upport for "
+        r"(?:this (?:podcast|show|series)|[A-Z][\w']*(?:\s+[A-Z][\w']*){0,3})"
+        r" comes from"
+    ),
+    re.compile(r"this (?:episode|podcast) is sponsored by", re.I),
+)
+
+
+def _is_obvious_ad_opener(text: str) -> bool:
+    lower = text.lower()
+    return any(phrase in lower for phrase in _OBVIOUS_AD_PHRASES) or any(
+        pattern.search(text) for pattern in _OBVIOUS_AD_PATTERNS
+    )
 
 # A sponsor read ends on its call to action, so these close the segment.
 _CTA_MARKERS = (".com", "learn more", "visit")
@@ -74,9 +99,7 @@ def _detect_obvious_ad_segments(segments: list[dict]) -> list[dict]:
     """
     ads: list[dict] = []
     for idx, seg in enumerate(segments):
-        text = str(seg.get("text", ""))
-        lower = text.lower()
-        if not any(phrase in lower for phrase in _OBVIOUS_AD_PHRASES):
+        if not _is_obvious_ad_opener(str(seg.get("text", ""))):
             continue
 
         start = float(seg["start"])

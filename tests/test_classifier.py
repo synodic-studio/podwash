@@ -168,3 +168,43 @@ async def test_openai_backend_raises_on_empty_content(monkeypatch):
             base_url="http://localhost:4000/v1",
             model="dsf",
         )
+
+
+def test_detects_support_comes_from_sponsor_opener():
+    """The other standard opener, which names the show mid-phrase."""
+    segments = [
+        {"start": 0.7, "end": 4.0, "text": "Support for The Daily comes from Instagram."},
+        {"start": 4.0, "end": 12.0, "text": "Instagram teen accounts have built-in protections."},
+        {"start": 12.0, "end": 29.9, "text": "Learn more at instagram.com/teenaccounts."},
+        {"start": 31.7, "end": 35.0, "text": "From New York Times, I'm Michael Barbaro."},
+    ]
+
+    ads = _detect_obvious_ad_segments(segments)
+
+    assert len(ads) == 1
+    # Spans the whole read, not just the opening line -- the short-segment
+    # failure this guards against cut 2.3s where 29s of ad existed.
+    assert ads[0]["start"] == 0.7
+    assert ads[0]["end"] == 29.9
+    assert ads[0]["type"] == "pre_roll"
+
+
+def test_support_pattern_does_not_match_editorial_speech():
+    segments = [
+        {"start": 10.0, "end": 20.0, "text": "Support for the bill comes from both parties."},
+        {"start": 20.0, "end": 30.0, "text": "Most of the funding comes from federal grants."},
+    ]
+    assert _detect_obvious_ad_segments(segments) == []
+
+
+def test_short_model_segment_is_widened_by_the_guardrail():
+    """A correctly-identified ad given a 2s span gets fixed on merge."""
+    model = [{"start": 0.7, "end": 3.0, "confidence": 0.95, "type": "pre_roll",
+              "reason": "Instagram ad read"}]
+    guardrail = [{"start": 0.7, "end": 29.9, "confidence": 0.99, "type": "pre_roll",
+                  "reason": "deterministic"}]
+
+    merged = classifier._merge_ad_segments(model, guardrail)
+
+    assert len(merged) == 1
+    assert (merged[0]["start"], merged[0]["end"]) == (0.7, 29.9)
