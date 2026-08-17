@@ -5,7 +5,7 @@ Dropped as regenerable: test-coverage/logging/CLAUDE.md-audit tasks, stale-branc
 Bead IDs kept for reference.
 
 ## 🔴 Security
-- Rotate the leaked Anthropic API key in `.env` (`sk-ant-api03-FaBzK…`) — gitignored but exposed on disk. *(r3y)*
+- Rotate the Anthropic API key in `.env` — gitignored but exposed on disk. *(r3y)*
 
 ## Feature / perf
 - Run Whisper **natively on host with MLX** instead of CPU-only inside Docker (M1 has no Docker GPU passthrough) — mlx-whisper sidecar the container calls out to. *(wuf)*
