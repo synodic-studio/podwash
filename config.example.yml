@@ -37,7 +37,9 @@ processing:
   ad_boundary_padding: 0.5
   # Maximum episodes to keep processed audio for (older get cleaned up)
   retention_days: 30
-  # Classifier backend: "claude" or "ollama"
+  # Classifier backend: "claude" (Anthropic SDK) or "litellm" (any
+  # OpenAI-compatible /chat/completions endpoint — a LiteLLM proxy,
+  # Ollama, vLLM)
   classifier_backend: "claude"
 
 # Claude API settings
@@ -45,11 +47,18 @@ claude:
   model: "claude-sonnet-4-5-20250929"
   max_tokens: 4096
 
-# Ollama settings (used when classifier_backend = "ollama")
-ollama:
-  model: "llama3.1"
-  base_url: "http://localhost:11434"
-  max_tokens: 4096
+# OpenAI-compatible backend (used when classifier_backend = "litellm").
+# base_url is resolved on the worker host, not the server host.
+litellm:
+  model: "dsf"
+  base_url: "http://localhost:4000/v1"
+  # A reasoning model sizes its answer to this budget rather than merely
+  # truncating at it, so a small value quietly costs ad segments while
+  # still returning valid JSON. Keep it generous — real output is ~350
+  # tokens, so this bounds quality, not spend.
+  max_tokens: 16000
+  # Optional bearer token for a proxy that requires one.
+  api_key: ""
 
 # Self-healing alerts (set in .env on each host, NOT here):
 #   ALERT_TELEGRAM_BOT_TOKEN  bot token

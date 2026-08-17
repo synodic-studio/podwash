@@ -13,4 +13,6 @@ Bead IDs kept for reference.
 ## Real bugs worth fixing
 - SQLite connection uses `check_same_thread=False` shared across async handlers + APScheduler thread with no locking → corruption risk under concurrency. *(0t3)*
 - `/api/feeds` POST and `/submit` are public with no rate limiting or auth. *(lwn)*
-- Ollama URL mismatch between `config.yml` (docker host) and `config.example.yml` (localhost) — document both. *(bil)*
+- A completed episode's proxy RSS item still carries the source `itunes:duration`
+  and a `length` estimated from it, so a podcast app shows the uncut runtime for
+  audio that is minutes shorter.
