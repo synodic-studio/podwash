@@ -16,6 +16,10 @@ config.yml
 # Data directory
 data/
 
+# Demo harness: local settings and per-run output
+scripts/demo.env
+.demo-out/
+
 # IDE
 .idea/
 .vscode/

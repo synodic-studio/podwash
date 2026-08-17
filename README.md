@@ -191,7 +191,15 @@ Plus a small `/api/jobs/*` family used internally by the worker.
 uv sync --extra worker --extra dev   # full dev environment
 uv run pytest                        # tests
 uv run ruff check src/               # lint
+scripts/demo.sh -h                   # scripted walkthrough of the pipeline
 ```
+
+`scripts/demo.sh` is a three-beat live demo: it fetches the published proxy
+feed and measures the cleaned audio it points at, runs the real `classify_ads`
+through an OpenAI-compatible endpoint, and shows what the classifier's
+`max_tokens` budget actually controls. Every beat degrades to what it can still
+prove when a backend is unreachable. Settings live in `scripts/demo.env`
+(gitignored), documented in `scripts/demo.env.example`.
 
 ## Caveats and limitations
 
