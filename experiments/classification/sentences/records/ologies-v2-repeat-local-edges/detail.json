@@ -1,0 +1,37 @@
+[
+  {
+    "span": {
+      "first": 83,
+      "last": 178
+    },
+    "edge": "first",
+    "output_text": "{\"decisions\":[{\"id\":2,\"label\":\"E\"},{\"id\":3,\"label\":\"E\"},{\"id\":4,\"label\":\"E\"},{\"id\":5,\"label\":\"E\"},{\"id\":6,\"label\":\"E\"},{\"id\":7,\"label\":\"A\"},{\"id\":8,\"label\":\"A\"},{\"id\":9,\"label\":\"A\"},{\"id\":10,\"label\":\"A\"},{\"id\":11,\"label\":\"A\"}]}",
+    "response_id": "95a39d27-3a9c-4084-9b64-9835ef0cff0b",
+    "cost_usd": 0.000172168,
+    "usage": {
+      "completion_tokens": 96,
+      "prompt_tokens": 599,
+      "total_tokens": 695,
+      "prompt_tokens_details": {
+        "cached_tokens": 512
+      },
+      "prompt_cache_hit_tokens": 512,
+      "prompt_cache_miss_tokens": 87
+    },
+    "prompt_sha256": "50647b3daf53a559558c77624282b33710070965fcc8d59d12ce67626621d237",
+    "seconds": 0.8657205830095336,
+    "labels": {
+      "2": "E",
+      "3": "E",
+      "4": "E",
+      "5": "E",
+      "6": "E",
+      "7": "A",
+      "8": "A",
+      "9": "A",
+      "10": "A",
+      "11": "A"
+    },
+    "whole_boundary_disagreement": false
+  }
+]

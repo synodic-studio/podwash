@@ -1,0 +1,1119 @@
+[
+  {
+    "label": "first-ad-return",
+    "source_offset": 145,
+    "segments": [
+      {
+        "start": 152.22,
+        "end": 156.18,
+        "text": " Your first credit, at least on IMDb, is Law and Order SVU.",
+        "words": [
+          {
+            "word": " Your",
+            "start": 152.22,
+            "end": 152.7
+          },
+          {
+            "word": " first",
+            "start": 152.7,
+            "end": 153.18
+          },
+          {
+            "word": " credit,",
+            "start": 153.18,
+            "end": 153.58
+          },
+          {
+            "word": " at",
+            "start": 153.7,
+            "end": 153.78
+          },
+          {
+            "word": " least",
+            "start": 153.78,
+            "end": 153.92
+          },
+          {
+            "word": " on",
+            "start": 153.92,
+            "end": 154.1
+          },
+          {
+            "word": " IMDb,",
+            "start": 154.1,
+            "end": 154.64
+          },
+          {
+            "word": " is",
+            "start": 154.8,
+            "end": 154.94
+          },
+          {
+            "word": " Law",
+            "start": 154.94,
+            "end": 155.12
+          },
+          {
+            "word": " and",
+            "start": 155.12,
+            "end": 155.26
+          },
+          {
+            "word": " Order",
+            "start": 155.26,
+            "end": 155.5
+          },
+          {
+            "word": " SVU.",
+            "start": 155.5,
+            "end": 156.18
+          }
+        ]
+      },
+      {
+        "start": 157.48,
+        "end": 160.04,
+        "text": " And you play a bad guy behind bars.",
+        "words": [
+          {
+            "word": " And",
+            "start": 157.48,
+            "end": 157.68
+          },
+          {
+            "word": " you",
+            "start": 157.68,
+            "end": 158.38
+          },
+          {
+            "word": " play",
+            "start": 158.38,
+            "end": 158.66
+          },
+          {
+            "word": " a",
+            "start": 158.66,
+            "end": 158.92
+          },
+          {
+            "word": " bad",
+            "start": 158.92,
+            "end": 159.16
+          },
+          {
+            "word": " guy",
+            "start": 159.16,
+            "end": 159.32
+          },
+          {
+            "word": " behind",
+            "start": 159.32,
+            "end": 159.7
+          },
+          {
+            "word": " bars.",
+            "start": 159.7,
+            "end": 160.04
+          }
+        ]
+      },
+      {
+        "start": 160.44,
+        "end": 166.38,
+        "text": " We call it the New York City Yearbook because all the actors in New York do Law and Order,",
+        "words": [
+          {
+            "word": " We",
+            "start": 160.44,
+            "end": 160.54
+          },
+          {
+            "word": " call",
+            "start": 160.54,
+            "end": 160.82
+          },
+          {
+            "word": " it",
+            "start": 160.82,
+            "end": 161.0
+          },
+          {
+            "word": " the",
+            "start": 161.0,
+            "end": 161.1
+          },
+          {
+            "word": " New",
+            "start": 161.1,
+            "end": 161.26
+          },
+          {
+            "word": " York",
+            "start": 161.26,
+            "end": 161.56
+          },
+          {
+            "word": " City",
+            "start": 161.56,
+            "end": 162.64
+          },
+          {
+            "word": " Yearbook",
+            "start": 162.64,
+            "end": 163.18
+          },
+          {
+            "word": " because",
+            "start": 163.18,
+            "end": 163.68
+          },
+          {
+            "word": " all",
+            "start": 163.68,
+            "end": 164.0
+          },
+          {
+            "word": " the",
+            "start": 164.0,
+            "end": 164.18
+          },
+          {
+            "word": " actors",
+            "start": 164.18,
+            "end": 164.46
+          },
+          {
+            "word": " in",
+            "start": 164.46,
+            "end": 164.7
+          },
+          {
+            "word": " New",
+            "start": 164.7,
+            "end": 164.88
+          },
+          {
+            "word": " York",
+            "start": 164.88,
+            "end": 165.16
+          },
+          {
+            "word": " do",
+            "start": 165.16,
+            "end": 165.8
+          },
+          {
+            "word": " Law",
+            "start": 165.8,
+            "end": 166.0
+          },
+          {
+            "word": " and",
+            "start": 166.0,
+            "end": 166.07999999999998
+          },
+          {
+            "word": " Order,",
+            "start": 166.07999999999998,
+            "end": 166.38
+          }
+        ]
+      },
+      {
+        "start": 166.48,
+        "end": 167.92000000000002,
+        "text": " Law and Order SVU at some point.",
+        "words": [
+          {
+            "word": " Law",
+            "start": 166.48,
+            "end": 166.64
+          },
+          {
+            "word": " and",
+            "start": 166.64,
+            "end": 166.78
+          },
+          {
+            "word": " Order",
+            "start": 166.78,
+            "end": 166.92000000000002
+          },
+          {
+            "word": " SVU",
+            "start": 166.92000000000002,
+            "end": 167.4
+          },
+          {
+            "word": " at",
+            "start": 167.4,
+            "end": 167.52
+          },
+          {
+            "word": " some",
+            "start": 167.52,
+            "end": 167.66
+          },
+          {
+            "word": " point.",
+            "start": 167.66,
+            "end": 167.92000000000002
+          }
+        ]
+      },
+      {
+        "start": 167.98,
+        "end": 169.96,
+        "text": " No, it's like the quintessential first credit, right?",
+        "words": [
+          {
+            "word": " No,",
+            "start": 167.98,
+            "end": 168.12
+          },
+          {
+            "word": " it's",
+            "start": 168.18,
+            "end": 168.28
+          },
+          {
+            "word": " like",
+            "start": 168.28,
+            "end": 168.4
+          },
+          {
+            "word": " the",
+            "start": 168.4,
+            "end": 168.54
+          },
+          {
+            "word": " quintessential",
+            "start": 168.54,
+            "end": 169.02
+          },
+          {
+            "word": " first",
+            "start": 169.02,
+            "end": 169.26
+          },
+          {
+            "word": " credit,",
+            "start": 169.26,
+            "end": 169.64
+          },
+          {
+            "word": " right?",
+            "start": 169.72,
+            "end": 169.96
+          }
+        ]
+      },
+      {
+        "start": 170.38,
+        "end": 170.74,
+        "text": " Yeah, perfect.",
+        "words": [
+          {
+            "word": " Yeah,",
+            "start": 170.38,
+            "end": 170.38
+          },
+          {
+            "word": " perfect.",
+            "start": 170.74,
+            "end": 170.74
+          }
+        ]
+      },
+      {
+        "start": 170.74,
+        "end": 174.88,
+        "text": " But I was wondering, like, do you remember when you got that call that you got the part,",
+        "words": [
+          {
+            "word": " But",
+            "start": 170.74,
+            "end": 171.38
+          },
+          {
+            "word": " I",
+            "start": 171.38,
+            "end": 171.46
+          },
+          {
+            "word": " was",
+            "start": 171.46,
+            "end": 171.56
+          },
+          {
+            "word": " wondering,",
+            "start": 171.56,
+            "end": 171.74
+          },
+          {
+            "word": " like,",
+            "start": 172.0,
+            "end": 172.0
+          },
+          {
+            "word": " do",
+            "start": 172.4,
+            "end": 172.56
+          },
+          {
+            "word": " you",
+            "start": 172.56,
+            "end": 172.7
+          },
+          {
+            "word": " remember",
+            "start": 172.7,
+            "end": 173.06
+          },
+          {
+            "word": " when",
+            "start": 173.06,
+            "end": 173.42000000000002
+          },
+          {
+            "word": " you",
+            "start": 173.42000000000002,
+            "end": 173.56
+          },
+          {
+            "word": " got",
+            "start": 173.56,
+            "end": 173.7
+          },
+          {
+            "word": " that",
+            "start": 173.7,
+            "end": 173.9
+          },
+          {
+            "word": " call",
+            "start": 173.9,
+            "end": 174.1
+          },
+          {
+            "word": " that",
+            "start": 174.1,
+            "end": 174.24
+          },
+          {
+            "word": " you",
+            "start": 174.24,
+            "end": 174.32
+          },
+          {
+            "word": " got",
+            "start": 174.32,
+            "end": 174.42000000000002
+          },
+          {
+            "word": " the",
+            "start": 174.42000000000002,
+            "end": 174.57999999999998
+          },
+          {
+            "word": " part,",
+            "start": 174.57999999999998,
+            "end": 174.88
+          }
+        ]
+      },
+      {
+        "start": 175.07999999999998,
+        "end": 178.07999999999998,
+        "text": " what it was like being on that set and being grilled by Benson and Stabler?",
+        "words": [
+          {
+            "word": " what",
+            "start": 175.07999999999998,
+            "end": 175.14
+          },
+          {
+            "word": " it",
+            "start": 175.14,
+            "end": 175.26
+          },
+          {
+            "word": " was",
+            "start": 175.26,
+            "end": 175.38
+          },
+          {
+            "word": " like",
+            "start": 175.38,
+            "end": 175.54
+          },
+          {
+            "word": " being",
+            "start": 175.54,
+            "end": 175.7
+          },
+          {
+            "word": " on",
+            "start": 175.7,
+            "end": 175.84
+          },
+          {
+            "word": " that",
+            "start": 175.84,
+            "end": 175.98
+          },
+          {
+            "word": " set",
+            "start": 175.98,
+            "end": 176.32
+          },
+          {
+            "word": " and",
+            "start": 176.32,
+            "end": 176.54
+          },
+          {
+            "word": " being",
+            "start": 176.54,
+            "end": 176.68
+          },
+          {
+            "word": " grilled",
+            "start": 176.68,
+            "end": 176.94
+          },
+          {
+            "word": " by",
+            "start": 176.94,
+            "end": 177.12
+          },
+          {
+            "word": " Benson",
+            "start": 177.12,
+            "end": 177.38
+          },
+          {
+            "word": " and",
+            "start": 177.38,
+            "end": 177.56
+          },
+          {
+            "word": " Stabler?",
+            "start": 177.56,
+            "end": 178.07999999999998
+          }
+        ]
+      },
+      {
+        "start": 179.72,
+        "end": 180.64,
+        "text": " I knew nothing.",
+        "words": [
+          {
+            "word": " I",
+            "start": 179.72,
+            "end": 180.06
+          },
+          {
+            "word": " knew",
+            "start": 180.06,
+            "end": 180.22
+          },
+          {
+            "word": " nothing.",
+            "start": 180.22,
+            "end": 180.64
+          }
+        ]
+      },
+      {
+        "start": 181.14,
+        "end": 181.86,
+        "text": " I mean, I actually",
+        "words": [
+          {
+            "word": " I",
+            "start": 181.14,
+            "end": 181.14
+          },
+          {
+            "word": " mean,",
+            "start": 181.14,
+            "end": 181.24
+          },
+          {
+            "word": " I",
+            "start": 181.32,
+            "end": 181.42000000000002
+          },
+          {
+            "word": " actually",
+            "start": 181.42000000000002,
+            "end": 181.86
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "midroll-return",
+    "source_offset": 636,
+    "segments": [
+      {
+        "start": 636.0,
+        "end": 640.48,
+        "text": " get checked once. You earn miles on every mile you fly and your lounge access",
+        "words": [
+          {
+            "word": " get",
+            "start": 636.0,
+            "end": 636.24
+          },
+          {
+            "word": " checked",
+            "start": 636.24,
+            "end": 636.56
+          },
+          {
+            "word": " once.",
+            "start": 636.56,
+            "end": 636.94
+          },
+          {
+            "word": " You",
+            "start": 637.36,
+            "end": 637.44
+          },
+          {
+            "word": " earn",
+            "start": 637.44,
+            "end": 637.62
+          },
+          {
+            "word": " miles",
+            "start": 637.62,
+            "end": 637.86
+          },
+          {
+            "word": " on",
+            "start": 637.86,
+            "end": 638.08
+          },
+          {
+            "word": " every",
+            "start": 638.08,
+            "end": 638.46
+          },
+          {
+            "word": " mile",
+            "start": 638.46,
+            "end": 638.7
+          },
+          {
+            "word": " you",
+            "start": 638.7,
+            "end": 638.9
+          },
+          {
+            "word": " fly",
+            "start": 638.9,
+            "end": 639.18
+          },
+          {
+            "word": " and",
+            "start": 639.18,
+            "end": 639.58
+          },
+          {
+            "word": " your",
+            "start": 639.58,
+            "end": 639.7
+          },
+          {
+            "word": " lounge",
+            "start": 639.7,
+            "end": 639.98
+          },
+          {
+            "word": " access",
+            "start": 639.98,
+            "end": 640.48
+          }
+        ]
+      },
+      {
+        "start": 640.48,
+        "end": 645.16,
+        "text": " carries over. United and Air New Zealand, two airlines, one way to fly.",
+        "words": [
+          {
+            "word": " carries",
+            "start": 640.48,
+            "end": 640.92
+          },
+          {
+            "word": " over.",
+            "start": 640.92,
+            "end": 641.3
+          },
+          {
+            "word": " United",
+            "start": 642.12,
+            "end": 642.12
+          },
+          {
+            "word": " and",
+            "start": 642.12,
+            "end": 642.46
+          },
+          {
+            "word": " Air",
+            "start": 642.46,
+            "end": 642.66
+          },
+          {
+            "word": " New",
+            "start": 642.66,
+            "end": 642.8
+          },
+          {
+            "word": " Zealand,",
+            "start": 642.8,
+            "end": 643.12
+          },
+          {
+            "word": " two",
+            "start": 643.4,
+            "end": 643.54
+          },
+          {
+            "word": " airlines,",
+            "start": 643.54,
+            "end": 643.92
+          },
+          {
+            "word": " one",
+            "start": 644.34,
+            "end": 644.5
+          },
+          {
+            "word": " way",
+            "start": 644.5,
+            "end": 644.72
+          },
+          {
+            "word": " to",
+            "start": 644.72,
+            "end": 644.86
+          },
+          {
+            "word": " fly.",
+            "start": 644.86,
+            "end": 645.16
+          }
+        ]
+      },
+      {
+        "start": 647.86,
+        "end": 650.96,
+        "text": " So what time do you usually get up on a Monday and what's the first thing you do",
+        "words": [
+          {
+            "word": " So",
+            "start": 647.86,
+            "end": 648.06
+          },
+          {
+            "word": " what",
+            "start": 648.06,
+            "end": 648.48
+          },
+          {
+            "word": " time",
+            "start": 648.48,
+            "end": 648.72
+          },
+          {
+            "word": " do",
+            "start": 648.72,
+            "end": 648.9
+          },
+          {
+            "word": " you",
+            "start": 648.9,
+            "end": 648.96
+          },
+          {
+            "word": " usually",
+            "start": 648.96,
+            "end": 649.18
+          },
+          {
+            "word": " get",
+            "start": 649.18,
+            "end": 649.32
+          },
+          {
+            "word": " up",
+            "start": 649.32,
+            "end": 649.46
+          },
+          {
+            "word": " on",
+            "start": 649.46,
+            "end": 649.56
+          },
+          {
+            "word": " a",
+            "start": 649.56,
+            "end": 649.7
+          },
+          {
+            "word": " Monday",
+            "start": 649.7,
+            "end": 649.88
+          },
+          {
+            "word": " and",
+            "start": 649.88,
+            "end": 650.08
+          },
+          {
+            "word": " what's",
+            "start": 650.08,
+            "end": 650.3
+          },
+          {
+            "word": " the",
+            "start": 650.3,
+            "end": 650.4
+          },
+          {
+            "word": " first",
+            "start": 650.4,
+            "end": 650.56
+          },
+          {
+            "word": " thing",
+            "start": 650.56,
+            "end": 650.72
+          },
+          {
+            "word": " you",
+            "start": 650.72,
+            "end": 650.84
+          },
+          {
+            "word": " do",
+            "start": 650.84,
+            "end": 650.96
+          }
+        ]
+      },
+      {
+        "start": 650.96,
+        "end": 659.3,
+        "text": " after getting up? Well, I guess I wake up at about 6.30, 7 and lay there for",
+        "words": [
+          {
+            "word": " after",
+            "start": 650.96,
+            "end": 651.18
+          },
+          {
+            "word": " getting",
+            "start": 651.18,
+            "end": 651.42
+          },
+          {
+            "word": " up?",
+            "start": 651.42,
+            "end": 651.68
+          },
+          {
+            "word": " Well,",
+            "start": 653.44,
+            "end": 653.9
+          },
+          {
+            "word": " I",
+            "start": 653.94,
+            "end": 654.08
+          },
+          {
+            "word": " guess",
+            "start": 654.08,
+            "end": 654.18
+          },
+          {
+            "word": " I",
+            "start": 654.18,
+            "end": 654.34
+          },
+          {
+            "word": " wake",
+            "start": 654.34,
+            "end": 654.52
+          },
+          {
+            "word": " up",
+            "start": 654.52,
+            "end": 654.76
+          },
+          {
+            "word": " at",
+            "start": 654.76,
+            "end": 654.9
+          },
+          {
+            "word": " about",
+            "start": 654.9,
+            "end": 655.4
+          },
+          {
+            "word": " 6",
+            "start": 655.4,
+            "end": 656.12
+          },
+          {
+            "word": ".30,",
+            "start": 656.12,
+            "end": 656.52
+          },
+          {
+            "word": " 7",
+            "start": 656.54,
+            "end": 656.92
+          },
+          {
+            "word": " and",
+            "start": 656.92,
+            "end": 657.72
+          },
+          {
+            "word": " lay",
+            "start": 657.72,
+            "end": 658.28
+          },
+          {
+            "word": " there",
+            "start": 658.28,
+            "end": 658.68
+          },
+          {
+            "word": " for",
+            "start": 658.68,
+            "end": 659.3
+          }
+        ]
+      },
+      {
+        "start": 659.3,
+        "end": 659.98,
+        "text": " about 30 minutes.",
+        "words": [
+          {
+            "word": " about",
+            "start": 659.3,
+            "end": 659.52
+          },
+          {
+            "word": " 30",
+            "start": 659.52,
+            "end": 659.84
+          },
+          {
+            "word": " minutes.",
+            "start": 659.84,
+            "end": 659.98
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "opening-handoff",
+    "source_offset": 45,
+    "segments": [
+      {
+        "start": 45.0,
+        "end": 50.64,
+        "text": " For his Monday morning, Lee told me about spotting witches in real life, tending to his garden,",
+        "words": [
+          {
+            "word": " For",
+            "start": 45.0,
+            "end": 45.2
+          },
+          {
+            "word": " his",
+            "start": 45.2,
+            "end": 45.44
+          },
+          {
+            "word": " Monday",
+            "start": 45.44,
+            "end": 45.76
+          },
+          {
+            "word": " morning,",
+            "start": 45.76,
+            "end": 46.2
+          },
+          {
+            "word": " Lee",
+            "start": 46.78,
+            "end": 46.82
+          },
+          {
+            "word": " told",
+            "start": 46.82,
+            "end": 47.08
+          },
+          {
+            "word": " me",
+            "start": 47.08,
+            "end": 47.3
+          },
+          {
+            "word": " about",
+            "start": 47.3,
+            "end": 47.64
+          },
+          {
+            "word": " spotting",
+            "start": 47.64,
+            "end": 48.08
+          },
+          {
+            "word": " witches",
+            "start": 48.08,
+            "end": 48.4
+          },
+          {
+            "word": " in",
+            "start": 48.4,
+            "end": 48.66
+          },
+          {
+            "word": " real",
+            "start": 48.66,
+            "end": 48.86
+          },
+          {
+            "word": " life,",
+            "start": 48.86,
+            "end": 49.28
+          },
+          {
+            "word": " tending",
+            "start": 49.62,
+            "end": 49.9
+          },
+          {
+            "word": " to",
+            "start": 49.9,
+            "end": 50.18
+          },
+          {
+            "word": " his",
+            "start": 50.18,
+            "end": 50.32
+          },
+          {
+            "word": " garden,",
+            "start": 50.32,
+            "end": 50.64
+          }
+        ]
+      },
+      {
+        "start": 51.04,
+        "end": 56.74,
+        "text": " and of course, how he starts his week. We'll get into it right after the break.",
+        "words": [
+          {
+            "word": " and",
+            "start": 51.04,
+            "end": 51.36
+          },
+          {
+            "word": " of",
+            "start": 51.36,
+            "end": 51.480000000000004
+          },
+          {
+            "word": " course,",
+            "start": 51.480000000000004,
+            "end": 51.8
+          },
+          {
+            "word": " how",
+            "start": 52.12,
+            "end": 52.480000000000004
+          },
+          {
+            "word": " he",
+            "start": 52.480000000000004,
+            "end": 52.64
+          },
+          {
+            "word": " starts",
+            "start": 52.64,
+            "end": 52.88
+          },
+          {
+            "word": " his",
+            "start": 52.88,
+            "end": 53.08
+          },
+          {
+            "word": " week.",
+            "start": 53.08,
+            "end": 53.38
+          },
+          {
+            "word": " We'll",
+            "start": 54.26,
+            "end": 54.54
+          },
+          {
+            "word": " get",
+            "start": 54.54,
+            "end": 54.64
+          },
+          {
+            "word": " into",
+            "start": 54.64,
+            "end": 54.94
+          },
+          {
+            "word": " it",
+            "start": 54.94,
+            "end": 55.46
+          },
+          {
+            "word": " right",
+            "start": 55.46,
+            "end": 56.0
+          },
+          {
+            "word": " after",
+            "start": 56.0,
+            "end": 56.3
+          },
+          {
+            "word": " the",
+            "start": 56.3,
+            "end": 56.46
+          },
+          {
+            "word": " break.",
+            "start": 56.46,
+            "end": 56.74
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,6 +1,7 @@
 """Cut ad segments from audio using ffmpeg."""
 
 import asyncio
+import subprocess
 import time
 from pathlib import Path
 
@@ -35,8 +36,8 @@ async def cut_ads(
         ad_segments: List of ad segment dicts with 'start' and 'end' keys.
         padding: Extra trim when no transcript speech timings are available.
         transcript_segments: Whisper transcript segments. When supplied, ad
-            boundaries that abut non-speech audio (outro music, silence,
-            stingers) are extended across it so the dead space goes too.
+            adjacent gaps are checked with local VAD before cut expansion.
+            Detected speech or a failed check preserves the gap.
 
     Returns:
         ProcessingLog with editing stats.
@@ -75,9 +76,13 @@ async def cut_ads(
         )
 
     # Resolve each ad into a concrete cut range, absorbing abutting dead space
-    cut_ranges = _resolve_cut_ranges(
-        ads, _speech_intervals(transcript_segments), duration, padding
-    )
+    speech = _speech_intervals(transcript_segments)
+    cut_ranges = _resolve_cut_ranges(ads, speech, duration, padding)
+    if speech:
+        boundaries = [_ad_boundaries(ad, speech) for ad in ads]
+        cut_ranges = await _verify_gap_extensions(
+            audio_path, boundaries, cut_ranges, duration
+        )
 
     # Build keep-segments (the parts we want to keep)
     keep_segments = _compute_keep_segments(cut_ranges, duration)
@@ -98,18 +103,29 @@ async def cut_ads(
     filter_parts = []
     concat_inputs = []
     for i, (seg_start, seg_end) in enumerate(keep_segments):
-        filter_parts.append(f"[0:a]atrim=start={seg_start}:end={seg_end},asetpts=PTS-STARTPTS[s{i}]")
+        filter_parts.append(
+            f"[0:a]atrim=start={seg_start}:end={seg_end},asetpts=PTS-STARTPTS[s{i}]"
+        )
         concat_inputs.append(f"[s{i}]")
 
     n = len(keep_segments)
-    filter_complex = ";".join(filter_parts) + f";{''.join(concat_inputs)}concat=n={n}:v=0:a=1[out]"
+    filter_complex = (
+        ";".join(filter_parts) + f";{''.join(concat_inputs)}concat=n={n}:v=0:a=1[out]"
+    )
 
     cmd = [
-        "ffmpeg", "-y",
-        "-i", str(audio_path),
-        "-filter_complex", filter_complex,
-        "-map", "[out]",
-        "-c:a", "libmp3lame", "-q:a", "2",
+        "ffmpeg",
+        "-y",
+        "-i",
+        str(audio_path),
+        "-filter_complex",
+        filter_complex,
+        "-map",
+        "[out]",
+        "-c:a",
+        "libmp3lame",
+        "-q:a",
+        "2",
         str(output_path),
     ]
 
@@ -176,15 +192,9 @@ def _resolve_cut_ranges(
     """
     ranges = []
     for ad in ads:
-        ad_start = float(ad["start"])
-        ad_end = float(ad["end"])
+        ad_start, ad_end = _ad_boundaries(ad, speech)
 
         if speech:
-            snapped_start = _nearest_edge(speech, ad_start, 0)
-            snapped_end = _nearest_edge(speech, ad_end, 1)
-            # Very short/ambiguous requests must not invert when snapped.
-            if snapped_start < snapped_end:
-                ad_start, ad_end = snapped_start, snapped_end
             prev_speech_end = _speech_end_before(speech, ad_start)
             cut_start = (
                 max(ad_start - _MAX_DEAD_SPACE_EXTEND, prev_speech_end)
@@ -205,14 +215,103 @@ def _resolve_cut_ranges(
     return ranges
 
 
-def _nearest_edge(
-    speech: list[tuple[float, float]], point: float, edge: int
-) -> float:
+def _ad_boundaries(ad: dict, speech: list[tuple[float, float]]) -> tuple[float, float]:
+    start, end = float(ad["start"]), float(ad["end"])
+    snapped_start = _nearest_edge(speech, start, 0)
+    snapped_end = _nearest_edge(speech, end, 1)
+    return (snapped_start, snapped_end) if snapped_start < snapped_end else (start, end)
+
+
+async def _verify_gap_extensions(
+    audio_path: Path,
+    boundaries: list[tuple[float, float]],
+    ranges: list[tuple[float, float]],
+    duration: float,
+) -> list[tuple[float, float]]:
+    """Veto gap extensions containing speech omitted by transcription.
+
+    VAD only decides whether extending is safe; its coarse timestamps never
+    choose a word boundary. If unavailable, retain the classified boundaries.
+    """
+    verified = []
+    for (start, end), (cut_start, cut_end) in zip(boundaries, ranges, strict=True):
+        start, end = max(0.0, start), min(duration, end)
+        for side, a, b in [("start", cut_start, start), ("end", end, cut_end)]:
+            if b <= a:
+                continue
+            try:
+                has_speech = await asyncio.to_thread(
+                    _gap_has_speech, audio_path, a, b, duration
+                )
+            except Exception as exc:
+                print(
+                    f"[edit] Gap verification unavailable ({type(exc).__name__}); preserving gap"
+                )
+                has_speech = True
+            if has_speech:
+                if side == "start":
+                    cut_start = start
+                else:
+                    cut_end = end
+        verified.append((cut_start, cut_end))
+    return verified
+
+
+def _gap_has_speech(
+    audio_path: Path, start: float, end: float, duration: float
+) -> bool:
+    """Check a proposed extension with the worker's bundled Silero VAD, offline."""
+    import numpy as np
+    from faster_whisper.vad import VadOptions, get_speech_timestamps
+
+    offset = max(0.0, start - 0.5)
+    stop = min(duration, end + 0.5)
+    audio = subprocess.run(
+        [
+            "ffmpeg",
+            "-v",
+            "error",
+            "-ss",
+            str(offset),
+            "-i",
+            str(audio_path),
+            "-t",
+            str(stop - offset),
+            "-f",
+            "f32le",
+            "-ac",
+            "1",
+            "-ar",
+            "16000",
+            "pipe:1",
+        ],
+        check=True,
+        capture_output=True,
+        timeout=120,
+    )
+    samples = np.frombuffer(audio.stdout, dtype="<f4")
+    if not samples.size:
+        raise ValueError("No decoded audio for gap verification")
+    spans = get_speech_timestamps(
+        samples, VadOptions(min_silence_duration_ms=100, speech_pad_ms=100)
+    )
+    return any(
+        offset + span["start"] / 16000 < end and offset + span["end"] / 16000 > start
+        for span in spans
+    )
+
+
+def _nearest_edge(speech: list[tuple[float, float]], point: float, edge: int) -> float:
     """Choose the nearest start/end, resolving ties toward a smaller cut."""
-    candidates = [span[edge] for span in speech if abs(span[edge] - point) <= _SNAP_TOLERANCE]
+    candidates = [
+        span[edge] for span in speech if abs(span[edge] - point) <= _SNAP_TOLERANCE
+    ]
     if not candidates:
         return point
-    return min(candidates, key=lambda value: (abs(value - point), -value if edge == 0 else value))
+    return min(
+        candidates,
+        key=lambda value: (abs(value - point), -value if edge == 0 else value),
+    )
 
 
 def _speech_end_before(speech: list[tuple[float, float]], point: float) -> float:
@@ -263,7 +362,13 @@ def _compute_keep_segments(
 async def _run_ffmpeg_copy(src: Path, dst: Path) -> None:
     """Stream-copy src to dst with ffmpeg, raising on any failure."""
     proc = await asyncio.create_subprocess_exec(
-        "ffmpeg", "-y", "-i", str(src), "-c", "copy", str(dst),
+        "ffmpeg",
+        "-y",
+        "-i",
+        str(src),
+        "-c",
+        "copy",
+        str(dst),
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
@@ -283,9 +388,13 @@ def _assert_nonempty(path: Path) -> None:
 async def _get_duration(audio_path: Path) -> float:
     """Get audio duration in seconds via ffprobe."""
     proc = await asyncio.create_subprocess_exec(
-        "ffprobe", "-v", "error",
-        "-show_entries", "format=duration",
-        "-of", "default=noprint_wrappers=1:nokey=1",
+        "ffprobe",
+        "-v",
+        "error",
+        "-show_entries",
+        "format=duration",
+        "-of",
+        "default=noprint_wrappers=1:nokey=1",
         str(audio_path),
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
@@ -293,8 +402,7 @@ async def _get_duration(audio_path: Path) -> float:
     stdout, stderr = await proc.communicate()
     if proc.returncode != 0:
         raise RuntimeError(
-            f"ffprobe failed (rc={proc.returncode}): "
-            f"{stderr.decode()[:300]}"
+            f"ffprobe failed (rc={proc.returncode}): {stderr.decode()[:300]}"
         )
     raw = stdout.decode().strip()
     if not raw:
@@ -302,9 +410,7 @@ async def _get_duration(audio_path: Path) -> float:
     try:
         duration = float(raw)
     except ValueError as exc:
-        raise RuntimeError(
-            f"ffprobe returned non-numeric duration {raw!r}"
-        ) from exc
+        raise RuntimeError(f"ffprobe returned non-numeric duration {raw!r}") from exc
     if duration <= 0 or duration != duration:  # NaN guard
         raise RuntimeError(f"ffprobe returned non-positive duration {duration}")
     return duration

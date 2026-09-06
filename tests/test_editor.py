@@ -250,9 +250,7 @@ async def test_no_ad_copy_raises_on_ffmpeg_failure(monkeypatch, tmp_path):
 
     monkeypatch.setattr(asyncio, "create_subprocess_exec", _exec)
     with pytest.raises(RuntimeError, match="ffmpeg copy failed"):
-        await editor.cut_ads(
-            tmp_path / "in.mp3", tmp_path / "out.mp3", ad_segments=[]
-        )
+        await editor.cut_ads(tmp_path / "in.mp3", tmp_path / "out.mp3", ad_segments=[])
 
 
 @pytest.mark.asyncio
@@ -291,22 +289,68 @@ async def test_segment_past_end_of_audio_is_reported(monkeypatch, tmp_path, caps
     assert "150.0-180.0s" in captured
 
 
-@pytest.mark.parametrize('offset', [0, -0.02, 0.03])
+@pytest.mark.parametrize("offset", [0, -0.02, 0.03])
 def test_touching_words_preserved_with_exact_or_rounded_ad_edges(offset):
-    speech = editor._speech_intervals(_spoken((0, 1), (1, 1.2), (1.2, 1.8), (1.8, 2), (2, 3)))
+    speech = editor._speech_intervals(
+        _spoken((0, 1), (1, 1.2), (1.2, 1.8), (1.8, 2), (2, 3))
+    )
     assert editor._resolve_cut_ranges(
-        [{'start': 1 + offset, 'end': 2 + offset}], speech, 3, .5
+        [{"start": 1 + offset, "end": 2 + offset}], speech, 3, 0.5
     ) == [(1, 2)]
 
 
 def test_short_neighbor_after_whisperx_ad_is_not_skipped():
-    speech = editor._speech_intervals(_spoken((3.5, 4.542), (4.622, 4.763), (4.823, 5.2)))
-    assert editor._resolve_cut_ranges(
-        [{'start': 3.5, 'end': 4.542}], speech, 6, .5
-    )[0][1] <= 4.622
+    speech = editor._speech_intervals(
+        _spoken((3.5, 4.542), (4.622, 4.763), (4.823, 5.2))
+    )
+    assert (
+        editor._resolve_cut_ranges([{"start": 3.5, "end": 4.542}], speech, 6, 0.5)[0][1]
+        <= 4.622
+    )
 
 
 def test_imprecise_boundary_inside_word_does_not_expand_into_more_speech():
     assert editor._resolve_cut_ranges(
-        [{'start': 1.4, 'end': 2.6}], [(0, 2), (2, 4)], 4, .5
+        [{"start": 1.4, "end": 2.6}], [(0, 2), (2, 4)], 4, 0.5
     ) == [(1.4, 2.6)]
+
+
+@pytest.mark.asyncio
+async def test_gap_verification_preserves_untranscribed_conversation(monkeypatch):
+    # Journal: Whisper resumes at 168.70, but actual speech resumes at 152.22.
+    # Veto the entire extension rather than trusting VAD for a word-level cut.
+    monkeypatch.setattr(editor, "_gap_has_speech", lambda *args: True, raising=False)
+    cuts = await editor._verify_gap_extensions(
+        Path("source.mp3"), [(63.58, 150.72)], [(53.28, 168.70)], 200
+    )
+    assert cuts == [(63.58, 150.72)]
+
+
+@pytest.mark.asyncio
+async def test_gap_verification_still_removes_verified_dead_space(monkeypatch):
+    monkeypatch.setattr(editor, "_gap_has_speech", lambda *args: False, raising=False)
+    assert await editor._verify_gap_extensions(
+        Path("source.mp3"), [(40, 60)], [(30, 80)], 100
+    ) == [(30, 80)]
+
+
+@pytest.mark.asyncio
+async def test_gap_detector_failure_preserves_audio(monkeypatch):
+    def unavailable(*args):
+        raise ImportError("optional worker dependency missing")
+
+    monkeypatch.setattr(editor, "_gap_has_speech", unavailable, raising=False)
+    assert await editor._verify_gap_extensions(
+        Path("source.mp3"), [(40, 60)], [(30, 80)], 100
+    ) == [(40, 60)]
+
+
+@pytest.mark.asyncio
+async def test_gap_verification_does_not_shrink_the_classified_ad(monkeypatch):
+    def should_not_run(*args):
+        raise AssertionError("No extension to inspect")
+
+    monkeypatch.setattr(editor, "_gap_has_speech", should_not_run, raising=False)
+    assert await editor._verify_gap_extensions(
+        Path("source.mp3"), [(40, 60)], [(40, 60)], 100
+    ) == [(40, 60)]

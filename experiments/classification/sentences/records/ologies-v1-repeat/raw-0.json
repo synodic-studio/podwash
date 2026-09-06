@@ -1,0 +1,31 @@
+{
+  "response": {
+    "id": "caf65ca3-b663-415a-8335-440317318ebb",
+    "created": 1788735726,
+    "model": "dsf",
+    "object": "chat.completion",
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\n  \"decisions\": [\n    {\"id\": 0, \"label\": \"E\"},\n    {\"id\": 1, \"label\": \"A\"},\n    {\"id\": 2, \"label\": \"E\"},\n    {\"id\": 3, \"label\": \"E\"},\n    {\"id\": 4, \"label\": \"A\"},\n    {\"id\": 5, \"label\": \"A\"},\n    {\"id\": 6, \"label\": \"A\"},\n    {\"id\": 7, \"label\": \"A\"},\n    {\"id\": 8, \"label\": \"E\"},\n    {\"id\": 9, \"label\": \"E\"},\n    {\"id\": 10, \"label\": \"E\"},\n    {\"id\": 11, \"label\": \"E\"},\n    {\"id\": 12, \"label\": \"E\"},\n    {\"id\": 13, \"label\": \"E\"},\n    {\"id\": 14, \"label\": \"E\"},\n    {\"id\": 15, \"label\": \"E\"},\n    {\"id\": 16, \"label\": \"E\"},\n    {\"id\": 17, \"label\": \"E\"},\n    {\"id\": 18, \"label\": \"E\"},\n    {\"id\": 19, \"label\": \"E\"},\n    {\"id\": 20, \"label\": \"E\"},\n    {\"id\": 21, \"label\": \"E\"},\n    {\"id\": 22, \"label\": \"E\"},\n    {\"id\": 23, \"label\": \"E\"},\n    {\"id\": 24, \"label\": \"E\"},\n    {\"id\": 25, \"label\": \"E\"},\n    {\"id\": 26, \"label\": \"E\"},\n    {\"id\": 27, \"label\": \"E\"},\n    {\"id\": 28, \"label\": \"E\"},\n    {\"id\": 29, \"label\": \"E\"},\n    {\"id\": 30, \"label\": \"P\"},\n    {\"id\": 31, \"label\": \"P\"},\n    {\"id\": 32, \"label\": \"E\"},\n    {\"id\": 33, \"label\": \"E\"},\n    {\"id\": 34, \"label\": \"E\"},\n    {\"id\": 35, \"label\": \"E\"},\n    {\"id\": 36, \"label\": \"E\"},\n    {\"id\": 37, \"label\": \"E\"},\n    {\"id\": 38, \"label\": \"E\"},\n    {\"id\": 39, \"label\": \"E\"}\n  ]\n}",
+          "role": "assistant"
+        },
+        "provider_specific_fields": {}
+      }
+    ],
+    "usage": {
+      "completion_tokens": 530,
+      "prompt_tokens": 1067,
+      "total_tokens": 1597,
+      "prompt_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "prompt_cache_hit_tokens": 1024,
+      "prompt_cache_miss_tokens": 43
+    }
+  },
+  "cost_usd": "0.0007328559999999999"
+}

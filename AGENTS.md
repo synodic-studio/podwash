@@ -26,8 +26,10 @@ on a single machine for local development — the worker just polls
 - `src/api/` — FastAPI app, routes (feeds, audio, management, queue)
 - `src/pipeline/` — Processing stages: downloader, transcriber, classifier, editor
   The editor keeps individual word intervals, snaps approximate boundaries only
-  within 50 ms of a word edge, and absorbs adjacent transcript gaps. Boundaries
-  inside known speech are not padded; padding applies only without speech timings.
+  within 50 ms of a word edge, and verifies adjacent transcript gaps with the worker's bundled local Silero VAD
+  before absorbing them. A gap containing detected speech, or a failed VAD check,
+  is preserved. Boundaries inside known speech are not padded; padding applies
+  only without speech timings.
 - `src/feeds/` — RSS parsing (feedparser) and generation (feedgen)
 - `src/database/` — SQLite via raw sqlite3, Pydantic models, CRUD queries
 - `src/scheduler.py` — APScheduler background jobs (poll every 15min, cleanup every 6hr, watchdog every 5min)
@@ -314,3 +316,8 @@ model API; it defaults to the local proxy’s `dsf` alias and disables response
 caching for repeatable comparisons. Full-episode cases require explicit selection.
 New results go under gitignored `data/classification-eval/runs/`. Speaker-change
 cues are a documented hypothesis; the saved corpus has no measured speaker labels.
+
+Eval recordings prioritize The Daily, The Journal, and Ologies. Other podcasts
+are useful for later generalization checks. Sentence/clause classification in
+`experiments/classification/sentences/` is experimental and is not the worker
+classifier. Model-only scores exclude production deterministic guardrails.

@@ -1,0 +1,105 @@
+{
+  "before": [
+    [
+      53.28,
+      93.74000000000001
+    ],
+    [
+      92.4,
+      168.7
+    ],
+    [
+      578.92,
+      615.22
+    ],
+    [
+      613.56,
+      647.5999999999999
+    ],
+    [
+      1105.92,
+      1149.5
+    ],
+    [
+      1149.5,
+      1174.2301875
+    ]
+  ],
+  "after": [
+    [
+      53.959999999999994,
+      92.4
+    ],
+    [
+      93.74000000000001,
+      150.72
+    ],
+    [
+      586.0400000000001,
+      613.56
+    ],
+    [
+      615.22,
+      645.14
+    ],
+    [
+      1114.92,
+      1149.5
+    ],
+    [
+      1149.5,
+      1172.98
+    ]
+  ],
+  "seconds": 1.963699333020486,
+  "ads": [
+    {
+      "start": 54.0,
+      "end": 92.4,
+      "type": "mid_roll",
+      "confidence": 0.98,
+      "sponsor": "Intuit Credit Karma",
+      "reason": "Host reads sponsor ad for Intuit Credit Karma, preceded by hand-off to break and followed by host introduction of next sponsor."
+    },
+    {
+      "start": 93.7,
+      "end": 150.7,
+      "type": "mid_roll",
+      "confidence": 0.99,
+      "sponsor": "Indeed",
+      "reason": "Host reads Indeed sponsored jobs ad with promo code, includes call to action and terms.; Obvious sponsor message matched deterministic ad phrase"
+    },
+    {
+      "start": 586.0,
+      "end": 613.6,
+      "type": "mid_roll",
+      "confidence": 0.95,
+      "sponsor": "Anthropic",
+      "reason": "Sponsor read for Anthropic/Claude, includes ad message and URL, preceded by break transition at 578.9 and followed by another ad."
+    },
+    {
+      "start": 615.2,
+      "end": 645.1,
+      "type": "mid_roll",
+      "confidence": 0.95,
+      "sponsor": "United Airlines / Air New Zealand",
+      "reason": "Sponsor read for United and Air New Zealand partnership, part of ad break between content segments."
+    },
+    {
+      "start": 1114.9,
+      "end": 1149.5,
+      "type": "post_roll",
+      "confidence": 0.92,
+      "sponsor": "King Supers",
+      "reason": "Post-roll ad for King Supers delivery after show outro, with promotional offer."
+    },
+    {
+      "start": 1149.5,
+      "end": 1173.0,
+      "type": "post_roll",
+      "confidence": 0.92,
+      "sponsor": "Verizon",
+      "reason": "Post-roll ad for Verizon NFL Sunday Ticket, following King Supers ad, both are sponsor messages after main content ends."
+    }
+  ]
+}

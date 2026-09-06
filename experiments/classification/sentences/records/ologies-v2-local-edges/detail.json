@@ -1,0 +1,70 @@
+[
+  {
+    "span": {
+      "first": 83,
+      "last": 178
+    },
+    "edge": "first",
+    "output_text": "{\"decisions\":[{\"id\":2,\"label\":\"E\"},{\"id\":3,\"label\":\"E\"},{\"id\":4,\"label\":\"E\"},{\"id\":5,\"label\":\"E\"},{\"id\":6,\"label\":\"E\"},{\"id\":7,\"label\":\"A\"},{\"id\":8,\"label\":\"A\"},{\"id\":9,\"label\":\"A\"},{\"id\":10,\"label\":\"A\"},{\"id\":11,\"label\":\"A\"}]}",
+    "response_id": "a29ce80e-8042-4f11-890e-957c9ae12b65",
+    "cost_usd": 0.00039028,
+    "usage": {
+      "completion_tokens": 96,
+      "prompt_tokens": 599,
+      "total_tokens": 695,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 599
+    },
+    "prompt_sha256": "50647b3daf53a559558c77624282b33710070965fcc8d59d12ce67626621d237",
+    "seconds": 1.1871302919462323,
+    "labels": {
+      "2": "E",
+      "3": "E",
+      "4": "E",
+      "5": "E",
+      "6": "E",
+      "7": "A",
+      "8": "A",
+      "9": "A",
+      "10": "A",
+      "11": "A"
+    },
+    "whole_boundary_disagreement": false
+  },
+  {
+    "span": {
+      "first": 4138,
+      "last": 4351
+    },
+    "edge": "last",
+    "output_text": "{\"decisions\":[{\"id\":347,\"label\":\"A\"},{\"id\":348,\"label\":\"A\"},{\"id\":349,\"label\":\"A\"},{\"id\":350,\"label\":\"A\"},{\"id\":351,\"label\":\"A\"},{\"id\":352,\"label\":\"E\"},{\"id\":353,\"label\":\"E\"},{\"id\":354,\"label\":\"E\"}]}",
+    "response_id": "2b9e569b-1674-4d1d-b714-64c552e086a5",
+    "cost_usd": 0.00032604,
+    "usage": {
+      "completion_tokens": 78,
+      "prompt_tokens": 507,
+      "total_tokens": 585,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 507
+    },
+    "prompt_sha256": "d49d9a089fee57f7023b26636d82cd30e6d46d5024816d15e0394e5e353498ed",
+    "seconds": 0.9092518750112504,
+    "labels": {
+      "347": "A",
+      "348": "A",
+      "349": "A",
+      "350": "A",
+      "351": "A",
+      "352": "E",
+      "353": "E",
+      "354": "E"
+    },
+    "whole_boundary_disagreement": false
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "time": "2026-09-06T23:09:40.716222+00:00",
+  "prompts": {
+    "prompt-v1.txt": "2481ae0c1d75c3ba462337c0ca42b7c7b5909969048ec3395aa8de69da7f2515",
+    "prompt-v2.txt": "84df9ba19ccf293b607ba4e93a6523ae30daffa2f654818d4302334cce679a02",
+    "quote-boundary-prompt.txt": "a0f6453baec0ddc2ab949f0b507d717ab79c09812aede8f873ffb1e56503c06f",
+    "boundary-prompt-v1.txt": "04d313296fb2c42a39f15c6a3510ddd61233f9db11bbf6423f350e9e9a665c16"
+  },
+  "cases_sha256": "d4ab631ccd57ada5d0a68dd3580f63650d61216d9db1b898f5d2cd07e231069e"
+}

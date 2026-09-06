@@ -1,0 +1,31 @@
+{
+  "response": {
+    "id": "16ac3a12-10ea-42cb-b1c6-e52797c401a8",
+    "created": 1788735729,
+    "model": "dsf",
+    "object": "chat.completion",
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "content": "{\"decisions\":[{\"id\":30,\"label\":\"P\"},{\"id\":31,\"label\":\"P\"},{\"id\":32,\"label\":\"E\"},{\"id\":33,\"label\":\"E\"},{\"id\":34,\"label\":\"E\"},{\"id\":35,\"label\":\"E\"},{\"id\":36,\"label\":\"E\"},{\"id\":37,\"label\":\"E\"},{\"id\":38,\"label\":\"E\"},{\"id\":39,\"label\":\"E\"},{\"id\":40,\"label\":\"E\"},{\"id\":41,\"label\":\"E\"},{\"id\":42,\"label\":\"E\"},{\"id\":43,\"label\":\"E\"},{\"id\":44,\"label\":\"E\"},{\"id\":45,\"label\":\"E\"},{\"id\":46,\"label\":\"E\"},{\"id\":47,\"label\":\"E\"},{\"id\":48,\"label\":\"E\"},{\"id\":49,\"label\":\"E\"},{\"id\":50,\"label\":\"E\"},{\"id\":51,\"label\":\"E\"},{\"id\":52,\"label\":\"E\"},{\"id\":53,\"label\":\"E\"},{\"id\":54,\"label\":\"E\"},{\"id\":55,\"label\":\"E\"},{\"id\":56,\"label\":\"E\"},{\"id\":57,\"label\":\"E\"},{\"id\":58,\"label\":\"E\"},{\"id\":59,\"label\":\"E\"},{\"id\":60,\"label\":\"E\"},{\"id\":61,\"label\":\"E\"},{\"id\":62,\"label\":\"E\"},{\"id\":63,\"label\":\"E\"},{\"id\":64,\"label\":\"E\"},{\"id\":65,\"label\":\"E\"},{\"id\":66,\"label\":\"E\"},{\"id\":67,\"label\":\"E\"},{\"id\":68,\"label\":\"E\"},{\"id\":69,\"label\":\"E\"},{\"id\":70,\"label\":\"E\"},{\"id\":71,\"label\":\"E\"},{\"id\":72,\"label\":\"E\"},{\"id\":73,\"label\":\"E\"}]}",
+          "role": "assistant"
+        },
+        "provider_specific_fields": {}
+      }
+    ],
+    "usage": {
+      "completion_tokens": 402,
+      "prompt_tokens": 1097,
+      "total_tokens": 1499,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1097
+    }
+  },
+  "cost_usd": "0.00101332"
+}

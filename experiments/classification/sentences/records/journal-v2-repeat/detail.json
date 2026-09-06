@@ -1,0 +1,1474 @@
+[
+  {
+    "missing_ids": [],
+    "core": [
+      0,
+      34
+    ],
+    "decisions": [
+      {
+        "id": 0,
+        "label": "E"
+      },
+      {
+        "id": 1,
+        "label": "E"
+      },
+      {
+        "id": 2,
+        "label": "E"
+      },
+      {
+        "id": 3,
+        "label": "E"
+      },
+      {
+        "id": 4,
+        "label": "E"
+      },
+      {
+        "id": 5,
+        "label": "E"
+      },
+      {
+        "id": 6,
+        "label": "E"
+      },
+      {
+        "id": 7,
+        "label": "A"
+      },
+      {
+        "id": 8,
+        "label": "A"
+      },
+      {
+        "id": 9,
+        "label": "A"
+      },
+      {
+        "id": 10,
+        "label": "A"
+      },
+      {
+        "id": 11,
+        "label": "A"
+      },
+      {
+        "id": 12,
+        "label": "A"
+      },
+      {
+        "id": 13,
+        "label": "A"
+      },
+      {
+        "id": 14,
+        "label": "A"
+      },
+      {
+        "id": 15,
+        "label": "A"
+      },
+      {
+        "id": 16,
+        "label": "A"
+      },
+      {
+        "id": 17,
+        "label": "A"
+      },
+      {
+        "id": 18,
+        "label": "A"
+      },
+      {
+        "id": 19,
+        "label": "A"
+      },
+      {
+        "id": 20,
+        "label": "A"
+      },
+      {
+        "id": 21,
+        "label": "A"
+      },
+      {
+        "id": 22,
+        "label": "A"
+      },
+      {
+        "id": 23,
+        "label": "A"
+      },
+      {
+        "id": 24,
+        "label": "A"
+      },
+      {
+        "id": 25,
+        "label": "A"
+      },
+      {
+        "id": 26,
+        "label": "E"
+      },
+      {
+        "id": 27,
+        "label": "E"
+      },
+      {
+        "id": 28,
+        "label": "E"
+      },
+      {
+        "id": 29,
+        "label": "E"
+      },
+      {
+        "id": 30,
+        "label": "E"
+      },
+      {
+        "id": 31,
+        "label": "E"
+      },
+      {
+        "id": 32,
+        "label": "E"
+      },
+      {
+        "id": 33,
+        "label": "E"
+      },
+      {
+        "id": 34,
+        "label": "E"
+      },
+      {
+        "id": 35,
+        "label": "E"
+      },
+      {
+        "id": 36,
+        "label": "E"
+      },
+      {
+        "id": 37,
+        "label": "E"
+      },
+      {
+        "id": 38,
+        "label": "E"
+      },
+      {
+        "id": 39,
+        "label": "E"
+      }
+    ],
+    "cost_usd": 0.0005177280000000001,
+    "usage": {
+      "completion_tokens": 366,
+      "prompt_tokens": 1194,
+      "total_tokens": 1560,
+      "prompt_tokens_details": {
+        "cached_tokens": 1152
+      },
+      "prompt_cache_hit_tokens": 1152,
+      "prompt_cache_miss_tokens": 42
+    },
+    "response_id": "78760c0d-41c5-4b5a-802c-08f3b4d4a1c8",
+    "prompt_sha256": "7afae96cc4a7f37b78d53741b7f2583412a3d729e95b00d536eb975ca61f9716",
+    "seconds": 1.985893499921076
+  },
+  {
+    "missing_ids": [],
+    "core": [
+      35,
+      69
+    ],
+    "decisions": [
+      {
+        "id": 30,
+        "label": "E"
+      },
+      {
+        "id": 31,
+        "label": "E"
+      },
+      {
+        "id": 32,
+        "label": "E"
+      },
+      {
+        "id": 33,
+        "label": "E"
+      },
+      {
+        "id": 34,
+        "label": "E"
+      },
+      {
+        "id": 35,
+        "label": "E"
+      },
+      {
+        "id": 36,
+        "label": "E"
+      },
+      {
+        "id": 37,
+        "label": "E"
+      },
+      {
+        "id": 38,
+        "label": "E"
+      },
+      {
+        "id": 39,
+        "label": "E"
+      },
+      {
+        "id": 40,
+        "label": "E"
+      },
+      {
+        "id": 41,
+        "label": "E"
+      },
+      {
+        "id": 42,
+        "label": "E"
+      },
+      {
+        "id": 43,
+        "label": "E"
+      },
+      {
+        "id": 44,
+        "label": "E"
+      },
+      {
+        "id": 45,
+        "label": "E"
+      },
+      {
+        "id": 46,
+        "label": "E"
+      },
+      {
+        "id": 47,
+        "label": "E"
+      },
+      {
+        "id": 48,
+        "label": "E"
+      },
+      {
+        "id": 49,
+        "label": "E"
+      },
+      {
+        "id": 50,
+        "label": "E"
+      },
+      {
+        "id": 51,
+        "label": "E"
+      },
+      {
+        "id": 52,
+        "label": "E"
+      },
+      {
+        "id": 53,
+        "label": "E"
+      },
+      {
+        "id": 54,
+        "label": "E"
+      },
+      {
+        "id": 55,
+        "label": "E"
+      },
+      {
+        "id": 56,
+        "label": "E"
+      },
+      {
+        "id": 57,
+        "label": "E"
+      },
+      {
+        "id": 58,
+        "label": "E"
+      },
+      {
+        "id": 59,
+        "label": "E"
+      },
+      {
+        "id": 60,
+        "label": "E"
+      },
+      {
+        "id": 61,
+        "label": "E"
+      },
+      {
+        "id": 62,
+        "label": "E"
+      },
+      {
+        "id": 63,
+        "label": "E"
+      },
+      {
+        "id": 64,
+        "label": "E"
+      },
+      {
+        "id": 65,
+        "label": "E"
+      },
+      {
+        "id": 66,
+        "label": "E"
+      },
+      {
+        "id": 67,
+        "label": "E"
+      },
+      {
+        "id": 68,
+        "label": "E"
+      },
+      {
+        "id": 69,
+        "label": "E"
+      },
+      {
+        "id": 70,
+        "label": "E"
+      },
+      {
+        "id": 71,
+        "label": "E"
+      },
+      {
+        "id": 72,
+        "label": "E"
+      },
+      {
+        "id": 73,
+        "label": "E"
+      },
+      {
+        "id": 74,
+        "label": "E"
+      }
+    ],
+    "cost_usd": 0.0005622,
+    "usage": {
+      "completion_tokens": 411,
+      "prompt_tokens": 1284,
+      "total_tokens": 1695,
+      "prompt_tokens_details": {
+        "cached_tokens": 1280
+      },
+      "prompt_cache_hit_tokens": 1280,
+      "prompt_cache_miss_tokens": 4
+    },
+    "response_id": "3b33be45-90f0-4067-b942-6d7a65850a9a",
+    "prompt_sha256": "b1bd02ed5e6c4c1b2c2adfae12059e878329588c684765db44509f5dac872f62",
+    "seconds": 2.032735374988988
+  },
+  {
+    "missing_ids": [],
+    "core": [
+      70,
+      104
+    ],
+    "decisions": [
+      {
+        "id": 65,
+        "label": "E"
+      },
+      {
+        "id": 66,
+        "label": "E"
+      },
+      {
+        "id": 67,
+        "label": "E"
+      },
+      {
+        "id": 68,
+        "label": "E"
+      },
+      {
+        "id": 69,
+        "label": "E"
+      },
+      {
+        "id": 70,
+        "label": "E"
+      },
+      {
+        "id": 71,
+        "label": "E"
+      },
+      {
+        "id": 72,
+        "label": "E"
+      },
+      {
+        "id": 73,
+        "label": "E"
+      },
+      {
+        "id": 74,
+        "label": "E"
+      },
+      {
+        "id": 75,
+        "label": "E"
+      },
+      {
+        "id": 76,
+        "label": "E"
+      },
+      {
+        "id": 77,
+        "label": "E"
+      },
+      {
+        "id": 78,
+        "label": "E"
+      },
+      {
+        "id": 79,
+        "label": "E"
+      },
+      {
+        "id": 80,
+        "label": "E"
+      },
+      {
+        "id": 81,
+        "label": "E"
+      },
+      {
+        "id": 82,
+        "label": "E"
+      },
+      {
+        "id": 83,
+        "label": "E"
+      },
+      {
+        "id": 84,
+        "label": "E"
+      },
+      {
+        "id": 85,
+        "label": "E"
+      },
+      {
+        "id": 86,
+        "label": "E"
+      },
+      {
+        "id": 87,
+        "label": "E"
+      },
+      {
+        "id": 88,
+        "label": "E"
+      },
+      {
+        "id": 89,
+        "label": "E"
+      },
+      {
+        "id": 90,
+        "label": "E"
+      },
+      {
+        "id": 91,
+        "label": "E"
+      },
+      {
+        "id": 92,
+        "label": "E"
+      },
+      {
+        "id": 93,
+        "label": "E"
+      },
+      {
+        "id": 94,
+        "label": "E"
+      },
+      {
+        "id": 95,
+        "label": "E"
+      },
+      {
+        "id": 96,
+        "label": "E"
+      },
+      {
+        "id": 97,
+        "label": "E"
+      },
+      {
+        "id": 98,
+        "label": "E"
+      },
+      {
+        "id": 99,
+        "label": "E"
+      },
+      {
+        "id": 100,
+        "label": "E"
+      },
+      {
+        "id": 101,
+        "label": "E"
+      },
+      {
+        "id": 102,
+        "label": "E"
+      },
+      {
+        "id": 103,
+        "label": "E"
+      },
+      {
+        "id": 104,
+        "label": "E"
+      },
+      {
+        "id": 105,
+        "label": "E"
+      },
+      {
+        "id": 106,
+        "label": "E"
+      },
+      {
+        "id": 107,
+        "label": "E"
+      },
+      {
+        "id": 108,
+        "label": "E"
+      },
+      {
+        "id": 109,
+        "label": "E"
+      }
+    ],
+    "cost_usd": 0.00058024,
+    "usage": {
+      "completion_tokens": 411,
+      "prompt_tokens": 1325,
+      "total_tokens": 1736,
+      "prompt_tokens_details": {
+        "cached_tokens": 1280
+      },
+      "prompt_cache_hit_tokens": 1280,
+      "prompt_cache_miss_tokens": 45
+    },
+    "response_id": "f4de6018-cb8b-4e84-928b-c7761527e122",
+    "prompt_sha256": "8ad6b69331b12026aae1d337212fba71565b8f40295fa1e0acd356b86be92ffe",
+    "seconds": 2.0780406249687076
+  },
+  {
+    "missing_ids": [],
+    "core": [
+      105,
+      139
+    ],
+    "decisions": [
+      {
+        "id": 100,
+        "label": "E"
+      },
+      {
+        "id": 101,
+        "label": "E"
+      },
+      {
+        "id": 102,
+        "label": "E"
+      },
+      {
+        "id": 103,
+        "label": "E"
+      },
+      {
+        "id": 104,
+        "label": "E"
+      },
+      {
+        "id": 105,
+        "label": "E"
+      },
+      {
+        "id": 106,
+        "label": "E"
+      },
+      {
+        "id": 107,
+        "label": "E"
+      },
+      {
+        "id": 108,
+        "label": "E"
+      },
+      {
+        "id": 109,
+        "label": "E"
+      },
+      {
+        "id": 110,
+        "label": "E"
+      },
+      {
+        "id": 111,
+        "label": "A"
+      },
+      {
+        "id": 112,
+        "label": "A"
+      },
+      {
+        "id": 113,
+        "label": "A"
+      },
+      {
+        "id": 114,
+        "label": "A"
+      },
+      {
+        "id": 115,
+        "label": "A"
+      },
+      {
+        "id": 116,
+        "label": "A"
+      },
+      {
+        "id": 117,
+        "label": "A"
+      },
+      {
+        "id": 118,
+        "label": "A"
+      },
+      {
+        "id": 119,
+        "label": "A"
+      },
+      {
+        "id": 120,
+        "label": "A"
+      },
+      {
+        "id": 121,
+        "label": "A"
+      },
+      {
+        "id": 122,
+        "label": "A"
+      },
+      {
+        "id": 123,
+        "label": "A"
+      },
+      {
+        "id": 124,
+        "label": "A"
+      },
+      {
+        "id": 125,
+        "label": "E"
+      },
+      {
+        "id": 126,
+        "label": "E"
+      },
+      {
+        "id": 127,
+        "label": "E"
+      },
+      {
+        "id": 128,
+        "label": "E"
+      },
+      {
+        "id": 129,
+        "label": "E"
+      },
+      {
+        "id": 130,
+        "label": "E"
+      },
+      {
+        "id": 131,
+        "label": "E"
+      },
+      {
+        "id": 132,
+        "label": "E"
+      },
+      {
+        "id": 133,
+        "label": "E"
+      },
+      {
+        "id": 134,
+        "label": "E"
+      },
+      {
+        "id": 135,
+        "label": "E"
+      },
+      {
+        "id": 136,
+        "label": "E"
+      },
+      {
+        "id": 137,
+        "label": "E"
+      },
+      {
+        "id": 138,
+        "label": "E"
+      },
+      {
+        "id": 139,
+        "label": "E"
+      },
+      {
+        "id": 140,
+        "label": "E"
+      },
+      {
+        "id": 141,
+        "label": "E"
+      },
+      {
+        "id": 142,
+        "label": "E"
+      },
+      {
+        "id": 143,
+        "label": "E"
+      },
+      {
+        "id": 144,
+        "label": "E"
+      }
+    ],
+    "cost_usd": 0.000574048,
+    "usage": {
+      "completion_tokens": 411,
+      "prompt_tokens": 1187,
+      "total_tokens": 1598,
+      "prompt_tokens_details": {
+        "cached_tokens": 1152
+      },
+      "prompt_cache_hit_tokens": 1152,
+      "prompt_cache_miss_tokens": 35
+    },
+    "response_id": "b6e3d01d-31b5-49f5-b9be-1ea717397b39",
+    "prompt_sha256": "a750a7a84ddb5e4157f2c320a0786b7e6433269023707a68f6850627d6c9156b",
+    "seconds": 2.0556007910054177
+  },
+  {
+    "missing_ids": [],
+    "core": [
+      140,
+      174
+    ],
+    "decisions": [
+      {
+        "id": 135,
+        "label": "E"
+      },
+      {
+        "id": 136,
+        "label": "E"
+      },
+      {
+        "id": 137,
+        "label": "E"
+      },
+      {
+        "id": 138,
+        "label": "E"
+      },
+      {
+        "id": 139,
+        "label": "E"
+      },
+      {
+        "id": 140,
+        "label": "E"
+      },
+      {
+        "id": 141,
+        "label": "E"
+      },
+      {
+        "id": 142,
+        "label": "E"
+      },
+      {
+        "id": 143,
+        "label": "E"
+      },
+      {
+        "id": 144,
+        "label": "E"
+      },
+      {
+        "id": 145,
+        "label": "E"
+      },
+      {
+        "id": 146,
+        "label": "E"
+      },
+      {
+        "id": 147,
+        "label": "E"
+      },
+      {
+        "id": 148,
+        "label": "E"
+      },
+      {
+        "id": 149,
+        "label": "E"
+      },
+      {
+        "id": 150,
+        "label": "E"
+      },
+      {
+        "id": 151,
+        "label": "E"
+      },
+      {
+        "id": 152,
+        "label": "E"
+      },
+      {
+        "id": 153,
+        "label": "E"
+      },
+      {
+        "id": 154,
+        "label": "E"
+      },
+      {
+        "id": 155,
+        "label": "E"
+      },
+      {
+        "id": 156,
+        "label": "E"
+      },
+      {
+        "id": 157,
+        "label": "E"
+      },
+      {
+        "id": 158,
+        "label": "E"
+      },
+      {
+        "id": 159,
+        "label": "E"
+      },
+      {
+        "id": 160,
+        "label": "E"
+      },
+      {
+        "id": 161,
+        "label": "E"
+      },
+      {
+        "id": 162,
+        "label": "E"
+      },
+      {
+        "id": 163,
+        "label": "E"
+      },
+      {
+        "id": 164,
+        "label": "E"
+      },
+      {
+        "id": 165,
+        "label": "E"
+      },
+      {
+        "id": 166,
+        "label": "E"
+      },
+      {
+        "id": 167,
+        "label": "E"
+      },
+      {
+        "id": 168,
+        "label": "E"
+      },
+      {
+        "id": 169,
+        "label": "E"
+      },
+      {
+        "id": 170,
+        "label": "E"
+      },
+      {
+        "id": 171,
+        "label": "E"
+      },
+      {
+        "id": 172,
+        "label": "E"
+      },
+      {
+        "id": 173,
+        "label": "E"
+      },
+      {
+        "id": 174,
+        "label": "E"
+      },
+      {
+        "id": 175,
+        "label": "E"
+      },
+      {
+        "id": 176,
+        "label": "E"
+      },
+      {
+        "id": 177,
+        "label": "E"
+      },
+      {
+        "id": 178,
+        "label": "E"
+      },
+      {
+        "id": 179,
+        "label": "E"
+      }
+    ],
+    "cost_usd": 0.000567448,
+    "usage": {
+      "completion_tokens": 411,
+      "prompt_tokens": 1172,
+      "total_tokens": 1583,
+      "prompt_tokens_details": {
+        "cached_tokens": 1152
+      },
+      "prompt_cache_hit_tokens": 1152,
+      "prompt_cache_miss_tokens": 20
+    },
+    "response_id": "ef429511-ecd1-4d0c-8929-672f82f8ea4d",
+    "prompt_sha256": "84cc3a763b6204358dbcf99d0b37577c497d84f6eca6cc4d20760a4e3ea76f7e",
+    "seconds": 2.063893166021444
+  },
+  {
+    "missing_ids": [],
+    "core": [
+      175,
+      209
+    ],
+    "decisions": [
+      {
+        "id": 170,
+        "label": "E"
+      },
+      {
+        "id": 171,
+        "label": "E"
+      },
+      {
+        "id": 172,
+        "label": "E"
+      },
+      {
+        "id": 173,
+        "label": "E"
+      },
+      {
+        "id": 174,
+        "label": "E"
+      },
+      {
+        "id": 175,
+        "label": "E"
+      },
+      {
+        "id": 176,
+        "label": "E"
+      },
+      {
+        "id": 177,
+        "label": "E"
+      },
+      {
+        "id": 178,
+        "label": "E"
+      },
+      {
+        "id": 179,
+        "label": "E"
+      },
+      {
+        "id": 180,
+        "label": "E"
+      },
+      {
+        "id": 181,
+        "label": "E"
+      },
+      {
+        "id": 182,
+        "label": "E"
+      },
+      {
+        "id": 183,
+        "label": "E"
+      },
+      {
+        "id": 184,
+        "label": "E"
+      },
+      {
+        "id": 185,
+        "label": "E"
+      },
+      {
+        "id": 186,
+        "label": "E"
+      },
+      {
+        "id": 187,
+        "label": "E"
+      },
+      {
+        "id": 188,
+        "label": "E"
+      },
+      {
+        "id": 189,
+        "label": "E"
+      },
+      {
+        "id": 190,
+        "label": "E"
+      },
+      {
+        "id": 191,
+        "label": "E"
+      },
+      {
+        "id": 192,
+        "label": "E"
+      },
+      {
+        "id": 193,
+        "label": "E"
+      },
+      {
+        "id": 194,
+        "label": "E"
+      },
+      {
+        "id": 195,
+        "label": "E"
+      },
+      {
+        "id": 196,
+        "label": "E"
+      },
+      {
+        "id": 197,
+        "label": "E"
+      },
+      {
+        "id": 198,
+        "label": "E"
+      },
+      {
+        "id": 199,
+        "label": "E"
+      },
+      {
+        "id": 200,
+        "label": "E"
+      },
+      {
+        "id": 201,
+        "label": "E"
+      },
+      {
+        "id": 202,
+        "label": "E"
+      },
+      {
+        "id": 203,
+        "label": "E"
+      },
+      {
+        "id": 204,
+        "label": "E"
+      },
+      {
+        "id": 205,
+        "label": "E"
+      },
+      {
+        "id": 206,
+        "label": "E"
+      },
+      {
+        "id": 207,
+        "label": "E"
+      },
+      {
+        "id": 208,
+        "label": "E"
+      },
+      {
+        "id": 209,
+        "label": "E"
+      },
+      {
+        "id": 210,
+        "label": "E"
+      },
+      {
+        "id": 211,
+        "label": "E"
+      },
+      {
+        "id": 212,
+        "label": "E"
+      },
+      {
+        "id": 213,
+        "label": "E"
+      },
+      {
+        "id": 214,
+        "label": "E"
+      }
+    ],
+    "cost_usd": 0.000559936,
+    "usage": {
+      "completion_tokens": 411,
+      "prompt_tokens": 1031,
+      "total_tokens": 1442,
+      "prompt_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "prompt_cache_hit_tokens": 1024,
+      "prompt_cache_miss_tokens": 7
+    },
+    "response_id": "7946ae3d-7566-43bf-a339-2206fbaff94e",
+    "prompt_sha256": "dbbb73b655aba90cc295509bcffad261e3d23d36487dba1a906dc21f7d5b660b",
+    "seconds": 2.151473707985133
+  },
+  {
+    "missing_ids": [],
+    "core": [
+      210,
+      244
+    ],
+    "decisions": [
+      {
+        "id": 205,
+        "label": "E"
+      },
+      {
+        "id": 206,
+        "label": "E"
+      },
+      {
+        "id": 207,
+        "label": "E"
+      },
+      {
+        "id": 208,
+        "label": "E"
+      },
+      {
+        "id": 209,
+        "label": "E"
+      },
+      {
+        "id": 210,
+        "label": "E"
+      },
+      {
+        "id": 211,
+        "label": "E"
+      },
+      {
+        "id": 212,
+        "label": "E"
+      },
+      {
+        "id": 213,
+        "label": "E"
+      },
+      {
+        "id": 214,
+        "label": "E"
+      },
+      {
+        "id": 215,
+        "label": "E"
+      },
+      {
+        "id": 216,
+        "label": "E"
+      },
+      {
+        "id": 217,
+        "label": "E"
+      },
+      {
+        "id": 218,
+        "label": "E"
+      },
+      {
+        "id": 219,
+        "label": "E"
+      },
+      {
+        "id": 220,
+        "label": "E"
+      },
+      {
+        "id": 221,
+        "label": "E"
+      },
+      {
+        "id": 222,
+        "label": "E"
+      },
+      {
+        "id": 223,
+        "label": "E"
+      },
+      {
+        "id": 224,
+        "label": "E"
+      },
+      {
+        "id": 225,
+        "label": "E"
+      },
+      {
+        "id": 226,
+        "label": "E"
+      },
+      {
+        "id": 227,
+        "label": "E"
+      },
+      {
+        "id": 228,
+        "label": "E"
+      },
+      {
+        "id": 229,
+        "label": "E"
+      },
+      {
+        "id": 230,
+        "label": "E"
+      },
+      {
+        "id": 231,
+        "label": "E"
+      },
+      {
+        "id": 232,
+        "label": "E"
+      },
+      {
+        "id": 233,
+        "label": "E"
+      },
+      {
+        "id": 234,
+        "label": "E"
+      },
+      {
+        "id": 235,
+        "label": "E"
+      },
+      {
+        "id": 236,
+        "label": "C"
+      },
+      {
+        "id": 237,
+        "label": "T"
+      },
+      {
+        "id": 238,
+        "label": "P"
+      },
+      {
+        "id": 239,
+        "label": "P"
+      },
+      {
+        "id": 240,
+        "label": "C"
+      },
+      {
+        "id": 241,
+        "label": "T"
+      },
+      {
+        "id": 242,
+        "label": "A"
+      },
+      {
+        "id": 243,
+        "label": "A"
+      },
+      {
+        "id": 244,
+        "label": "A"
+      },
+      {
+        "id": 245,
+        "label": "A"
+      },
+      {
+        "id": 246,
+        "label": "A"
+      },
+      {
+        "id": 247,
+        "label": "A"
+      },
+      {
+        "id": 248,
+        "label": "A"
+      },
+      {
+        "id": 249,
+        "label": "A"
+      }
+    ],
+    "cost_usd": 0.000583256,
+    "usage": {
+      "completion_tokens": 411,
+      "prompt_tokens": 1084,
+      "total_tokens": 1495,
+      "prompt_tokens_details": {
+        "cached_tokens": 1024
+      },
+      "prompt_cache_hit_tokens": 1024,
+      "prompt_cache_miss_tokens": 60
+    },
+    "response_id": "0a86eff4-fc89-4e8c-a893-0c54146ee6c7",
+    "prompt_sha256": "ed7d83186882eae7affa8af75c1d9a914cf6a710e1b7bd2d8d0b7a8010170251",
+    "seconds": 2.075823500053957
+  },
+  {
+    "missing_ids": [],
+    "core": [
+      245,
+      251
+    ],
+    "decisions": [
+      {
+        "id": 240,
+        "label": "C"
+      },
+      {
+        "id": 241,
+        "label": "E"
+      },
+      {
+        "id": 242,
+        "label": "A"
+      },
+      {
+        "id": 243,
+        "label": "A"
+      },
+      {
+        "id": 244,
+        "label": "A"
+      },
+      {
+        "id": 245,
+        "label": "A"
+      },
+      {
+        "id": 246,
+        "label": "A"
+      },
+      {
+        "id": 247,
+        "label": "A"
+      },
+      {
+        "id": 248,
+        "label": "A"
+      },
+      {
+        "id": 249,
+        "label": "A"
+      },
+      {
+        "id": 250,
+        "label": "A"
+      },
+      {
+        "id": 251,
+        "label": "A"
+      }
+    ],
+    "cost_usd": 0.00020604800000000002,
+    "usage": {
+      "completion_tokens": 114,
+      "prompt_tokens": 622,
+      "total_tokens": 736,
+      "prompt_tokens_details": {
+        "cached_tokens": 512
+      },
+      "prompt_cache_hit_tokens": 512,
+      "prompt_cache_miss_tokens": 110
+    },
+    "response_id": "bf0bc9f8-3613-491f-8e6f-186f58deee77",
+    "prompt_sha256": "e056d4cff7abd7f1988e51139462a5bc4dd8ef4003883f2f6ddb66e47319a1b9",
+    "seconds": 0.9448939160211012
+  }
+]

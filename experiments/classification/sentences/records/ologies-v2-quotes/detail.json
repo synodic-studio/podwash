@@ -1,0 +1,149 @@
+[
+  {
+    "original": {
+      "first": 9,
+      "last": 14
+    },
+    "response_id": "88b22823-a9f4-4240-9b28-928b30b61a70",
+    "output_text": "{\"first_remove\": \"It's brought to you by Burbo.\", \"last_remove\": \"It's brought to you by Burbo.\"}",
+    "cost_usd": 0.00018964,
+    "usage": {
+      "completion_tokens": 31,
+      "prompt_tokens": 338,
+      "total_tokens": 369,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 338
+    },
+    "prompt_sha256": "28cae23f332dd2b09f721f65cb079cd5e725c634148d830a89891426b9d9d267",
+    "seconds": 0.6771766250021756,
+    "parsed": {
+      "first": 9,
+      "last": 14
+    }
+  },
+  {
+    "original": {
+      "first": 83,
+      "last": 178
+    },
+    "response_id": "41601edf-dbe4-4cf6-ada6-ccd85ecc53aa",
+    "output_text": "{\"first_remove\": \"It's scientifically different and people study this and they let me talk to them and I've experienced that a lot myself by booking a verbo and having fun with the people I love and Verbo makes it easy to bring your people together in one place to create those traditions.\", \"last_remove\": \"Book your next day on the Verbo app.\"}",
+    "cost_usd": 0.00032384000000000004,
+    "usage": {
+      "completion_tokens": 78,
+      "prompt_tokens": 502,
+      "total_tokens": 580,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 502
+    },
+    "prompt_sha256": "afd1c7b36ee35ea91908fdf985a12857b1b4db507e1f45cd40879d4306b6e9cf",
+    "seconds": 0.8632114579668269,
+    "parsed": {
+      "first": 83,
+      "last": 178
+    }
+  },
+  {
+    "original": {
+      "first": 465,
+      "last": 522
+    },
+    "response_id": "da390762-b625-41d4-af49-d57f03cd7ca2",
+    "output_text": "{\"first_remove\": \"thank you to patrons of the show at patreon .com slashologies and thanks to listeners who leave reviews which help the show so much.\", \"last_remove\": \"and yes thank you Selvin seven who called the show strange beautiful and endlessly fascinating.\"}",
+    "cost_usd": 0.00025432,
+    "usage": {
+      "completion_tokens": 58,
+      "prompt_tokens": 404,
+      "total_tokens": 462,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 404
+    },
+    "prompt_sha256": "869e0383a863a44cb6f3a3472ea6ad37fe771958330acbc72c6ac2efe6b70d4f",
+    "seconds": 1.0311666670022532,
+    "error": "Invalid exact quote: "
+  },
+  {
+    "original": {
+      "first": 4138,
+      "last": 4351
+    },
+    "response_id": "9f74ded8-b171-412d-b2c2-7d01f42ddb1e",
+    "output_text": "{\"first_remove\": \"Thank you so much to Verbo for sponsoring today's episode and making it possible for us to donate to causes of theologist choosing.\", \"last_remove\": \"So you can focus on the traditions that you're building and you can find your next day on the Verbo app.\"}",
+    "cost_usd": 0.00034188,
+    "usage": {
+      "completion_tokens": 65,
+      "prompt_tokens": 582,
+      "total_tokens": 647,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 582
+    },
+    "prompt_sha256": "de53a5dba74bd3b5690e0787adeb653e5177f9734e7506f922e9d2c72633791b",
+    "seconds": 1.0668895839480683,
+    "parsed": {
+      "first": 4138,
+      "last": 4351
+    }
+  },
+  {
+    "original": {
+      "first": 6841,
+      "last": 6939
+    },
+    "response_id": "892f2d6e-8475-47e4-949c-6e815ab8ad53",
+    "output_text": "{\"first_remove\":\"Thank you as always to supporters at patreon .com slash Alligies for supporting the show from the very beginning.\",\"last_remove\":\"Nick Thorburn gifted us with this theme music.\"}",
+    "cost_usd": 0.00025696,
+    "usage": {
+      "completion_tokens": 46,
+      "prompt_tokens": 446,
+      "total_tokens": 492,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 446
+    },
+    "prompt_sha256": "99242dda3f30628d369f08de324a60bfbc08c9d9e938be6731ab3fb1b6c8713d",
+    "seconds": 0.7648279999848455,
+    "parsed": {
+      "first": 6841,
+      "last": 6939
+    }
+  },
+  {
+    "original": {
+      "first": 7144,
+      "last": 7303
+    },
+    "response_id": "74d55314-e7f0-44a4-8e1e-7e04a2cbddd4",
+    "output_text": "{\n  \"first_remove\": \"Thank you again so much to Verbo for sponsoring today's special episode.\",\n  \"last_remove\": \"Yay!\"\n}",
+    "cost_usd": 0.00024508,
+    "usage": {
+      "completion_tokens": 35,
+      "prompt_tokens": 452,
+      "total_tokens": 487,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 452
+    },
+    "prompt_sha256": "7bd2c386f39753bb14ef78fc3fab1a91d7989ba9a5f912a137cdc5f1892b2fe3",
+    "seconds": 0.7014552500331774,
+    "parsed": {
+      "first": 7144,
+      "last": 7303
+    }
+  }
+]

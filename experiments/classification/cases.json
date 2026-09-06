@@ -356,5 +356,93 @@
       ]
     ],
     "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  },
+  {
+    "name": "journal_lee_pace",
+    "split": "fresh_holdout",
+    "transcript": "journal_lee_pace",
+    "include_ranges": [
+      [
+        0,
+        3047
+      ]
+    ],
+    "remove_ranges": [
+      [
+        115,
+        401
+      ],
+      [
+        1502,
+        1676
+      ],
+      [
+        2799,
+        3047
+      ]
+    ],
+    "keep_ranges": [
+      [
+        0,
+        114
+      ],
+      [
+        402,
+        1501
+      ],
+      [
+        1677,
+        2766
+      ]
+    ],
+    "notes": "Reviewed full transcript before model predictions. Guest thanks 2767\u20132798 unscored; actor/film/trainer/coffee mentions are editorial. Frozen sentence-v2 and local-clause-edge candidate."
+  },
+  {
+    "name": "daily_west_bank",
+    "split": "unused_holdout",
+    "transcript": "daily_west_bank",
+    "include_ranges": [
+      [
+        0,
+        3791
+      ]
+    ],
+    "remove_ranges": [
+      [
+        1881,
+        1884
+      ],
+      [
+        3587,
+        3590
+      ],
+      [
+        3721,
+        3791
+      ]
+    ],
+    "keep_ranges": [
+      [
+        0,
+        204
+      ],
+      [
+        218,
+        1880
+      ],
+      [
+        1885,
+        3368
+      ],
+      [
+        3388,
+        3586
+      ],
+      [
+        3591,
+        3720
+      ]
+    ],
+    "notes": "Full transcript reviewed before any classifier test. No inserted ads in this captured audio. Break handoffs and closing credits/signoff removable. Guest thanks and embedded opening publisher/show identification unscored. Retained as unused holdout after scope returned to production boundary precision."
   }
 ]

@@ -1,0 +1,146 @@
+[
+  {
+    "original": {
+      "first": 9,
+      "last": 14
+    },
+    "response_id": "30c07026-84ac-4f86-ae03-62df67980acf",
+    "output_text": "{\n  \"first\": 9,\n  \"last\": 14\n}",
+    "cost_usd": 0.00028952000000000003,
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 610,
+      "total_tokens": 626,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 610
+    },
+    "prompt_sha256": "acee8ee83106f02456000a1a98ad433487b86fd3e95ec15f2dd67a77e8fcaeaf",
+    "seconds": 0.6496801249450073,
+    "parsed": {
+      "first": 9,
+      "last": 14
+    }
+  },
+  {
+    "original": {
+      "first": 83,
+      "last": 178
+    },
+    "response_id": "7900fe54-ec99-4b41-acf2-2137e9a96708",
+    "output_text": "{\n  \"first\": 83,\n  \"last\": 170\n}",
+    "cost_usd": 0.00047740000000000006,
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 1037,
+      "total_tokens": 1053,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1037
+    },
+    "prompt_sha256": "b0de31d53e557b2dc579d0f2d582d3689ecf4744d14d78f558fd4f8248d48855",
+    "seconds": 0.7027829170692712,
+    "error": "Invalid boundary response: "
+  },
+  {
+    "original": {
+      "first": 465,
+      "last": 522
+    },
+    "response_id": "22698227-1048-4d2f-92cf-b7980a170f4b",
+    "output_text": "```json\n{\"first\":465,\"last\":522}\n```",
+    "cost_usd": 0.0003146,
+    "usage": {
+      "completion_tokens": 13,
+      "prompt_tokens": 676,
+      "total_tokens": 689,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 676
+    },
+    "prompt_sha256": "50b8f4173fef25de0ffb41e8db69075a3e0b015350872b87e217927877e42214",
+    "seconds": 0.9340025420533493,
+    "parsed": {
+      "first": 465,
+      "last": 522
+    }
+  },
+  {
+    "original": {
+      "first": 4138,
+      "last": 4351
+    },
+    "response_id": "2451a0c9-3201-4f73-9faf-7ea3664a3c88",
+    "output_text": "{\n  \"first\": 4138,\n  \"last\": 4330\n}",
+    "cost_usd": 0.0007321600000000001,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 1610,
+      "total_tokens": 1628,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1610
+    },
+    "prompt_sha256": "39ce5f0375a5f5ce9f88b639c8e0b4a831893a26bc6b8086218b010dfe497958",
+    "seconds": 0.7887430000118911,
+    "error": "Invalid boundary response: "
+  },
+  {
+    "original": {
+      "first": 6841,
+      "last": 6939
+    },
+    "response_id": "80e6385c-62eb-40d3-a72e-1af83ccf0bff",
+    "output_text": "{\n  \"first\": 6841,\n  \"last\": 6939\n}",
+    "cost_usd": 0.00048752,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 1054,
+      "total_tokens": 1072,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1054
+    },
+    "prompt_sha256": "0007fceb4482dba993d63b8d11058ad4ac72fed59e05773c6c036e05f806994b",
+    "seconds": 0.6836562090320513,
+    "parsed": {
+      "first": 6841,
+      "last": 6939
+    }
+  },
+  {
+    "original": {
+      "first": 7144,
+      "last": 7303
+    },
+    "response_id": "5607c696-986e-416e-9520-518b61aeb420",
+    "output_text": "{\n  \"first\": 7144,\n  \"last\": 7303\n}",
+    "cost_usd": 0.00053856,
+    "usage": {
+      "completion_tokens": 18,
+      "prompt_tokens": 1170,
+      "total_tokens": 1188,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1170
+    },
+    "prompt_sha256": "b8035f19fdfc88a5634566b6b3dd9d826f85c2bc3b5697d9a7a8f23e1079c7b2",
+    "seconds": 0.8932165000587702,
+    "parsed": {
+      "first": 7144,
+      "last": 7303
+    }
+  }
+]

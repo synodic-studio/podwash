@@ -48,6 +48,24 @@
       "transcript_sha256": "0e648e6afbb3ad3e2a0bc78295c0887582ea1b11b7f3c400f5578d85a1f2c8c8",
       "source_offset_seconds": 5216.819563,
       "local_original_metadata": "data/classification-eval/ezra/source.json"
+    },
+    "journal_lee_pace": {
+      "path": "transcripts/journal_lee_pace.json.gz",
+      "title": "My Monday Morning: Lee Pace",
+      "feed_url": "https://video-api.wsj.com/podcast/rss/wsj/the-journal",
+      "original_audio_sha256": "9975512f77ad5dcb40657e9ec3622ea775245c6b8bdc63e11d96b8aabcf652f5",
+      "transcript_sha256": "85ce4c862087efcc112ceba5aedbe9bbb47112c2733389fcf72ccc8c82835b21",
+      "source_offset_seconds": 0,
+      "local_original_metadata": "data/classification-eval/journal-new/source.json"
+    },
+    "daily_west_bank": {
+      "path": "transcripts/daily_west_bank.json.gz",
+      "title": "The Fight for the West Bank",
+      "feed_url": "https://feeds.simplecast.com/54nAGcIl",
+      "original_audio_sha256": "9e10759e1b65ad582545030719ed06db11e77c87c3d82cf71574a59c4d5384c5",
+      "transcript_sha256": "d68562c541fb47896208d41e4c8c520784fcbd29b813547f8d69a0ea23ab3254",
+      "source_offset_seconds": 0,
+      "local_original_metadata": "data/classification-eval/daily-west-bank/source.json"
     }
   },
   "model_aliases": {

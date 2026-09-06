@@ -3,7 +3,7 @@
 A small, offline-first corpus for testing cheaper classifiers and prompts.
 **The default model for an explicitly requested live run is `dsf`.** GPT and
 Opus results are retained as comparison baselines, not production recommendations.
-No production configuration, prompt, or processing behavior was changed.
+The production classifier is unchanged; cutter fixes are documented separately.
 
 ## Saved material
 
@@ -151,3 +151,11 @@ See [window and review results](resume/README.md): full-episode overlapping wind
 cost about 2.5 cents; adding a review pass brought the total to about 3 cents.
 Both still selected substantial editorial content. The saved failures are useful
 regressions, not a production recommendation.
+
+## Sentence experiments and production baseline
+
+[Sentence/clause results](sentences/README.md) include a fresh Journal comparison
+and an unused Daily holdout. They do not establish improvement over the user's
+reported low audible-ad rate. Model-only scores exclude production sponsor
+guardrails and count credits/promos/transitions alongside ads. A separate local
+VAD cutter safeguard addresses reproduced loss of untranscribed speech.

@@ -1,0 +1,1414 @@
+[
+  {
+    "label": "guarded-opening",
+    "source_offset": 35,
+    "segments": [
+      {
+        "start": 35.0,
+        "end": 36.16,
+        "text": " Calvin King and the Hobbit.",
+        "words": [
+          {
+            "word": " Calvin",
+            "start": 35.0,
+            "end": 35.22
+          },
+          {
+            "word": " King",
+            "start": 35.22,
+            "end": 35.46
+          },
+          {
+            "word": " and",
+            "start": 35.46,
+            "end": 35.68
+          },
+          {
+            "word": " the",
+            "start": 35.68,
+            "end": 35.82
+          },
+          {
+            "word": " Hobbit.",
+            "start": 35.82,
+            "end": 36.16
+          }
+        ]
+      },
+      {
+        "start": 37.14,
+        "end": 40.12,
+        "text": " This fall, he's starring alongside two beloved witches,",
+        "words": [
+          {
+            "word": " This",
+            "start": 37.14,
+            "end": 37.4
+          },
+          {
+            "word": " fall,",
+            "start": 37.4,
+            "end": 37.74
+          },
+          {
+            "word": " he's",
+            "start": 38.06,
+            "end": 38.16
+          },
+          {
+            "word": " starring",
+            "start": 38.16,
+            "end": 38.42
+          },
+          {
+            "word": " alongside",
+            "start": 38.42,
+            "end": 38.9
+          },
+          {
+            "word": " two",
+            "start": 38.9,
+            "end": 39.3
+          },
+          {
+            "word": " beloved",
+            "start": 39.3,
+            "end": 39.68
+          },
+          {
+            "word": " witches,",
+            "start": 39.68,
+            "end": 40.12
+          }
+        ]
+      },
+      {
+        "start": 40.84,
+        "end": 44.06,
+        "text": " Sandra Bullock and Nicole Kidman, in Practical Magic 2.",
+        "words": [
+          {
+            "word": " Sandra",
+            "start": 40.84,
+            "end": 41.0
+          },
+          {
+            "word": " Bullock",
+            "start": 41.0,
+            "end": 41.34
+          },
+          {
+            "word": " and",
+            "start": 41.34,
+            "end": 41.5
+          },
+          {
+            "word": " Nicole",
+            "start": 41.5,
+            "end": 41.8
+          },
+          {
+            "word": " Kidman,",
+            "start": 41.8,
+            "end": 42.22
+          },
+          {
+            "word": " in",
+            "start": 42.68,
+            "end": 42.86
+          },
+          {
+            "word": " Practical",
+            "start": 42.86,
+            "end": 43.3
+          },
+          {
+            "word": " Magic",
+            "start": 43.3,
+            "end": 43.58
+          },
+          {
+            "word": " 2.",
+            "start": 43.58,
+            "end": 44.06
+          }
+        ]
+      },
+      {
+        "start": 45.0,
+        "end": 48.4,
+        "text": " For his Monday morning, Lee told me about spotting witches",
+        "words": [
+          {
+            "word": " For",
+            "start": 45.0,
+            "end": 45.2
+          },
+          {
+            "word": " his",
+            "start": 45.2,
+            "end": 45.44
+          },
+          {
+            "word": " Monday",
+            "start": 45.44,
+            "end": 45.76
+          },
+          {
+            "word": " morning,",
+            "start": 45.76,
+            "end": 46.22
+          },
+          {
+            "word": " Lee",
+            "start": 46.76,
+            "end": 46.82
+          },
+          {
+            "word": " told",
+            "start": 46.82,
+            "end": 47.06
+          },
+          {
+            "word": " me",
+            "start": 47.06,
+            "end": 47.3
+          },
+          {
+            "word": " about",
+            "start": 47.3,
+            "end": 47.62
+          },
+          {
+            "word": " spotting",
+            "start": 47.62,
+            "end": 48.1
+          },
+          {
+            "word": " witches",
+            "start": 48.1,
+            "end": 48.4
+          }
+        ]
+      },
+      {
+        "start": 48.4,
+        "end": 50.62,
+        "text": " in real life, tending to his garden,",
+        "words": [
+          {
+            "word": " in",
+            "start": 48.4,
+            "end": 48.66
+          },
+          {
+            "word": " real",
+            "start": 48.66,
+            "end": 48.86
+          },
+          {
+            "word": " life,",
+            "start": 48.86,
+            "end": 49.26
+          },
+          {
+            "word": " tending",
+            "start": 49.68,
+            "end": 49.9
+          },
+          {
+            "word": " to",
+            "start": 49.9,
+            "end": 50.18
+          },
+          {
+            "word": " his",
+            "start": 50.18,
+            "end": 50.32
+          },
+          {
+            "word": " garden,",
+            "start": 50.32,
+            "end": 50.62
+          }
+        ]
+      },
+      {
+        "start": 51.18,
+        "end": 53.42,
+        "text": " and of course, how he starts his week.",
+        "words": [
+          {
+            "word": " and",
+            "start": 51.18,
+            "end": 51.36
+          },
+          {
+            "word": " of",
+            "start": 51.36,
+            "end": 51.5
+          },
+          {
+            "word": " course,",
+            "start": 51.5,
+            "end": 51.8
+          },
+          {
+            "word": " how",
+            "start": 52.14,
+            "end": 52.46
+          },
+          {
+            "word": " he",
+            "start": 52.46,
+            "end": 52.64
+          },
+          {
+            "word": " starts",
+            "start": 52.64,
+            "end": 52.879999999999995
+          },
+          {
+            "word": " his",
+            "start": 52.879999999999995,
+            "end": 53.08
+          },
+          {
+            "word": " week.",
+            "start": 53.08,
+            "end": 53.42
+          }
+        ]
+      },
+      {
+        "start": 57.230000000000004,
+        "end": 60.760000000000005,
+        "text": " Your first credit, at least on IMDb, is Law and Order SVU.",
+        "words": [
+          {
+            "word": " Your",
+            "start": 57.230000000000004,
+            "end": 57.519999999999996
+          },
+          {
+            "word": " first",
+            "start": 57.519999999999996,
+            "end": 57.8
+          },
+          {
+            "word": " credit,",
+            "start": 57.8,
+            "end": 58.16
+          },
+          {
+            "word": " at",
+            "start": 58.28,
+            "end": 58.36
+          },
+          {
+            "word": " least",
+            "start": 58.36,
+            "end": 58.480000000000004
+          },
+          {
+            "word": " on",
+            "start": 58.480000000000004,
+            "end": 58.68
+          },
+          {
+            "word": " IMDb,",
+            "start": 58.68,
+            "end": 59.18
+          },
+          {
+            "word": " is",
+            "start": 59.34,
+            "end": 59.5
+          },
+          {
+            "word": " Law",
+            "start": 59.5,
+            "end": 59.7
+          },
+          {
+            "word": " and",
+            "start": 59.7,
+            "end": 59.82
+          },
+          {
+            "word": " Order",
+            "start": 59.82,
+            "end": 60.1
+          },
+          {
+            "word": " SVU.",
+            "start": 60.1,
+            "end": 60.760000000000005
+          }
+        ]
+      },
+      {
+        "start": 62.16,
+        "end": 64.7,
+        "text": " And you play a bad guy behind bars.",
+        "words": [
+          {
+            "word": " And",
+            "start": 62.16,
+            "end": 62.56
+          },
+          {
+            "word": " you",
+            "start": 62.56,
+            "end": 62.96
+          },
+          {
+            "word": " play",
+            "start": 62.96,
+            "end": 63.239999999999995
+          },
+          {
+            "word": " a",
+            "start": 63.239999999999995,
+            "end": 63.5
+          },
+          {
+            "word": " bad",
+            "start": 63.5,
+            "end": 63.72
+          },
+          {
+            "word": " guy",
+            "start": 63.72,
+            "end": 63.9
+          },
+          {
+            "word": " behind",
+            "start": 63.9,
+            "end": 64.28
+          },
+          {
+            "word": " bars.",
+            "start": 64.28,
+            "end": 64.7
+          }
+        ]
+      },
+      {
+        "start": 65.02,
+        "end": 70.94,
+        "text": " We call it the New York City Yearbook because all the actors in New York do Law and Order,",
+        "words": [
+          {
+            "word": " We",
+            "start": 65.02,
+            "end": 65.12
+          },
+          {
+            "word": " call",
+            "start": 65.12,
+            "end": 65.42
+          },
+          {
+            "word": " it",
+            "start": 65.42,
+            "end": 65.56
+          },
+          {
+            "word": " the",
+            "start": 65.56,
+            "end": 65.68
+          },
+          {
+            "word": " New",
+            "start": 65.68,
+            "end": 65.84
+          },
+          {
+            "word": " York",
+            "start": 65.84,
+            "end": 66.14
+          },
+          {
+            "word": " City",
+            "start": 66.14,
+            "end": 67.22
+          },
+          {
+            "word": " Yearbook",
+            "start": 67.22,
+            "end": 67.75999999999999
+          },
+          {
+            "word": " because",
+            "start": 67.75999999999999,
+            "end": 68.25999999999999
+          },
+          {
+            "word": " all",
+            "start": 68.25999999999999,
+            "end": 68.58
+          },
+          {
+            "word": " the",
+            "start": 68.58,
+            "end": 68.78
+          },
+          {
+            "word": " actors",
+            "start": 68.78,
+            "end": 69.03999999999999
+          },
+          {
+            "word": " in",
+            "start": 69.03999999999999,
+            "end": 69.28
+          },
+          {
+            "word": " New",
+            "start": 69.28,
+            "end": 69.46000000000001
+          },
+          {
+            "word": " York",
+            "start": 69.46000000000001,
+            "end": 69.74000000000001
+          },
+          {
+            "word": " do",
+            "start": 69.74000000000001,
+            "end": 70.38
+          },
+          {
+            "word": " Law",
+            "start": 70.38,
+            "end": 70.58
+          },
+          {
+            "word": " and",
+            "start": 70.58,
+            "end": 70.66
+          },
+          {
+            "word": " Order,",
+            "start": 70.66,
+            "end": 70.94
+          }
+        ]
+      },
+      {
+        "start": 71.03999999999999,
+        "end": 72.5,
+        "text": " Law and Order SVU at some point.",
+        "words": [
+          {
+            "word": " Law",
+            "start": 71.03999999999999,
+            "end": 71.22
+          },
+          {
+            "word": " and",
+            "start": 71.22,
+            "end": 71.36
+          },
+          {
+            "word": " Order",
+            "start": 71.36,
+            "end": 71.5
+          },
+          {
+            "word": " SVU",
+            "start": 71.5,
+            "end": 71.97999999999999
+          },
+          {
+            "word": " at",
+            "start": 71.97999999999999,
+            "end": 72.08
+          },
+          {
+            "word": " some",
+            "start": 72.08,
+            "end": 72.24000000000001
+          },
+          {
+            "word": " point.",
+            "start": 72.24000000000001,
+            "end": 72.5
+          }
+        ]
+      },
+      {
+        "start": 72.53999999999999,
+        "end": 74.53999999999999,
+        "text": " No, it's like the quintessential first credit, right?",
+        "words": [
+          {
+            "word": " No,",
+            "start": 72.53999999999999,
+            "end": 72.7
+          },
+          {
+            "word": " it's",
+            "start": 72.75999999999999,
+            "end": 72.86
+          },
+          {
+            "word": " like",
+            "start": 72.86,
+            "end": 72.96000000000001
+          },
+          {
+            "word": " the",
+            "start": 72.96000000000001,
+            "end": 73.12
+          },
+          {
+            "word": " quintessential",
+            "start": 73.12,
+            "end": 73.6
+          },
+          {
+            "word": " first",
+            "start": 73.6,
+            "end": 73.84
+          },
+          {
+            "word": " credit,",
+            "start": 73.84,
+            "end": 74.24000000000001
+          },
+          {
+            "word": " right?",
+            "start": 74.32,
+            "end": 74.53999999999999
+          }
+        ]
+      },
+      {
+        "start": 74.96000000000001,
+        "end": 75.32,
+        "text": " Yeah, perfect.",
+        "words": [
+          {
+            "word": " Yeah,",
+            "start": 74.96000000000001,
+            "end": 74.96000000000001
+          },
+          {
+            "word": " perfect.",
+            "start": 75.32,
+            "end": 75.32
+          }
+        ]
+      },
+      {
+        "start": 75.62,
+        "end": 79.46000000000001,
+        "text": " But it was wondering, do you remember when you got that call that you got the part,",
+        "words": [
+          {
+            "word": " But",
+            "start": 75.62,
+            "end": 75.97999999999999
+          },
+          {
+            "word": " it",
+            "start": 75.97999999999999,
+            "end": 76.03999999999999
+          },
+          {
+            "word": " was",
+            "start": 76.03999999999999,
+            "end": 76.14
+          },
+          {
+            "word": " wondering,",
+            "start": 76.14,
+            "end": 76.3
+          },
+          {
+            "word": " do",
+            "start": 76.7,
+            "end": 77.12
+          },
+          {
+            "word": " you",
+            "start": 77.12,
+            "end": 77.28
+          },
+          {
+            "word": " remember",
+            "start": 77.28,
+            "end": 77.64
+          },
+          {
+            "word": " when",
+            "start": 77.64,
+            "end": 78.0
+          },
+          {
+            "word": " you",
+            "start": 78.0,
+            "end": 78.14
+          },
+          {
+            "word": " got",
+            "start": 78.14,
+            "end": 78.28
+          },
+          {
+            "word": " that",
+            "start": 78.28,
+            "end": 78.47999999999999
+          },
+          {
+            "word": " call",
+            "start": 78.47999999999999,
+            "end": 78.68
+          },
+          {
+            "word": " that",
+            "start": 78.68,
+            "end": 78.82
+          },
+          {
+            "word": " you",
+            "start": 78.82,
+            "end": 78.9
+          },
+          {
+            "word": " got",
+            "start": 78.9,
+            "end": 79.02000000000001
+          },
+          {
+            "word": " the",
+            "start": 79.02000000000001,
+            "end": 79.18
+          },
+          {
+            "word": " part,",
+            "start": 79.18,
+            "end": 79.46000000000001
+          }
+        ]
+      },
+      {
+        "start": 79.64,
+        "end": 82.64,
+        "text": " what it was like being on that set and being grilled by Benson and Stabler?",
+        "words": [
+          {
+            "word": " what",
+            "start": 79.64,
+            "end": 79.72
+          },
+          {
+            "word": " it",
+            "start": 79.72,
+            "end": 79.84
+          },
+          {
+            "word": " was",
+            "start": 79.84,
+            "end": 79.96000000000001
+          },
+          {
+            "word": " like",
+            "start": 79.96000000000001,
+            "end": 80.14
+          },
+          {
+            "word": " being",
+            "start": 80.14,
+            "end": 80.28
+          },
+          {
+            "word": " on",
+            "start": 80.28,
+            "end": 80.42
+          },
+          {
+            "word": " that",
+            "start": 80.42,
+            "end": 80.58
+          },
+          {
+            "word": " set",
+            "start": 80.58,
+            "end": 80.9
+          },
+          {
+            "word": " and",
+            "start": 80.9,
+            "end": 81.12
+          },
+          {
+            "word": " being",
+            "start": 81.12,
+            "end": 81.25999999999999
+          },
+          {
+            "word": " grilled",
+            "start": 81.25999999999999,
+            "end": 81.52000000000001
+          },
+          {
+            "word": " by",
+            "start": 81.52000000000001,
+            "end": 81.72
+          },
+          {
+            "word": " Benson",
+            "start": 81.72,
+            "end": 81.96000000000001
+          },
+          {
+            "word": " and",
+            "start": 81.96000000000001,
+            "end": 82.16
+          },
+          {
+            "word": " Stabler?",
+            "start": 82.16,
+            "end": 82.64
+          }
+        ]
+      },
+      {
+        "start": 84.24000000000001,
+        "end": 85.22,
+        "text": " I knew nothing.",
+        "words": [
+          {
+            "word": " I",
+            "start": 84.24000000000001,
+            "end": 84.64
+          },
+          {
+            "word": " knew",
+            "start": 84.64,
+            "end": 84.82
+          },
+          {
+            "word": " nothing.",
+            "start": 84.82,
+            "end": 85.22
+          }
+        ]
+      },
+      {
+        "start": 85.64,
+        "end": 86.94,
+        "text": " I mean, I actually knew nothing.",
+        "words": [
+          {
+            "word": " I",
+            "start": 85.64,
+            "end": 85.74000000000001
+          },
+          {
+            "word": " mean,",
+            "start": 85.74000000000001,
+            "end": 85.82
+          },
+          {
+            "word": " I",
+            "start": 85.84,
+            "end": 86.02000000000001
+          },
+          {
+            "word": " actually",
+            "start": 86.02000000000001,
+            "end": 86.44
+          },
+          {
+            "word": " knew",
+            "start": 86.44,
+            "end": 86.66
+          },
+          {
+            "word": " nothing.",
+            "start": 86.66,
+            "end": 86.94
+          }
+        ]
+      },
+      {
+        "start": 86.94,
+        "end": 90.74000000000001,
+        "text": " I remember Mariska Hargitay, who was so sweet.",
+        "words": [
+          {
+            "word": " I",
+            "start": 86.94,
+            "end": 87.18
+          },
+          {
+            "word": " remember",
+            "start": 87.18,
+            "end": 88.44
+          },
+          {
+            "word": " Mariska",
+            "start": 88.44,
+            "end": 89.16
+          },
+          {
+            "word": " Hargitay,",
+            "start": 89.16,
+            "end": 89.7
+          },
+          {
+            "word": " who",
+            "start": 90.18,
+            "end": 90.24000000000001
+          },
+          {
+            "word": " was",
+            "start": 90.24000000000001,
+            "end": 90.36
+          },
+          {
+            "word": " so",
+            "start": 90.36,
+            "end": 90.5
+          },
+          {
+            "word": " sweet.",
+            "start": 90.5,
+            "end": 90.74000000000001
+          }
+        ]
+      },
+      {
+        "start": 90.84,
+        "end": 91.66,
+        "text": " I worked for half a day.",
+        "words": [
+          {
+            "word": " I",
+            "start": 90.84,
+            "end": 90.9
+          },
+          {
+            "word": " worked",
+            "start": 90.9,
+            "end": 91.0
+          },
+          {
+            "word": " for",
+            "start": 91.0,
+            "end": 91.18
+          },
+          {
+            "word": " half",
+            "start": 91.18,
+            "end": 91.3
+          },
+          {
+            "word": " a",
+            "start": 91.3,
+            "end": 91.44
+          },
+          {
+            "word": " day.",
+            "start": 91.44,
+            "end": 91.66
+          }
+        ]
+      },
+      {
+        "start": 92.5,
+        "end": 95.02000000000001,
+        "text": " It was the first time I was really in front of a camera.",
+        "words": [
+          {
+            "word": " It",
+            "start": 92.5,
+            "end": 92.86
+          },
+          {
+            "word": " was",
+            "start": 92.86,
+            "end": 93.22
+          },
+          {
+            "word": " the",
+            "start": 93.22,
+            "end": 93.34
+          },
+          {
+            "word": " first",
+            "start": 93.34,
+            "end": 93.5
+          },
+          {
+            "word": " time",
+            "start": 93.5,
+            "end": 93.7
+          },
+          {
+            "word": " I",
+            "start": 93.7,
+            "end": 93.78
+          },
+          {
+            "word": " was",
+            "start": 93.78,
+            "end": 93.88
+          },
+          {
+            "word": " really",
+            "start": 93.88,
+            "end": 94.12
+          },
+          {
+            "word": " in",
+            "start": 94.12,
+            "end": 94.32
+          },
+          {
+            "word": " front",
+            "start": 94.32,
+            "end": 94.46000000000001
+          },
+          {
+            "word": " of",
+            "start": 94.46000000000001,
+            "end": 94.58
+          },
+          {
+            "word": " a",
+            "start": 94.58,
+            "end": 94.7
+          },
+          {
+            "word": " camera.",
+            "start": 94.7,
+            "end": 95.02000000000001
+          }
+        ]
+      },
+      {
+        "start": 95.36,
+        "end": 96.84,
+        "text": " I was so new to it.",
+        "words": [
+          {
+            "word": " I",
+            "start": 95.36,
+            "end": 95.36
+          },
+          {
+            "word": " was",
+            "start": 95.36,
+            "end": 95.56
+          },
+          {
+            "word": " so",
+            "start": 95.56,
+            "end": 96.12
+          },
+          {
+            "word": " new",
+            "start": 96.12,
+            "end": 96.34
+          },
+          {
+            "word": " to",
+            "start": 96.34,
+            "end": 96.52000000000001
+          },
+          {
+            "word": " it.",
+            "start": 96.52000000000001,
+            "end": 96.84
+          }
+        ]
+      },
+      {
+        "start": 97.46000000000001,
+        "end": 100.28,
+        "text": " And she kind of crouched so that her eye",
+        "words": [
+          {
+            "word": " And",
+            "start": 97.46000000000001,
+            "end": 97.82
+          },
+          {
+            "word": " she",
+            "start": 97.82,
+            "end": 98.18
+          },
+          {
+            "word": " kind",
+            "start": 98.18,
+            "end": 98.97999999999999
+          },
+          {
+            "word": " of",
+            "start": 98.97999999999999,
+            "end": 99.32
+          },
+          {
+            "word": " crouched",
+            "start": 99.32,
+            "end": 99.62
+          },
+          {
+            "word": " so",
+            "start": 99.62,
+            "end": 99.8
+          },
+          {
+            "word": " that",
+            "start": 99.8,
+            "end": 99.92
+          },
+          {
+            "word": " her",
+            "start": 99.92,
+            "end": 100.08
+          },
+          {
+            "word": " eye",
+            "start": 100.08,
+            "end": 100.28
+          }
+        ]
+      },
+      {
+        "start": 100.28,
+        "end": 101.58,
+        "text": " line was close to the lens.",
+        "words": [
+          {
+            "word": " line",
+            "start": 100.28,
+            "end": 100.5
+          },
+          {
+            "word": " was",
+            "start": 100.5,
+            "end": 100.68
+          },
+          {
+            "word": " close",
+            "start": 100.68,
+            "end": 100.96
+          },
+          {
+            "word": " to",
+            "start": 100.96,
+            "end": 101.18
+          },
+          {
+            "word": " the",
+            "start": 101.18,
+            "end": 101.3
+          },
+          {
+            "word": " lens.",
+            "start": 101.3,
+            "end": 101.58
+          }
+        ]
+      },
+      {
+        "start": 102.28,
+        "end": 104.0,
+        "text": " And I was like, why is she standing like that?",
+        "words": [
+          {
+            "word": " And",
+            "start": 102.28,
+            "end": 102.4
+          },
+          {
+            "word": " I",
+            "start": 102.4,
+            "end": 102.48
+          },
+          {
+            "word": " was",
+            "start": 102.48,
+            "end": 102.58
+          },
+          {
+            "word": " like,",
+            "start": 102.58,
+            "end": 102.74
+          },
+          {
+            "word": " why",
+            "start": 102.8,
+            "end": 102.96
+          },
+          {
+            "word": " is",
+            "start": 102.96,
+            "end": 103.12
+          },
+          {
+            "word": " she",
+            "start": 103.12,
+            "end": 103.24
+          },
+          {
+            "word": " standing",
+            "start": 103.24,
+            "end": 103.52
+          },
+          {
+            "word": " like",
+            "start": 103.52,
+            "end": 103.8
+          },
+          {
+            "word": " that?",
+            "start": 103.8,
+            "end": 104.0
+          }
+        ]
+      },
+      {
+        "start": 104.16,
+        "end": 105.36,
+        "text": " Why is she doing that crazy thing?",
+        "words": [
+          {
+            "word": " Why",
+            "start": 104.16,
+            "end": 104.28
+          },
+          {
+            "word": " is",
+            "start": 104.28,
+            "end": 104.4
+          },
+          {
+            "word": " she",
+            "start": 104.4,
+            "end": 104.52
+          },
+          {
+            "word": " doing",
+            "start": 104.52,
+            "end": 104.68
+          },
+          {
+            "word": " that",
+            "start": 104.68,
+            "end": 104.9
+          },
+          {
+            "word": " crazy",
+            "start": 104.9,
+            "end": 105.1
+          },
+          {
+            "word": " thing?",
+            "start": 105.1,
+            "end": 105.36
+          }
+        ]
+      },
+      {
+        "start": 105.46,
+        "end": 107.62,
+        "text": " I realize now that it was just to kind of keep my eyes",
+        "words": [
+          {
+            "word": " I",
+            "start": 105.46,
+            "end": 105.48
+          },
+          {
+            "word": " realize",
+            "start": 105.48,
+            "end": 105.72
+          },
+          {
+            "word": " now",
+            "start": 105.72,
+            "end": 105.96
+          },
+          {
+            "word": " that",
+            "start": 105.96,
+            "end": 106.1
+          },
+          {
+            "word": " it",
+            "start": 106.1,
+            "end": 106.18
+          },
+          {
+            "word": " was",
+            "start": 106.18,
+            "end": 106.32
+          },
+          {
+            "word": " just",
+            "start": 106.32,
+            "end": 106.5
+          },
+          {
+            "word": " to",
+            "start": 106.5,
+            "end": 106.68
+          },
+          {
+            "word": " kind",
+            "start": 106.68,
+            "end": 106.78
+          },
+          {
+            "word": " of",
+            "start": 106.78,
+            "end": 106.92
+          },
+          {
+            "word": " keep",
+            "start": 106.92,
+            "end": 107.06
+          },
+          {
+            "word": " my",
+            "start": 107.06,
+            "end": 107.28
+          },
+          {
+            "word": " eyes",
+            "start": 107.28,
+            "end": 107.62
+          }
+        ]
+      },
+      {
+        "start": 107.62,
+        "end": 110.66,
+        "text": " closer to the lens so that it could",
+        "words": [
+          {
+            "word": " closer",
+            "start": 107.62,
+            "end": 108.06
+          },
+          {
+            "word": " to",
+            "start": 108.06,
+            "end": 108.3
+          },
+          {
+            "word": " the",
+            "start": 108.3,
+            "end": 108.44
+          },
+          {
+            "word": " lens",
+            "start": 108.44,
+            "end": 108.68
+          },
+          {
+            "word": " so",
+            "start": 108.68,
+            "end": 110.14
+          },
+          {
+            "word": " that",
+            "start": 110.14,
+            "end": 110.28
+          },
+          {
+            "word": " it",
+            "start": 110.28,
+            "end": 110.52
+          },
+          {
+            "word": " could",
+            "start": 110.52,
+            "end": 110.66
+          }
+        ]
+      },
+      {
+        "start": 110.66,
+        "end": 112.12,
+        "text": " seem when I was doing better.",
+        "words": [
+          {
+            "word": " seem",
+            "start": 110.66,
+            "end": 110.86
+          },
+          {
+            "word": " when",
+            "start": 110.86,
+            "end": 111.42
+          },
+          {
+            "word": " I",
+            "start": 111.42,
+            "end": 111.52
+          },
+          {
+            "word": " was",
+            "start": 111.52,
+            "end": 111.64
+          },
+          {
+            "word": " doing",
+            "start": 111.64,
+            "end": 111.8
+          },
+          {
+            "word": " better.",
+            "start": 111.8,
+            "end": 112.12
+          }
+        ]
+      },
+      {
+        "start": 112.12,
+        "end": 114.82,
+        "text": " But, yeah, it was, it was,",
+        "words": [
+          {
+            "word": " But,",
+            "start": 112.12,
+            "end": 112.44
+          },
+          {
+            "word": " yeah,",
+            "start": 113.04,
+            "end": 113.9
+          },
+          {
+            "word": " it",
+            "start": 114.1,
+            "end": 114.1
+          },
+          {
+            "word": " was,",
+            "start": 114.1,
+            "end": 114.24
+          },
+          {
+            "word": " it",
+            "start": 114.46,
+            "end": 114.64
+          },
+          {
+            "word": " was,",
+            "start": 114.64,
+            "end": 114.82
+          }
+        ]
+      }
+    ]
+  }
+]
