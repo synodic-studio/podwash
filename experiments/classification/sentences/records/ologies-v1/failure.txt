@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/bryancostanza/Developer/podwash/experiments/classification/sentences/run.py", line 39, in <module>
+    p=argparse.ArgumentParser();p.add_argument('--case',default='ologies_full');p.add_argument('--prompt',type=Path,default=Path('experiments/classification/sentences/prompt-v1.txt'));p.add_argument('--output',type=Path,required=True);a=p.parse_args();run(load_cases()[a.case],a.prompt,a.output)
+                                                                                                                                                                                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/bryancostanza/Developer/podwash/experiments/classification/sentences/run.py", line 30, in run
+    assert len(decisions)==len(valid) and {a['id'] for a in decisions}==valid
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
