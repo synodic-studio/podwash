@@ -48,9 +48,10 @@ def test_speech_intervals_absent_transcript_is_empty():
     assert editor._speech_intervals([]) == []
 
 
-def test_speech_intervals_merges_and_sorts():
+def test_speech_intervals_retains_boundaries_and_sorts():
     assert editor._speech_intervals(_spoken((10, 12), (0, 5), (4, 8))) == [
-        (0.0, 8.0),
+        (0.0, 5.0),
+        (4.0, 8.0),
         (10.0, 12.0),
     ]
 
@@ -86,13 +87,13 @@ def test_no_transcript_falls_back_to_plain_padding():
     assert ranges == [(49.5, 60.5)]
 
 
-def test_boundary_inside_speech_keeps_padding():
+def test_boundary_inside_speech_does_not_expand():
     # Ad runs 50-60 with words straddling both boundaries: no gap to cut in.
     speech = [(48.0, 52.0), (58.0, 62.0)]
     ranges = editor._resolve_cut_ranges(
         [{"start": 50, "end": 60}], speech, duration=100.0, padding=0.5
     )
-    assert ranges == [(49.5, 60.5)]
+    assert ranges == [(50, 60)]
 
 
 def test_padding_never_clips_neighboring_words():
@@ -148,7 +149,7 @@ def test_ad_at_end_of_file_absorbs_trailing_audio():
     ranges = editor._resolve_cut_ranges(
         [{"start": 60, "end": 80}], speech, duration=100.0, padding=0.5
     )
-    assert ranges == [(59.5, 100.0)]
+    assert ranges == [(60, 100.0)]
 
 
 def test_two_ads_split_by_dead_space_close_the_gap():
@@ -163,9 +164,8 @@ def test_two_ads_split_by_dead_space_close_the_gap():
     keep = editor._compute_keep_segments(ranges, duration=1400.0)
     # Nothing survives after the last content word: credits, the 20s of dead
     # space, and the post-roll all collapse into one cut running to EOF.
-    # 1291.5 rather than 1292.0 because credits begin mid-speech, so the
-    # normal padding still applies on that boundary.
-    assert keep == [(0.0, 1291.5)]
+    # Touching content and credit words retain their shared boundary.
+    assert keep == [(0.0, 1292.0)]
 
 
 def test_boundary_rounded_to_one_decimal_still_snaps():
@@ -181,12 +181,12 @@ def test_boundary_rounded_to_one_decimal_still_snaps():
 
 def test_word_genuinely_spanning_boundary_is_not_snapped():
     # A long word from 45 to 70 really does straddle a boundary at 60; that is
-    # beyond any rounding artifact, so fall back to padding.
+    # beyond any rounding artifact, so keep the requested boundary.
     speech = [(45.0, 70.0), (80.0, 90.0)]
     ranges = editor._resolve_cut_ranges(
         [{"start": 50, "end": 60}], speech, duration=100.0, padding=0.5
     )
-    assert ranges == [(49.5, 60.5)]
+    assert ranges == [(50, 60)]
 
 
 def test_extension_is_capped_by_max_dead_space():
@@ -289,3 +289,24 @@ async def test_segment_past_end_of_audio_is_reported(monkeypatch, tmp_path, caps
     captured = capsys.readouterr().out
     assert "starts past end of audio" in captured
     assert "150.0-180.0s" in captured
+
+
+@pytest.mark.parametrize('offset', [0, -0.02, 0.03])
+def test_touching_words_preserved_with_exact_or_rounded_ad_edges(offset):
+    speech = editor._speech_intervals(_spoken((0, 1), (1, 1.2), (1.2, 1.8), (1.8, 2), (2, 3)))
+    assert editor._resolve_cut_ranges(
+        [{'start': 1 + offset, 'end': 2 + offset}], speech, 3, .5
+    ) == [(1, 2)]
+
+
+def test_short_neighbor_after_whisperx_ad_is_not_skipped():
+    speech = editor._speech_intervals(_spoken((3.5, 4.542), (4.622, 4.763), (4.823, 5.2)))
+    assert editor._resolve_cut_ranges(
+        [{'start': 3.5, 'end': 4.542}], speech, 6, .5
+    )[0][1] <= 4.622
+
+
+def test_imprecise_boundary_inside_word_does_not_expand_into_more_speech():
+    assert editor._resolve_cut_ranges(
+        [{'start': 1.4, 'end': 2.6}], [(0, 2), (2, 4)], 4, .5
+    ) == [(1.4, 2.6)]

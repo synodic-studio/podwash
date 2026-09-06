@@ -1,0 +1,817 @@
+{
+  "limitations": "Overlap with transcript word intervals, not measured phonetic clipping. Unselected words may be unscored or separately removable. Guarded algorithm uses the same timestamps as the metric; zero overlap is not independent accuracy evidence.",
+  "summary": {
+    "current_exact": {
+      "cuts": 12,
+      "cuts_overlapping_unselected_words": 0,
+      "overlap_seconds": 0,
+      "word_cut_intersections": 0
+    },
+    "current_rounded": {
+      "cuts": 12,
+      "cuts_overlapping_unselected_words": 0,
+      "overlap_seconds": 0,
+      "word_cut_intersections": 0
+    },
+    "guarded_word_ids": {
+      "cuts": 12,
+      "cuts_overlapping_unselected_words": 0,
+      "overlap_seconds": 0,
+      "word_cut_intersections": 0
+    }
+  },
+  "rows": [
+    {
+      "source": "ologies",
+      "selection": [
+        9,
+        14
+      ],
+      "selected_edges": [
+        " It's",
+        " Burbo."
+      ],
+      "method": "current_exact",
+      "requested": [
+        3.5,
+        4.44
+      ],
+      "cut": [
+        3.42,
+        4.6
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        9,
+        14
+      ],
+      "selected_edges": [
+        " It's",
+        " Burbo."
+      ],
+      "method": "current_rounded",
+      "requested": [
+        3.5,
+        4.44
+      ],
+      "cut": [
+        3.42,
+        4.6
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        9,
+        14
+      ],
+      "selected_edges": [
+        " It's",
+        " Burbo."
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        3.5,
+        4.44
+      ],
+      "cut": [
+        3.46,
+        4.52
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        97,
+        178
+      ],
+      "selected_edges": [
+        " and",
+        " app."
+      ],
+      "method": "current_exact",
+      "requested": [
+        34.02,
+        62.4
+      ],
+      "cut": [
+        34.02,
+        62.6
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        97,
+        178
+      ],
+      "selected_edges": [
+        " and",
+        " app."
+      ],
+      "method": "current_rounded",
+      "requested": [
+        34.02,
+        62.4
+      ],
+      "cut": [
+        34.02,
+        62.6
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        97,
+        178
+      ],
+      "selected_edges": [
+        " and",
+        " app."
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        34.02,
+        62.4
+      ],
+      "cut": [
+        34.02,
+        62.52
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        465,
+        522
+      ],
+      "selected_edges": [
+        " And",
+        " fascinating."
+      ],
+      "method": "current_exact",
+      "requested": [
+        169.94,
+        186.58
+      ],
+      "cut": [
+        169.52,
+        186.88
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        465,
+        522
+      ],
+      "selected_edges": [
+        " And",
+        " fascinating."
+      ],
+      "method": "current_rounded",
+      "requested": [
+        169.94,
+        186.58
+      ],
+      "cut": [
+        169.52,
+        186.88
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        465,
+        522
+      ],
+      "selected_edges": [
+        " And",
+        " fascinating."
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        169.94,
+        186.58
+      ],
+      "cut": [
+        169.60000000000002,
+        186.79999999999998
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        4138,
+        4355
+      ],
+      "selected_edges": [
+        " Thank",
+        " back."
+      ],
+      "method": "current_exact",
+      "requested": [
+        1535.3,
+        1610.84
+      ],
+      "cut": [
+        1534.68,
+        1611.12
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        4138,
+        4355
+      ],
+      "selected_edges": [
+        " Thank",
+        " back."
+      ],
+      "method": "current_rounded",
+      "requested": [
+        1535.3,
+        1610.84
+      ],
+      "cut": [
+        1534.68,
+        1611.12
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        4138,
+        4355
+      ],
+      "selected_edges": [
+        " Thank",
+        " back."
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        1535.3,
+        1610.84
+      ],
+      "cut": [
+        1534.76,
+        1611.04
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        6807,
+        6939
+      ],
+      "selected_edges": [
+        " We",
+        " music."
+      ],
+      "method": "current_exact",
+      "requested": [
+        2489.54,
+        2535.9
+      ],
+      "cut": [
+        2489.22,
+        2535.9
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        6807,
+        6939
+      ],
+      "selected_edges": [
+        " We",
+        " music."
+      ],
+      "method": "current_rounded",
+      "requested": [
+        2489.54,
+        2535.9
+      ],
+      "cut": [
+        2489.22,
+        2535.9
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        6807,
+        6939
+      ],
+      "selected_edges": [
+        " We",
+        " music."
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        2489.54,
+        2535.9
+      ],
+      "cut": [
+        2489.2999999999997,
+        2535.9
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        7133,
+        7135
+      ],
+      "selected_edges": [
+        " Okay,",
+        " bye."
+      ],
+      "method": "current_exact",
+      "requested": [
+        2594.1,
+        2594.9
+      ],
+      "cut": [
+        2593.42,
+        2613.9
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        7133,
+        7135
+      ],
+      "selected_edges": [
+        " Okay,",
+        " bye."
+      ],
+      "method": "current_rounded",
+      "requested": [
+        2594.1,
+        2594.9
+      ],
+      "cut": [
+        2593.42,
+        2613.9
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        7133,
+        7135
+      ],
+      "selected_edges": [
+        " Okay,",
+        " bye."
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        2594.1,
+        2594.9
+      ],
+      "cut": [
+        2593.5,
+        2613.82
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        7144,
+        7155
+      ],
+      "selected_edges": [
+        " Thank",
+        " episode."
+      ],
+      "method": "current_exact",
+      "requested": [
+        2618.64,
+        2622.72
+      ],
+      "cut": [
+        2617.72,
+        2622.86
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        7144,
+        7155
+      ],
+      "selected_edges": [
+        " Thank",
+        " episode."
+      ],
+      "method": "current_rounded",
+      "requested": [
+        2618.64,
+        2622.72
+      ],
+      "cut": [
+        2617.72,
+        2622.86
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        7144,
+        7155
+      ],
+      "selected_edges": [
+        " Thank",
+        " episode."
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        2618.64,
+        2622.72
+      ],
+      "cut": [
+        2617.7999999999997,
+        2622.79
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        7265,
+        7303
+      ],
+      "selected_edges": [
+        " And",
+        " Yay!"
+      ],
+      "method": "current_exact",
+      "requested": [
+        2661.14,
+        2674.48
+      ],
+      "cut": [
+        2660.66,
+        2674.48
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        7265,
+        7303
+      ],
+      "selected_edges": [
+        " And",
+        " Yay!"
+      ],
+      "method": "current_rounded",
+      "requested": [
+        2661.14,
+        2674.48
+      ],
+      "cut": [
+        2660.66,
+        2674.48
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ologies",
+      "selection": [
+        7265,
+        7303
+      ],
+      "selected_edges": [
+        " And",
+        " Yay!"
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        2661.14,
+        2674.48
+      ],
+      "cut": [
+        2660.74,
+        2674.48
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "daily_opening",
+      "selection": [
+        0,
+        3
+      ],
+      "selected_edges": [
+        " From",
+        " Times,"
+      ],
+      "method": "current_exact",
+      "requested": [
+        0.8200000000000021,
+        2.14
+      ],
+      "cut": [
+        0.0,
+        2.54
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "daily_opening",
+      "selection": [
+        0,
+        3
+      ],
+      "selected_edges": [
+        " From",
+        " Times,"
+      ],
+      "method": "current_rounded",
+      "requested": [
+        0.8200000000000021,
+        2.14
+      ],
+      "cut": [
+        0.0,
+        2.54
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "daily_opening",
+      "selection": [
+        0,
+        3
+      ],
+      "selected_edges": [
+        " From",
+        " Times,"
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        0.8200000000000021,
+        2.14
+      ],
+      "cut": [
+        0,
+        2.46
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "daily_closing",
+      "selection": [
+        132,
+        135
+      ],
+      "selected_edges": [
+        " We'll",
+        " back."
+      ],
+      "method": "current_exact",
+      "requested": [
+        67.62,
+        68.76
+      ],
+      "cut": [
+        60.66,
+        72.32
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "daily_closing",
+      "selection": [
+        132,
+        135
+      ],
+      "selected_edges": [
+        " We'll",
+        " back."
+      ],
+      "method": "current_rounded",
+      "requested": [
+        67.62,
+        68.76
+      ],
+      "cut": [
+        60.66,
+        72.32
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "daily_closing",
+      "selection": [
+        132,
+        135
+      ],
+      "selected_edges": [
+        " We'll",
+        " back."
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        67.62,
+        68.76
+      ],
+      "cut": [
+        60.739999999999995,
+        72.24
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "daily_closing",
+      "selection": [
+        352,
+        409
+      ],
+      "selected_edges": [
+        " Today's",
+        " tomorrow."
+      ],
+      "method": "current_exact",
+      "requested": [
+        170.36,
+        204.7
+      ],
+      "cut": [
+        164.2,
+        204.7
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "daily_closing",
+      "selection": [
+        352,
+        409
+      ],
+      "selected_edges": [
+        " Today's",
+        " tomorrow."
+      ],
+      "method": "current_rounded",
+      "requested": [
+        170.36,
+        204.7
+      ],
+      "cut": [
+        164.2,
+        204.7
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "daily_closing",
+      "selection": [
+        352,
+        409
+      ],
+      "selected_edges": [
+        " Today's",
+        " tomorrow."
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        170.36,
+        204.7
+      ],
+      "cut": [
+        164.28,
+        204.7
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ezra_closing",
+      "selection": [
+        309,
+        374
+      ],
+      "selected_edges": [
+        " The",
+        " Samulowski."
+      ],
+      "method": "current_exact",
+      "requested": [
+        135.16000000000003,
+        156.46
+      ],
+      "cut": [
+        126.26,
+        156.46
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ezra_closing",
+      "selection": [
+        309,
+        374
+      ],
+      "selected_edges": [
+        " The",
+        " Samulowski."
+      ],
+      "method": "current_rounded",
+      "requested": [
+        135.16000000000003,
+        156.46
+      ],
+      "cut": [
+        126.26,
+        156.46
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    },
+    {
+      "source": "ezra_closing",
+      "selection": [
+        309,
+        374
+      ],
+      "selected_edges": [
+        " The",
+        " Samulowski."
+      ],
+      "method": "guarded_word_ids",
+      "requested": [
+        135.16000000000003,
+        156.46
+      ],
+      "cut": [
+        126.34,
+        156.46
+      ],
+      "neighbor_overlap_seconds": 0,
+      "affected_words": []
+    }
+  ]
+}

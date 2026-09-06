@@ -1,0 +1,218 @@
+[
+  {
+    "candidate": {
+      "first": 10,
+      "last": 178
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 10,
+          "last": 178,
+          "kind": "ad",
+          "reason": "Sponsor segment for Burbo/Verbo featuring personal anecdote, product pitch, tagline, and call to action, ending at 'app.'"
+        }
+      ]
+    },
+    "cost_usd": 0.0006504480000000001,
+    "response_id": "6bdbd1d4-2675-47c8-9c2e-62f1d02c1c08",
+    "usage": {
+      "completion_tokens": 52,
+      "prompt_tokens": 1818,
+      "total_tokens": 1870,
+      "prompt_tokens_details": {
+        "cached_tokens": 512
+      },
+      "prompt_cache_hit_tokens": 512,
+      "prompt_cache_miss_tokens": 1306
+    },
+    "seconds": 1.1338807500433177
+  },
+  {
+    "candidate": {
+      "first": 475,
+      "last": 487
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 475,
+          "last": 500,
+          "kind": "credits",
+          "reason": "Production staff credit and thanks to patrons/listeners with review request; includes the preceding 'first but' as it introduces the removal, and cuts off at 'much' before the editorial sentence about reading reviews."
+        },
+        {
+          "first": 501,
+          "last": 539,
+          "kind": "self_promo",
+          "reason": "Host reads a listener review, promotes the show's longevity, and frames this as a bonus episode; this is promotional/boilerplate content about the show, not editorial."
+        }
+      ]
+    },
+    "cost_usd": 0.000669776,
+    "response_id": "66175f55-28e6-4a00-a453-2a3b16d7f14f",
+    "usage": {
+      "completion_tokens": 119,
+      "prompt_tokens": 1537,
+      "total_tokens": 1656,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 1153
+    },
+    "seconds": 1.6029748750152066
+  },
+  {
+    "candidate": {
+      "first": 500,
+      "last": 545
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 465,
+          "last": 545,
+          "kind": "credits",
+          "reason": "Host thanks patrons, plugs Patreon, reads a review, and thanks reviewers; this is show self-promotion and production acknowledgments with a transition to content, which should be removed."
+        }
+      ]
+    },
+    "cost_usd": 0.000657896,
+    "response_id": "15ef1498-0438-4f8c-a916-b8c29f2ad949",
+    "usage": {
+      "completion_tokens": 59,
+      "prompt_tokens": 1690,
+      "total_tokens": 1749,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 1306
+    },
+    "seconds": 1.573406666982919
+  },
+  {
+    "candidate": {
+      "first": 4012,
+      "last": 4351
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 4143,
+          "last": 4151,
+          "kind": "ad",
+          "reason": "Sponsor acknowledgment for Verbo making the donation possible."
+        },
+        {
+          "first": 4264,
+          "last": 4351,
+          "kind": "ad",
+          "reason": "Verbo promotional pitch describing services and app call to action."
+        }
+      ]
+    },
+    "cost_usd": 0.001472336,
+    "response_id": "da48a51f-515c-4493-bc24-28472c79bdfc",
+    "usage": {
+      "completion_tokens": 67,
+      "prompt_tokens": 3517,
+      "total_tokens": 3584,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3133
+    },
+    "seconds": 1.1222063330933452
+  },
+  {
+    "candidate": {
+      "first": 6800,
+      "last": 6953
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 6802,
+          "last": 6806,
+          "kind": "ad",
+          "reason": "Calls to action to find guests in show notes"
+        },
+        {
+          "first": 6807,
+          "last": 6825,
+          "kind": "self_promo",
+          "reason": "Social media handles and host's handle promotion"
+        },
+        {
+          "first": 6826,
+          "last": 6840,
+          "kind": "self_promo",
+          "reason": "Promoting shorter kid friendly episodes in another feed"
+        },
+        {
+          "first": 6841,
+          "last": 6859,
+          "kind": "ad",
+          "reason": "Thanking Patreon supporters and promoting Patreon"
+        },
+        {
+          "first": 6860,
+          "last": 6869,
+          "kind": "transition",
+          "reason": "Sign-off and return next Tuesday with regular episodes"
+        },
+        {
+          "first": 6870,
+          "last": 6953,
+          "kind": "credits",
+          "reason": "Production credits, staff, theme music, and teaser for secret at end"
+        }
+      ]
+    },
+    "cost_usd": 0.001182816,
+    "response_id": "fd1b33a3-cc33-45f6-a54d-18db14358c24",
+    "usage": {
+      "completion_tokens": 183,
+      "prompt_tokens": 2511,
+      "total_tokens": 2694,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 2127
+    },
+    "seconds": 1.7727828749921173
+  },
+  {
+    "candidate": {
+      "first": 7144,
+      "last": 7302
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 7144,
+          "last": 7302,
+          "kind": "ad",
+          "reason": "Complete sponsor acknowledgment and pitch for Verbo, including thanks, product benefits, and call to action. Preceded by host's sign-off 'bye bye' (editorial) and followed by the end of the excerpt."
+        }
+      ]
+    },
+    "cost_usd": 0.0008132160000000001,
+    "response_id": "d2ff3b92-ec50-4c96-9b18-25dbaf50b72b",
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 2007,
+      "total_tokens": 2078,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 1623
+    },
+    "seconds": 1.0255492079304531
+  }
+]

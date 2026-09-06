@@ -1,0 +1,82 @@
+[
+  {
+    "case": "ezra_closing",
+    "model": "gpt",
+    "seconds": 1.98,
+    "usage": {
+      "completion_tokens": 111,
+      "prompt_tokens": 2118,
+      "total_tokens": 2229,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 62,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 309,
+          "last": 374,
+          "kind": "credits",
+          "reason": "production staff credits, fact checking, mixing, music, audience strategy, executive producer, and special thanks"
+        }
+      ]
+    },
+    "prompt_sha256": "f3b24221a2226d18cfe7c17ceefee5b6fea23219ff487bb25ad24288580c3e24",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.01392,
+    "response_id": "chatcmpl-ELFaBO5Rd6SATTVsYzfugU3ENwHkL",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_opening",
+    "model": "gpt",
+    "seconds": 3.32,
+    "usage": {
+      "completion_tokens": 200,
+      "prompt_tokens": 2391,
+      "total_tokens": 2591,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 154,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 391,
+          "last": 397,
+          "kind": "self_promo",
+          "reason": "boilerplate listener contact information, not part of the substantive introduction or interview"
+        }
+      ]
+    },
+    "prompt_sha256": "875311ffc503f3ef2e32cc43eb371f39c626f86fb82147374c119946781e8ad9",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.017955,
+    "response_id": "chatcmpl-ELFaBEBqL7ck0lXvtesOnlhyGZwbH",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  }
+]

@@ -13,7 +13,7 @@
     <string>__LABEL__</string>
 
     <!-- Always go through the wrapper. It re-syncs deps with `uv run
-         --extra worker`, escalates crash bursts via the self-heal
+         —extra worker`, escalates crash bursts via the self-heal
          agent, and is the only thing standing between launchd's silent
          throttle loop and an undetected outage. Runs under system
          Python so a broken project venv can't keep the wrapper itself

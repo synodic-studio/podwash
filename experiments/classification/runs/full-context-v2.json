@@ -1,0 +1,302 @@
+[
+  {
+    "case": "ologies_full",
+    "model": "dsf",
+    "seconds": 2.18,
+    "usage": {
+      "completion_tokens": 267,
+      "prompt_tokens": 23414,
+      "total_tokens": 23681,
+      "prompt_tokens_details": {
+        "cached_tokens": 23296
+      },
+      "prompt_cache_hit_tokens": 23296,
+      "prompt_cache_miss_tokens": 118
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 0.6,
+          "end": 64.1,
+          "type": "mid_roll",
+          "confidence": 0.95,
+          "sponsor": "Vrbo",
+          "reason": "Host reads a Vrbo ad that introduces the episode and includes sponsor messaging with calls to action."
+        },
+        {
+          "start": 1535.3,
+          "end": 1610.8,
+          "type": "mid_roll",
+          "confidence": 0.95,
+          "sponsor": "Vrbo",
+          "reason": "Host reads a Vrbo ad including a thank you to the sponsor, descriptions of the service, and a call to action."
+        },
+        {
+          "start": 2613.9,
+          "end": 2675.6,
+          "type": "post_roll",
+          "confidence": 0.95,
+          "sponsor": "Vrbo",
+          "reason": "Host delivers a post-roll Vrbo ad after the main content has concluded."
+        }
+      ],
+      "summary": "Found 3 segments totaling ~236 seconds (3 ads)"
+    },
+    "prompt_sha256": "205de2111ead883e8eb99435d2c879ee1e3b80519bc17199ea02ecde9d9219ef",
+    "cache_headers": {
+      "llm_provider-x-cache": "Miss from cloudfront"
+    },
+    "policy": "current",
+    "cost_usd": 0.0007305040000000001,
+    "response_id": "64c2f831-ff80-4365-b778-7aef4be8dc31",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_full",
+    "model": "dsf",
+    "seconds": 3.05,
+    "usage": {
+      "completion_tokens": 241,
+      "prompt_tokens": 39015,
+      "total_tokens": 39256,
+      "prompt_tokens_details": {
+        "cached_tokens": 1536
+      },
+      "prompt_cache_hit_tokens": 1536,
+      "prompt_cache_miss_tokens": 37479
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 0,
+          "last": 14,
+          "kind": "ad",
+          "reason": "Podcast intro with sponsor mention 'brought to you by Burbo'"
+        },
+        {
+          "first": 104,
+          "last": 178,
+          "kind": "ad",
+          "reason": "Personal anecdote promoting Verbo with tagline and call to action"
+        },
+        {
+          "first": 475,
+          "last": 500,
+          "kind": "self_promo",
+          "reason": "Self-promotion for Patreon and reviews"
+        },
+        {
+          "first": 4000,
+          "last": 4137,
+          "kind": "ad",
+          "reason": "Promotional segment for charities, includes calls to donate and websites"
+        },
+        {
+          "first": 4138,
+          "last": 4155,
+          "kind": "ad",
+          "reason": "Sponsor acknowledgment for Verbo"
+        },
+        {
+          "first": 4263,
+          "last": 4351,
+          "kind": "ad",
+          "reason": "Sponsored content for Verbo with tagline and call to action"
+        },
+        {
+          "first": 6841,
+          "last": 6939,
+          "kind": "credits",
+          "reason": "Production credits, including hosts, editors, and theme music"
+        },
+        {
+          "first": 7144,
+          "last": 7302,
+          "kind": "ad",
+          "reason": "Closing sponsor segment for Verbo with tagline and call to action"
+        }
+      ]
+    },
+    "prompt_sha256": "f60a64612cb338ccd318db78b8610323ef81a83dbb769f67a6577855923eea9f",
+    "cache_headers": {
+      "llm_provider-x-cache": "Miss from cloudfront"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.016830384,
+    "response_id": "3baa2cf5-3618-48e1-bd01-c8e38b46d855",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_full",
+    "model": "gpt",
+    "seconds": 10.14,
+    "usage": {
+      "completion_tokens": 934,
+      "prompt_tokens": 23095,
+      "total_tokens": 24029,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 512,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 0.6,
+          "end": 64.1,
+          "type": "pre_roll",
+          "confidence": 0.98,
+          "sponsor": "Vrbo",
+          "reason": "Opening sponsor read for Vrbo with product benefits and app call-to-action before the main episode begins"
+        },
+        {
+          "start": 170.9,
+          "end": 187.8,
+          "type": "self_promo",
+          "confidence": 0.9,
+          "sponsor": "N/A",
+          "reason": "Host thanks Patreon supporters and asks/listener reviews are discussed before returning to episode content"
+        },
+        {
+          "start": 1535.3,
+          "end": 1610.8,
+          "type": "mid_roll",
+          "confidence": 0.97,
+          "sponsor": "Vrbo",
+          "reason": "Mid-roll sponsor segment thanking Vrbo and pitching Vrbo features, ending with the hand-back 'Okay, so we're back'"
+        },
+        {
+          "start": 2484.0,
+          "end": 2538.4,
+          "type": "end_credits",
+          "confidence": 0.95,
+          "sponsor": "N/A",
+          "reason": "Closing boilerplate with show notes, social handles, Patreon mention, production staff credits, and theme music credit"
+        },
+        {
+          "start": 2618.6,
+          "end": 2674.5,
+          "type": "post_roll",
+          "confidence": 0.98,
+          "sponsor": "Vrbo",
+          "reason": "Post-roll sponsor message for Vrbo with product positioning and call-to-action to book on the Vrbo app"
+        }
+      ],
+      "summary": "Found 5 segments totaling ~228 seconds (3 ads, 2 credits/self-promos)"
+    },
+    "prompt_sha256": "205de2111ead883e8eb99435d2c879ee1e3b80519bc17199ea02ecde9d9219ef",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "current",
+    "cost_usd": 0.143495,
+    "response_id": "chatcmpl-ELFaAHA8Xx5MZElKrRSsiRpeYV2KI",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_full",
+    "model": "gpt",
+    "seconds": 14.83,
+    "usage": {
+      "completion_tokens": 1198,
+      "prompt_tokens": 38605,
+      "total_tokens": 39803,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 890,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 9,
+          "last": 14,
+          "kind": "ad",
+          "reason": "Explicit sponsor acknowledgment at the start."
+        },
+        {
+          "first": 98,
+          "last": 180,
+          "kind": "ad",
+          "reason": "Personal product-use anecdote leading into sponsor pitch, product benefits, tagline, and app call to action."
+        },
+        {
+          "first": 475,
+          "last": 539,
+          "kind": "self_promo",
+          "reason": "Patreon and review promotion before returning to the episode topic."
+        },
+        {
+          "first": 4138,
+          "last": 4160,
+          "kind": "ad",
+          "reason": "Sponsor acknowledgment tied to funding the episode and donations."
+        },
+        {
+          "first": 4264,
+          "last": 4351,
+          "kind": "ad",
+          "reason": "Sponsor product pitch with benefits, support claims, and app call to action."
+        },
+        {
+          "first": 6787,
+          "last": 6859,
+          "kind": "self_promo",
+          "reason": "Show notes, social media, kids feed, and Patreon promotion."
+        },
+        {
+          "first": 6860,
+          "last": 6869,
+          "kind": "self_promo",
+          "reason": "Promotion of upcoming regular episodes."
+        },
+        {
+          "first": 6870,
+          "last": 6953,
+          "kind": "credits",
+          "reason": "Production and staff credits plus teaser after credits."
+        },
+        {
+          "first": 7133,
+          "last": 7135,
+          "kind": "transition",
+          "reason": "Final sign-off boilerplate before the closing sponsor message."
+        },
+        {
+          "first": 7144,
+          "last": 7303,
+          "kind": "ad",
+          "reason": "Closing sponsor acknowledgment and promotional pitch with tagline and app call to action."
+        }
+      ]
+    },
+    "prompt_sha256": "f60a64612cb338ccd318db78b8610323ef81a83dbb769f67a6577855923eea9f",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.228965,
+    "response_id": "chatcmpl-ELFaAG5nFHP2le6EfBkZIjHR6zH6w",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  }
+]

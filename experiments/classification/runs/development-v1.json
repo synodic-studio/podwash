@@ -1,0 +1,1271 @@
+[
+  {
+    "case": "ologies_editorial",
+    "model": "dsf",
+    "seconds": 1.38,
+    "usage": {
+      "completion_tokens": 21,
+      "prompt_tokens": 2367,
+      "total_tokens": 2388,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2367
+    },
+    "parsed": {
+      "ad_segments": [],
+      "summary": "No ad or credit segments detected"
+    },
+    "policy": "current",
+    "cost_usd": 0.0010692,
+    "response_id": "58818c39-797f-4e41-af24-309fe41712c1",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_closing",
+    "model": "dsf",
+    "seconds": 1.79,
+    "usage": {
+      "completion_tokens": 114,
+      "prompt_tokens": 2102,
+      "total_tokens": 2216,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2102
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 2613.9,
+          "end": 2674.5,
+          "type": "mid_roll",
+          "confidence": 0.98,
+          "sponsor": "Verbo",
+          "reason": "Host delivers a sponsor read for Verbo, including promotional language and a call to book on the Verbo app."
+        }
+      ],
+      "summary": "Found 1 segments totaling ~60.6 seconds (1 ad, 0 credits)"
+    },
+    "policy": "current",
+    "cost_usd": 0.00107536,
+    "response_id": "00df5e4c-9bee-45bc-8445-c89b10cd5184",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_opening",
+    "model": "dsf",
+    "seconds": 1.84,
+    "usage": {
+      "completion_tokens": 117,
+      "prompt_tokens": 1664,
+      "total_tokens": 1781,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1664
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 0.6,
+          "end": 64.1,
+          "type": "mid_roll",
+          "confidence": 0.97,
+          "sponsor": "Vrbo",
+          "reason": "Host reads a long Vrbo sponsor segment at the start of the episode, including a product pitch, benefits, and call to book on the app."
+        }
+      ],
+      "summary": "Found 1 segment totaling ~63.5 seconds (1 ad)"
+    },
+    "policy": "current",
+    "cost_usd": 0.0008866000000000001,
+    "response_id": "78821f2f-5620-4a20-a20f-eea87385dd4d",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_opening",
+    "model": "dsf",
+    "seconds": 2.0,
+    "usage": {
+      "completion_tokens": 143,
+      "prompt_tokens": 2250,
+      "total_tokens": 2393,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2250
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 54.3,
+          "end": 61.2,
+          "type": "self_promo",
+          "confidence": 0.95,
+          "sponsor": "New York Times / The Daily",
+          "reason": "Hosts reference the show 'Kevin and Michael's Feel Good Happy Hour' and joke about it being how 'every episode starts' \u2014 this is a self-referential segment about the podcast itself, removed as non-content."
+        }
+      ],
+      "summary": "Found 1 segment totaling ~6.9 seconds (0 ads, 1 self-promotion)"
+    },
+    "policy": "current",
+    "cost_usd": 0.00117876,
+    "response_id": "c8be8235-721f-425e-9db1-4ff79bc95a46",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_editorial",
+    "model": "dsf",
+    "seconds": 0.72,
+    "usage": {
+      "completion_tokens": 10,
+      "prompt_tokens": 2278,
+      "total_tokens": 2288,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2278
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.0010155200000000002,
+    "response_id": "703e5113-c05e-463d-b281-f1a066382e7e",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_opening",
+    "model": "dsf",
+    "seconds": 1.0,
+    "usage": {
+      "completion_tokens": 47,
+      "prompt_tokens": 1493,
+      "total_tokens": 1540,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1493
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 10,
+          "last": 178,
+          "kind": "ad",
+          "reason": "Sponsor segment for Burbo/Verbo from 'brought to you by' through CTA on the Verbo app."
+        }
+      ]
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.00071896,
+    "response_id": "e10d82f2-adc1-4877-9fdf-1484e1f82b4f",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_closing",
+    "model": "dsf",
+    "seconds": 0.95,
+    "usage": {
+      "completion_tokens": 61,
+      "prompt_tokens": 2225,
+      "total_tokens": 2286,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2225
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 7150,
+          "last": 7155,
+          "kind": "ad",
+          "reason": "Sponsor mention for Verbo in mid-sentence"
+        },
+        {
+          "first": 7266,
+          "last": 7302,
+          "kind": "ad",
+          "reason": "Verbo ad with pitch and call to action"
+        }
+      ]
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.00105952,
+    "response_id": "fb1d76d8-0032-4c72-a38f-1c450e99a005",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_opening",
+    "model": "dsf",
+    "seconds": 0.65,
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 2785,
+      "total_tokens": 2791,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2785
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.00123332,
+    "response_id": "f7f7e806-662b-4b99-aee3-12cb9b745b46",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_closing",
+    "model": "dsf",
+    "seconds": 0.77,
+    "usage": {
+      "completion_tokens": 10,
+      "prompt_tokens": 2213,
+      "total_tokens": 2223,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2213
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.00098692,
+    "response_id": "376a7fb3-688d-452a-94d5-206dcf610634",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_closing",
+    "model": "dsf",
+    "seconds": 2.73,
+    "usage": {
+      "completion_tokens": 363,
+      "prompt_tokens": 2002,
+      "total_tokens": 2365,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2002
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 67.6,
+          "end": 68.8,
+          "type": "mid_roll",
+          "confidence": 0.8,
+          "sponsor": "unknown",
+          "reason": "Break transition 'We'll be right back' signals a hand-off to an ad break; even if no ad follows immediately, this is a standard mid-roll break marker and should be removed."
+        },
+        {
+          "start": 72.3,
+          "end": 117.4,
+          "type": "mid_roll",
+          "confidence": 0.9,
+          "sponsor": "unknown",
+          "reason": "This segment is a news brief read by a different voice after the break, likely a pre-produced news insert or filler. It is not part of the main interview and is a distinct non-content segment (e.g., 'Here's what else you need to know...'). It follows a break transition and is followed by a return to the main content with a different topic (carrier news)."
+        },
+        {
+          "start": 170.4,
+          "end": 204.7,
+          "type": "end_credits",
+          "confidence": 0.95,
+          "sponsor": "N/A",
+          "reason": "Production credits listing staff, editors, music, and engineering, followed by sign-off 'That's it for today. I'm Michael Bauer. See you tomorrow.' This is standard end-of-episode credits/outro."
+        }
+      ],
+      "summary": "Found 3 segments totaling ~82 seconds (2 mid-roll ads/news inserts, 1 credits)"
+    },
+    "policy": "current",
+    "cost_usd": 0.00136004,
+    "response_id": "96850e2c-20a5-4381-b022-750c69534699",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_closing",
+    "model": "glm",
+    "seconds": 10.94,
+    "error": "429 Client Error: Too Many Requests for url: http://localhost:4000/v1/chat/completions",
+    "policy": "current",
+    "cost_usd": null,
+    "response_id": null,
+    "response_model": null,
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false,
+    "availability_note": "Serial diagnostic reported insufficient provider balance/no resource package; excluded from quality comparison."
+  },
+  {
+    "case": "daily_opening",
+    "model": "glm",
+    "seconds": 10.66,
+    "error": "429 Client Error: Too Many Requests for url: http://localhost:4000/v1/chat/completions",
+    "policy": "current",
+    "cost_usd": null,
+    "response_id": null,
+    "response_model": null,
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false,
+    "availability_note": "Serial diagnostic reported insufficient provider balance/no resource package; excluded from quality comparison."
+  },
+  {
+    "case": "ologies_editorial",
+    "model": "glm",
+    "seconds": 11.32,
+    "error": "429 Client Error: Too Many Requests for url: http://localhost:4000/v1/chat/completions",
+    "policy": "current",
+    "cost_usd": null,
+    "response_id": null,
+    "response_model": null,
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false,
+    "availability_note": "Serial diagnostic reported insufficient provider balance/no resource package; excluded from quality comparison."
+  },
+  {
+    "case": "ologies_opening",
+    "model": "glm",
+    "seconds": 12.73,
+    "error": "429 Client Error: Too Many Requests for url: http://localhost:4000/v1/chat/completions",
+    "policy": "current",
+    "cost_usd": null,
+    "response_id": null,
+    "response_model": null,
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false,
+    "availability_note": "Serial diagnostic reported insufficient provider balance/no resource package; excluded from quality comparison."
+  },
+  {
+    "case": "daily_closing",
+    "model": "glm",
+    "seconds": 10.94,
+    "error": "429 Client Error: Too Many Requests for url: http://localhost:4000/v1/chat/completions",
+    "policy": "current",
+    "cost_usd": null,
+    "response_id": null,
+    "response_model": null,
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false,
+    "availability_note": "Serial diagnostic reported insufficient provider balance/no resource package; excluded from quality comparison."
+  },
+  {
+    "case": "ologies_closing",
+    "model": "glm",
+    "seconds": 10.97,
+    "error": "429 Client Error: Too Many Requests for url: http://localhost:4000/v1/chat/completions",
+    "policy": "words-v1",
+    "cost_usd": null,
+    "response_id": null,
+    "response_model": null,
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false,
+    "availability_note": "Serial diagnostic reported insufficient provider balance/no resource package; excluded from quality comparison."
+  },
+  {
+    "case": "ologies_opening",
+    "model": "glm",
+    "seconds": 11.24,
+    "error": "429 Client Error: Too Many Requests for url: http://localhost:4000/v1/chat/completions",
+    "policy": "words-v1",
+    "cost_usd": null,
+    "response_id": null,
+    "response_model": null,
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false,
+    "availability_note": "Serial diagnostic reported insufficient provider balance/no resource package; excluded from quality comparison."
+  },
+  {
+    "case": "ologies_editorial",
+    "model": "glm",
+    "seconds": 12.0,
+    "error": "429 Client Error: Too Many Requests for url: http://localhost:4000/v1/chat/completions",
+    "policy": "words-v1",
+    "cost_usd": null,
+    "response_id": null,
+    "response_model": null,
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false,
+    "availability_note": "Serial diagnostic reported insufficient provider balance/no resource package; excluded from quality comparison."
+  },
+  {
+    "case": "ologies_opening",
+    "model": "gpt",
+    "seconds": 4.86,
+    "usage": {
+      "completion_tokens": 193,
+      "prompt_tokens": 1613,
+      "total_tokens": 1806,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 77,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 0.6,
+          "end": 64.1,
+          "type": "pre_roll",
+          "confidence": 0.98,
+          "sponsor": "Vrbo",
+          "reason": "Opening sponsor read for Vrbo with product pitch and call to book on the Vrbo app before main content begins"
+        }
+      ],
+      "summary": "Found 1 segment totaling ~64 seconds (1 ad, 0 credits)"
+    },
+    "policy": "current",
+    "cost_usd": 0.013855000000000001,
+    "response_id": "chatcmpl-ELFVmbsJBU9sis80LId2EXcw2suer",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_closing",
+    "model": "gpt",
+    "seconds": 4.52,
+    "usage": {
+      "completion_tokens": 284,
+      "prompt_tokens": 2048,
+      "total_tokens": 2332,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 171,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 2618.6,
+          "end": 2674.5,
+          "type": "post_roll",
+          "confidence": 0.98,
+          "sponsor": "Vrbo",
+          "reason": "Post-roll sponsor message thanking Vrbo and promoting booking a trip on the Vrbo app"
+        }
+      ],
+      "summary": "Found 1 segment totaling ~56 seconds (1 ads, 0 credits)"
+    },
+    "policy": "current",
+    "cost_usd": 0.01876,
+    "response_id": "chatcmpl-ELFVmGY1ZFjWAifUzVCzRuUoTAyfB",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_editorial",
+    "model": "gpt",
+    "seconds": 1.88,
+    "usage": {
+      "completion_tokens": 42,
+      "prompt_tokens": 2313,
+      "total_tokens": 2355,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 13,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ad_segments": [],
+      "summary": "No ad or credit segments detected"
+    },
+    "policy": "current",
+    "cost_usd": 0.012825000000000001,
+    "response_id": "chatcmpl-ELFVpDd0ZlwL0pxg23PmSwUB7Vezr",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_opening",
+    "model": "gpt",
+    "seconds": 3.09,
+    "usage": {
+      "completion_tokens": 184,
+      "prompt_tokens": 2198,
+      "total_tokens": 2382,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 80,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 0.8,
+          "end": 4.9,
+          "type": "intro_credits",
+          "confidence": 0.9,
+          "sponsor": "N/A",
+          "reason": "Opening network/show identifier before the episode content begins"
+        }
+      ],
+      "summary": "Found 1 segment totaling ~4 seconds (0 ads, 1 credit)"
+    },
+    "policy": "current",
+    "cost_usd": 0.016510000000000004,
+    "response_id": "chatcmpl-ELFVqBaWZNQVZJRVGCrv2JnXnynKJ",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_opening",
+    "model": "glm",
+    "seconds": 10.35,
+    "error": "429 Client Error: Too Many Requests for url: http://localhost:4000/v1/chat/completions",
+    "policy": "words-v1",
+    "cost_usd": null,
+    "response_id": null,
+    "response_model": null,
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false,
+    "availability_note": "Serial diagnostic reported insufficient provider balance/no resource package; excluded from quality comparison."
+  },
+  {
+    "case": "daily_closing",
+    "model": "gpt",
+    "seconds": 3.86,
+    "usage": {
+      "completion_tokens": 289,
+      "prompt_tokens": 1955,
+      "total_tokens": 2244,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 177,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 170.4,
+          "end": 204.7,
+          "type": "end_credits",
+          "confidence": 0.98,
+          "sponsor": "N/A",
+          "reason": "End credits listing production staff, music, engineering, theme music, and closing sign-off"
+        }
+      ],
+      "summary": "Found 1 segment totaling ~34 seconds (0 ads, 1 credits)"
+    },
+    "policy": "current",
+    "cost_usd": 0.018445000000000003,
+    "response_id": "chatcmpl-ELFVqKq35JO66LG6HH5ZF5oFBH2Ds",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_closing",
+    "model": "glm",
+    "seconds": 11.48,
+    "error": "429 Client Error: Too Many Requests for url: http://localhost:4000/v1/chat/completions",
+    "policy": "words-v1",
+    "cost_usd": null,
+    "response_id": null,
+    "response_model": null,
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false,
+    "availability_note": "Serial diagnostic reported insufficient provider balance/no resource package; excluded from quality comparison."
+  },
+  {
+    "case": "ologies_editorial",
+    "model": "gpt",
+    "seconds": 1.46,
+    "usage": {
+      "completion_tokens": 38,
+      "prompt_tokens": 2266,
+      "total_tokens": 2304,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 25,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.012470000000000002,
+    "response_id": "chatcmpl-ELFVu7bxrVwkky1Nxdvd1pVbRqyTR",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_opening",
+    "model": "gpt",
+    "seconds": 3.25,
+    "usage": {
+      "completion_tokens": 191,
+      "prompt_tokens": 2749,
+      "total_tokens": 2940,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 153,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 0,
+          "last": 3,
+          "kind": "credits",
+          "reason": "network identifier before the host's actual show introduction"
+        }
+      ]
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.019475,
+    "response_id": "chatcmpl-ELFVvfqv4gIeAKyK9we5QGQI8PAJe",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_opening",
+    "model": "gpt",
+    "seconds": 7.0,
+    "usage": {
+      "completion_tokens": 423,
+      "prompt_tokens": 1470,
+      "total_tokens": 1893,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 357,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 9,
+          "last": 14,
+          "kind": "ad",
+          "reason": "explicit sponsor acknowledgment"
+        },
+        {
+          "first": 98,
+          "last": 180,
+          "kind": "ad",
+          "reason": "personal product-use anecdote leading into sponsor pitch, support claims, tagline, and call to action"
+        }
+      ]
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.020040000000000002,
+    "response_id": "chatcmpl-ELFVthDoEF6k7tLI80076VVCEdDc9",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_closing",
+    "model": "gpt",
+    "seconds": 4.11,
+    "usage": {
+      "completion_tokens": 248,
+      "prompt_tokens": 2193,
+      "total_tokens": 2441,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 182,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 132,
+          "last": 135,
+          "kind": "transition",
+          "reason": "Break hand-off with no editorial content."
+        },
+        {
+          "first": 352,
+          "last": 409,
+          "kind": "credits",
+          "reason": "Production credits, theme music credit, and final sign-off boilerplate."
+        }
+      ]
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.018405,
+    "response_id": "chatcmpl-ELFVwzAJFGurBTHleCc2ysiaPCWPU",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_closing",
+    "model": "gpt",
+    "seconds": 7.41,
+    "usage": {
+      "completion_tokens": 574,
+      "prompt_tokens": 2189,
+      "total_tokens": 2763,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 474,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 7133,
+          "last": 7135,
+          "kind": "transition",
+          "reason": "brief final sign-off boilerplate rather than substantive show content"
+        },
+        {
+          "first": 7144,
+          "last": 7155,
+          "kind": "ad",
+          "reason": "explicit sponsor acknowledgment for Verbo"
+        },
+        {
+          "first": 7265,
+          "last": 7303,
+          "kind": "ad",
+          "reason": "sponsor product pitch, tagline, and call to action to book on the Verbo app"
+        }
+      ]
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.028165000000000003,
+    "response_id": "chatcmpl-ELFVutpwWGzN2fQrO9rIvoX6yuaJz",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_opening",
+    "model": "opus",
+    "seconds": 3.14,
+    "usage": {
+      "completion_tokens": 208,
+      "prompt_tokens": 2340,
+      "total_tokens": 2548,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 208
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2340,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 0.6,
+          "end": 64.1,
+          "type": "pre_roll",
+          "confidence": 0.97,
+          "sponsor": "Vrbo",
+          "reason": "Pre-roll sponsor read for Vrbo. Opens with 'brought to you by Vrbo' and continues into a full product pitch about booking vacations, 24/7 support team, and 'Book your next stay on the Vrbo app.'"
+        }
+      ],
+      "summary": "Found 1 segment totaling ~64 seconds (1 ad, 0 credits)"
+    },
+    "policy": "current",
+    "cost_usd": 0.016900000000000002,
+    "response_id": "chatcmpl-8f078293-8b3b-48e8-9a9b-0830702bf78e",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_editorial",
+    "model": "opus",
+    "seconds": 1.63,
+    "usage": {
+      "completion_tokens": 34,
+      "prompt_tokens": 3090,
+      "total_tokens": 3124,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 34
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 3090,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ad_segments": [],
+      "summary": "No ad or credit segments detected"
+    },
+    "policy": "current",
+    "cost_usd": 0.016300000000000002,
+    "response_id": "chatcmpl-16e87ed6-c205-471f-a1a2-31228687284b",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_opening",
+    "model": "opus",
+    "seconds": 1.38,
+    "usage": {
+      "completion_tokens": 34,
+      "prompt_tokens": 3080,
+      "total_tokens": 3114,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 34
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 3080,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ad_segments": [],
+      "summary": "No ad or credit segments detected"
+    },
+    "policy": "current",
+    "cost_usd": 0.01625,
+    "response_id": "chatcmpl-c45b2330-89e2-4cf1-ae13-7376cd57c8fb",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_closing",
+    "model": "opus",
+    "seconds": 3.15,
+    "usage": {
+      "completion_tokens": 192,
+      "prompt_tokens": 2846,
+      "total_tokens": 3038,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 192
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2846,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 2618.6,
+          "end": 2674.5,
+          "type": "post_roll",
+          "confidence": 0.97,
+          "sponsor": "Vrbo",
+          "reason": "Post-roll sponsor thank-you and ad read for Vrbo, including promotional messaging about booking travel on the Vrbo app and 'Book your next trip on the Verbo app.'"
+        }
+      ],
+      "summary": "Found 1 segment totaling ~56 seconds (1 ad, 0 credits)"
+    },
+    "policy": "current",
+    "cost_usd": 0.019030000000000002,
+    "response_id": "chatcmpl-cbe87868-51b8-4c41-ad18-e039e705302c",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_editorial",
+    "model": "opus",
+    "seconds": 1.74,
+    "usage": {
+      "completion_tokens": 11,
+      "prompt_tokens": 2687,
+      "total_tokens": 2698,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 11
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2687,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.01371,
+    "response_id": "chatcmpl-f3db3306-ac20-4698-b85a-8c5da010ac0f",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_closing",
+    "model": "opus",
+    "seconds": 3.53,
+    "usage": {
+      "completion_tokens": 253,
+      "prompt_tokens": 2830,
+      "total_tokens": 3083,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 253
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2830,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 67.6,
+          "end": 68.8,
+          "type": "mid_roll",
+          "confidence": 0.7,
+          "sponsor": "unknown",
+          "reason": "Break transition 'We'll be right back' hand-off into ad break"
+        },
+        {
+          "start": 170.4,
+          "end": 204.7,
+          "type": "end_credits",
+          "confidence": 0.95,
+          "sponsor": "N/A",
+          "reason": "Production credits listing producers, editors, music, engineering, theme music, and host sign-off"
+        }
+      ],
+      "summary": "Found 2 segments totaling ~36 seconds (0 ads, 1 credits, 1 break transition)"
+    },
+    "policy": "current",
+    "cost_usd": 0.020475,
+    "response_id": "chatcmpl-61569092-4ef5-450c-953f-7a573ae39405",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_closing",
+    "model": "opus",
+    "seconds": 3.52,
+    "usage": {
+      "completion_tokens": 81,
+      "prompt_tokens": 2633,
+      "total_tokens": 2714,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 81
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2633,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 7144,
+          "last": 7302,
+          "kind": "ad",
+          "reason": "Sponsor thank-you and pitch for Verbo, including brand messaging, tagline, and call to action to book on the Verbo app."
+        }
+      ]
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.015190000000000002,
+    "response_id": "chatcmpl-23933194-a43e-450a-9b2f-4cd2bc928585",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "ologies_opening",
+    "model": "opus",
+    "seconds": 4.47,
+    "usage": {
+      "completion_tokens": 149,
+      "prompt_tokens": 1855,
+      "total_tokens": 2004,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 149
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 1855,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 0,
+          "last": 14,
+          "kind": "ad",
+          "reason": "Sponsor identification for Verbo/Vrbo opening the episode; brand pitch and 'brought to you by' boilerplate."
+        },
+        {
+          "first": 104,
+          "last": 178,
+          "kind": "ad",
+          "reason": "Paid product pitch for Vrbo: personal use anecdote, feature list (24-7 support), tagline, and call to action to book on the app."
+        }
+      ]
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.013000000000000001,
+    "response_id": "chatcmpl-65d0711f-f88f-448e-a1a2-4d90fff3767a",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_opening",
+    "model": "opus",
+    "seconds": 1.56,
+    "usage": {
+      "completion_tokens": 11,
+      "prompt_tokens": 3258,
+      "total_tokens": 3269,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 11
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 3258,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.016565000000000003,
+    "response_id": "chatcmpl-94ac45be-9397-42aa-b758-08d625f66795",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  },
+  {
+    "case": "daily_closing",
+    "model": "opus",
+    "seconds": 4.74,
+    "usage": {
+      "completion_tokens": 184,
+      "prompt_tokens": 2689,
+      "total_tokens": 2873,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 184
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2689,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 132,
+          "last": 135,
+          "kind": "transition",
+          "reason": "Break hand-off 'We'll be right back' is production boilerplate."
+        },
+        {
+          "first": 244,
+          "last": 286,
+          "kind": "ad",
+          "reason": "Scripted paid-style spot thanking a host for a 'well-deserved break' with a call to relax and closing thank you; not part of the news content."
+        },
+        {
+          "first": 352,
+          "last": 409,
+          "kind": "credits",
+          "reason": "Production credits (producers, editor, music, engineer, theme) and final sign-off boilerplate."
+        }
+      ]
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.018045,
+    "response_id": "chatcmpl-c6d5ac5f-a483-4814-a8f6-cf754463f4de",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": false
+  }
+]

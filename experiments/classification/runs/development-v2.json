@@ -1,0 +1,625 @@
+[
+  {
+    "case": "ologies_editorial",
+    "model": "dsf",
+    "seconds": 0.65,
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 2369,
+      "total_tokens": 2375,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2369
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "prompt_sha256": "873ecbc01074a5dcacf0558e797e030d8067d1ffeda9444eece2c847a916d293",
+    "cache_headers": {
+      "llm_provider-x-cache": "Miss from cloudfront"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.00105028,
+    "response_id": "cb7b524b-a525-4957-a0e1-f08a6f01fd37",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "daily_opening",
+    "model": "dsf",
+    "seconds": 0.72,
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 2876,
+      "total_tokens": 2882,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2876
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "prompt_sha256": "b9084691378131deff12ad162feea3eaab0dcc3c012866c09b0ee54c4b21a426",
+    "cache_headers": {
+      "llm_provider-x-cache": "Miss from cloudfront"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.00127336,
+    "response_id": "c36b2bc8-fad3-458f-95a1-f38246b6cdc7",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_opening",
+    "model": "dsf",
+    "seconds": 0.99,
+    "usage": {
+      "completion_tokens": 60,
+      "prompt_tokens": 1584,
+      "total_tokens": 1644,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1584
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 10,
+          "last": 178,
+          "kind": "ad",
+          "reason": "Sponsor segment for Verbo embedded within the intro, including the product pitch and call to action."
+        }
+      ]
+    },
+    "prompt_sha256": "f9eb65098de91539a2a026daa07293120e3c6ffee256c37eaa9ccea3feacd9cc",
+    "cache_headers": {
+      "llm_provider-x-cache": "Miss from cloudfront"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.00077616,
+    "response_id": "ef20d0c2-3b3f-457f-85d6-72b6651410f0",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_closing",
+    "model": "dsf",
+    "seconds": 1.17,
+    "usage": {
+      "completion_tokens": 44,
+      "prompt_tokens": 2316,
+      "total_tokens": 2360,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2316
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 7144,
+          "last": 7303,
+          "kind": "ad",
+          "reason": "Sponsor acknowledgment and full promotional segment for Verbo including pitch, tagline, and call to action."
+        }
+      ]
+    },
+    "prompt_sha256": "ecb2087e031a060f5f67ba0d55aef58c61c1e634190f005a34cd515896ed0c9f",
+    "cache_headers": {
+      "llm_provider-x-cache": "Miss from cloudfront"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.0010771200000000002,
+    "response_id": "dd4a4f28-48d1-48bf-b8a4-1b5bc209ee85",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "daily_closing",
+    "model": "dsf",
+    "seconds": 1.13,
+    "usage": {
+      "completion_tokens": 81,
+      "prompt_tokens": 2304,
+      "total_tokens": 2385,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2304
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 132,
+          "last": 132,
+          "kind": "transition",
+          "reason": "Break hand-off 'We'll be right back' is a transition to be removed."
+        },
+        {
+          "first": 352,
+          "last": 409,
+          "kind": "credits",
+          "reason": "Production credits and final sign-off boilerplate, including staff credits, theme music credit, and host closing sign-off."
+        }
+      ]
+    },
+    "prompt_sha256": "44525a5f656e5b5847caf7010642c7466cdd0e290fb4a76bf2e5fa77d5535135",
+    "cache_headers": {
+      "llm_provider-x-cache": "Miss from cloudfront"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.00112068,
+    "response_id": "4363f498-13c1-4992-9665-f1b8d1f52f2d",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_editorial",
+    "model": "gpt",
+    "seconds": 1.11,
+    "usage": {
+      "completion_tokens": 28,
+      "prompt_tokens": 2353,
+      "total_tokens": 2381,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 15,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "prompt_sha256": "873ecbc01074a5dcacf0558e797e030d8067d1ffeda9444eece2c847a916d293",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.012605000000000002,
+    "response_id": "chatcmpl-ELFYfcVbYEia25uGgnRLabWYfoMNk",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "daily_opening",
+    "model": "gpt",
+    "seconds": 2.76,
+    "usage": {
+      "completion_tokens": 170,
+      "prompt_tokens": 2836,
+      "total_tokens": 3006,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 131,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 0,
+          "last": 3,
+          "kind": "credits",
+          "reason": "standalone publisher/network attribution before the show's own introduction"
+        }
+      ]
+    },
+    "prompt_sha256": "b9084691378131deff12ad162feea3eaab0dcc3c012866c09b0ee54c4b21a426",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.019280000000000002,
+    "response_id": "chatcmpl-ELFYgS3J4UmzeSPXJA69yn2f9trYN",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_closing",
+    "model": "gpt",
+    "seconds": 4.87,
+    "usage": {
+      "completion_tokens": 345,
+      "prompt_tokens": 2276,
+      "total_tokens": 2621,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 283,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 7144,
+          "last": 7155,
+          "kind": "ad",
+          "reason": "explicit sponsor acknowledgment"
+        },
+        {
+          "first": 7265,
+          "last": 7303,
+          "kind": "ad",
+          "reason": "sponsor product pitch, tagline, and call to action"
+        }
+      ]
+    },
+    "prompt_sha256": "ecb2087e031a060f5f67ba0d55aef58c61c1e634190f005a34cd515896ed0c9f",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.021730000000000003,
+    "response_id": "chatcmpl-ELFYfIN18eOEhc6zyqpO0Lj6r9M5u",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_opening",
+    "model": "gpt",
+    "seconds": 5.28,
+    "usage": {
+      "completion_tokens": 358,
+      "prompt_tokens": 1557,
+      "total_tokens": 1915,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 291,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 9,
+          "last": 14,
+          "kind": "ad",
+          "reason": "explicit sponsor attribution"
+        },
+        {
+          "first": 98,
+          "last": 180,
+          "kind": "ad",
+          "reason": "personal product-use anecdote and sponsor pitch with support claims, tagline, and app booking call to action"
+        }
+      ]
+    },
+    "prompt_sha256": "f9eb65098de91539a2a026daa07293120e3c6ffee256c37eaa9ccea3feacd9cc",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.018525,
+    "response_id": "chatcmpl-ELFYfkNmBbYFK44RnMLVE0xfaKLP1",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "daily_closing",
+    "model": "gpt",
+    "seconds": 3.81,
+    "usage": {
+      "completion_tokens": 242,
+      "prompt_tokens": 2280,
+      "total_tokens": 2522,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 165,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 132,
+          "last": 135,
+          "kind": "transition",
+          "reason": "break hand-off before the next editorial news segment"
+        },
+        {
+          "first": 352,
+          "last": 399,
+          "kind": "credits",
+          "reason": "production and staff credits"
+        },
+        {
+          "first": 400,
+          "last": 409,
+          "kind": "credits",
+          "reason": "final sign-off boilerplate"
+        }
+      ]
+    },
+    "prompt_sha256": "44525a5f656e5b5847caf7010642c7466cdd0e290fb4a76bf2e5fa77d5535135",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.018660000000000003,
+    "response_id": "chatcmpl-ELFYhGheJBlganDllRE7RAr8ocobm",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_editorial",
+    "model": "opus",
+    "seconds": 1.52,
+    "usage": {
+      "completion_tokens": 11,
+      "prompt_tokens": 2820,
+      "total_tokens": 2831,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 11
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2820,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "prompt_sha256": "873ecbc01074a5dcacf0558e797e030d8067d1ffeda9444eece2c847a916d293",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.014375,
+    "response_id": "chatcmpl-1645ab5d-e057-43c2-af85-173b00b70f67",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "daily_opening",
+    "model": "opus",
+    "seconds": 1.49,
+    "usage": {
+      "completion_tokens": 11,
+      "prompt_tokens": 3391,
+      "total_tokens": 3402,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 11
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 3391,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "prompt_sha256": "b9084691378131deff12ad162feea3eaab0dcc3c012866c09b0ee54c4b21a426",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.017230000000000002,
+    "response_id": "chatcmpl-235f526d-2cc7-4bea-af93-9ae590be6729",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_opening",
+    "model": "opus",
+    "seconds": 3.63,
+    "usage": {
+      "completion_tokens": 140,
+      "prompt_tokens": 1988,
+      "total_tokens": 2128,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 140
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 1988,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 9,
+          "last": 14,
+          "kind": "ad",
+          "reason": "Sponsor attribution: 'brought to you by Verbo' names the paid sponsor and its pitch."
+        },
+        {
+          "first": 104,
+          "last": 178,
+          "kind": "ad",
+          "reason": "Sponsored product pitch for Verbo: personal use anecdote, features, 24-7 support, tagline, and call to action to book on the app."
+        }
+      ]
+    },
+    "prompt_sha256": "f9eb65098de91539a2a026daa07293120e3c6ffee256c37eaa9ccea3feacd9cc",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.01344,
+    "response_id": "chatcmpl-d801f67f-bf28-4a40-8afa-86bf95e6443c",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_closing",
+    "model": "opus",
+    "seconds": 2.4,
+    "usage": {
+      "completion_tokens": 70,
+      "prompt_tokens": 2766,
+      "total_tokens": 2836,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 70
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2766,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 7144,
+          "last": 7303,
+          "kind": "ad",
+          "reason": "Sponsor thank-you and pitch for Verbo, including tagline and call to action to book on the app."
+        }
+      ]
+    },
+    "prompt_sha256": "ecb2087e031a060f5f67ba0d55aef58c61c1e634190f005a34cd515896ed0c9f",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.01558,
+    "response_id": "chatcmpl-a8cb26a3-60f2-4b1d-aa81-74d4f2e0d269",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "daily_closing",
+    "model": "opus",
+    "seconds": 4.62,
+    "usage": {
+      "completion_tokens": 192,
+      "prompt_tokens": 2822,
+      "total_tokens": 3014,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 192
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2822,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 132,
+          "last": 135,
+          "kind": "transition",
+          "reason": "Break hand-off 'We'll be right back' before the news bulletin."
+        },
+        {
+          "first": 244,
+          "last": 286,
+          "kind": "ad",
+          "reason": "Paid on-location sponsor break: host thanks a host for a 'well-deserved break' for the crew and relaxation time, an embedded promotional passage between news items."
+        },
+        {
+          "first": 352,
+          "last": 409,
+          "kind": "credits",
+          "reason": "Production staff credits, music/engineering attribution, theme credit, and final sign-off boilerplate."
+        }
+      ]
+    },
+    "prompt_sha256": "44525a5f656e5b5847caf7010642c7466cdd0e290fb4a76bf2e5fa77d5535135",
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v2",
+    "cost_usd": 0.018910000000000003,
+    "response_id": "chatcmpl-1c66f0b4-2d23-403e-bdbf-9218ed6bedee",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  }
+]

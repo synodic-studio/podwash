@@ -1,0 +1,499 @@
+[
+  {
+    "case": "ezra_closing",
+    "model": "dsf",
+    "seconds": 0.93,
+    "usage": {
+      "completion_tokens": 39,
+      "prompt_tokens": 2064,
+      "total_tokens": 2103,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 1680
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 309,
+          "last": 374,
+          "kind": "credits",
+          "reason": "Production and staff credits with network identifier and special thanks."
+        }
+      ]
+    },
+    "cache_headers": {
+      "llm_provider-x-cache": "Miss from cloudfront"
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.0007960560000000001,
+    "response_id": "45de0668-34ab-4428-b330-03889bb611f3",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_closing",
+    "model": "dsf",
+    "seconds": 1.12,
+    "usage": {
+      "completion_tokens": 101,
+      "prompt_tokens": 1902,
+      "total_tokens": 2003,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 1902
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 135.2,
+          "end": 156.5,
+          "type": "end_credits",
+          "confidence": 1.0,
+          "sponsor": "N/A",
+          "reason": "Production credits listing staff, network, and special thanks."
+        }
+      ],
+      "summary": "Found 1 segment totaling ~21.3 seconds (0 ads, 1 credit)"
+    },
+    "cache_headers": {
+      "llm_provider-x-cache": "Miss from cloudfront"
+    },
+    "policy": "current",
+    "cost_usd": 0.0009702000000000001,
+    "response_id": "790547fe-bc3d-4073-b2a8-0125d371ecb5",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_opening",
+    "model": "dsf",
+    "seconds": 1.14,
+    "usage": {
+      "completion_tokens": 73,
+      "prompt_tokens": 2337,
+      "total_tokens": 2410,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 1953
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 0,
+          "last": 30,
+          "kind": "credits",
+          "reason": "Opening repost note and episode intro mention of Labor Day repost, host name and show title are boilerplate before actual content"
+        },
+        {
+          "first": 391,
+          "last": 397,
+          "kind": "self_promo",
+          "reason": "Host email address promotion for the show"
+        }
+      ]
+    },
+    "cache_headers": {
+      "llm_provider-x-cache": "Miss from cloudfront"
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.000961056,
+    "response_id": "6d6aa27e-949a-4fbe-893d-0ffb209fd75e",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_opening",
+    "model": "dsf",
+    "seconds": 1.97,
+    "usage": {
+      "completion_tokens": 262,
+      "prompt_tokens": 2033,
+      "total_tokens": 2295,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 2033
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 0.0,
+          "end": 10.1,
+          "type": "pre_roll",
+          "confidence": 0.9,
+          "sponsor": "unknown",
+          "reason": "Opening self-promotion announcing a re-run and introducing the episode, not part of the interview content."
+        },
+        {
+          "start": 12.3,
+          "end": 14.6,
+          "type": "intro_credits",
+          "confidence": 0.8,
+          "sponsor": "N/A",
+          "reason": "Show title/credits bumper 'This is the Ezra Klein Show' before actual content begins."
+        },
+        {
+          "start": 159.0,
+          "end": 161.1,
+          "type": "post_roll",
+          "confidence": 0.75,
+          "sponsor": "N/A",
+          "reason": "Host email sign-off that serves as a closing boilerplate before the interview content starts."
+        }
+      ],
+      "summary": "Found 3 segments totaling ~14 seconds (1 pre-roll, 1 intro credits, 1 post-roll)"
+    },
+    "cache_headers": {
+      "llm_provider-x-cache": "Miss from cloudfront"
+    },
+    "policy": "current",
+    "cost_usd": 0.00124036,
+    "response_id": "3d8161b7-6c6e-4015-881e-3c150aef5e71",
+    "response_model": "dsf",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_opening",
+    "model": "gpt",
+    "seconds": 1.79,
+    "usage": {
+      "completion_tokens": 79,
+      "prompt_tokens": 1984,
+      "total_tokens": 2063,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 50,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ad_segments": [],
+      "summary": "No ad or credit segments detected"
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "current",
+    "cost_usd": 0.01229,
+    "response_id": "chatcmpl-ELFXriIfx80toDDJkC1ILlBXhvczw",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_opening",
+    "model": "opus",
+    "seconds": 1.23,
+    "usage": {
+      "completion_tokens": 34,
+      "prompt_tokens": 2838,
+      "total_tokens": 2872,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 34
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2838,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ad_segments": [],
+      "summary": "No ad or credit segments detected"
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "current",
+    "cost_usd": 0.015040000000000001,
+    "response_id": "chatcmpl-e5e51e86-bb2f-4894-b44d-ce8d9902e5e7",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_closing",
+    "model": "gpt",
+    "seconds": 3.19,
+    "usage": {
+      "completion_tokens": 190,
+      "prompt_tokens": 1841,
+      "total_tokens": 2031,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 74,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 135.2,
+          "end": 156.5,
+          "type": "end_credits",
+          "confidence": 0.98,
+          "sponsor": "N/A",
+          "reason": "End credits listing producers, fact checking, mixing, music, audience strategy, executive producer, and special thanks"
+        }
+      ],
+      "summary": "Found 1 segment totaling ~21 seconds (0 ads, 1 credit)"
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "current",
+    "cost_usd": 0.014905000000000002,
+    "response_id": "chatcmpl-ELFXsAlGDItURwIXx1N0IjaY370xn",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_closing",
+    "model": "gpt",
+    "seconds": 2.39,
+    "usage": {
+      "completion_tokens": 121,
+      "prompt_tokens": 2031,
+      "total_tokens": 2152,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 82,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 309,
+          "last": 374,
+          "kind": "credits",
+          "reason": "production staff credits and acknowledgments after the interview ends"
+        }
+      ]
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.013785,
+    "response_id": "chatcmpl-ELFXsA2UWWso49JeiOklBVpaIiK3w",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_opening",
+    "model": "gpt",
+    "seconds": 4.0,
+    "usage": {
+      "completion_tokens": 195,
+      "prompt_tokens": 2304,
+      "total_tokens": 2499,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 155,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 391,
+          "last": 397,
+          "kind": "self_promo",
+          "reason": "boilerplate contact promotion with show email address"
+        }
+      ]
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.017370000000000003,
+    "response_id": "chatcmpl-ELFXsNsEETsCWFr3qOuudLbmEwudX",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_opening",
+    "model": "opus",
+    "seconds": 1.25,
+    "usage": {
+      "completion_tokens": 11,
+      "prompt_tokens": 2791,
+      "total_tokens": 2802,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 11
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2791,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.01423,
+    "response_id": "chatcmpl-7dc752c0-003e-405c-a79b-d640a6326890",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_closing",
+    "model": "opus",
+    "seconds": 2.66,
+    "usage": {
+      "completion_tokens": 167,
+      "prompt_tokens": 2672,
+      "total_tokens": 2839,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 167
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2672,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ad_segments": [
+        {
+          "start": 135.2,
+          "end": 156.5,
+          "type": "end_credits",
+          "confidence": 0.95,
+          "sponsor": "N/A",
+          "reason": "Production credits listing staff members (producers, fact checking, mixing, original music, audience strategy, executive producer) and special thanks"
+        }
+      ],
+      "summary": "Found 1 segment totaling ~21 seconds (0 ads, 1 credits)"
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "current",
+    "cost_usd": 0.017535000000000002,
+    "response_id": "chatcmpl-d2143dab-90e3-4152-8e12-d4f0a0f4d612",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ezra_closing",
+    "model": "opus",
+    "seconds": 2.72,
+    "usage": {
+      "completion_tokens": 139,
+      "prompt_tokens": 2505,
+      "total_tokens": 2644,
+      "completion_tokens_details": {
+        "reasoning_tokens": 0,
+        "text_tokens": 139
+      },
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "text_tokens": 2505,
+        "cache_creation_tokens": 0,
+        "cache_creation_token_details": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 0
+        }
+      },
+      "cache_creation_input_tokens": 0,
+      "cache_read_input_tokens": 0,
+      "inference_geo": "global",
+      "service_tier": "standard"
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 302,
+          "last": 308,
+          "kind": "transition",
+          "reason": "Interview sign-off exchange ('Rick Rubin, thank you very much. Thank you.') marking the end of editorial content."
+        },
+        {
+          "first": 309,
+          "last": 374,
+          "kind": "credits",
+          "reason": "Full production credits: producers, fact checking, mixing, original music, audience strategy, executive producer, and special thanks."
+        }
+      ]
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.016,
+    "response_id": "chatcmpl-6d1c320f-6d36-4b36-b75b-de65d2f18a1d",
+    "response_model": "opus",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  }
+]

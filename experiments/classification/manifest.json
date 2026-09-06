@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "captured_date": "2026-09-06",
+  "transcriber": "faster-whisper 1.2.1 base CPU int8 word_timestamps=True",
+  "label_author": "Codex transcript review; not listener-validated phonetic ground truth",
+  "transcripts": {
+    "ologies": {
+      "path": "transcripts/ologies.json.gz",
+      "title": "Party Psychology (WHY WE CELEBRATE) with Danielle Brick & Kelley Gullo-Wight",
+      "feed_url": "https://feeds.simplecast.com/FO6kxYGj",
+      "original_audio_sha256": "ed7cec66d1acfaa875e9d4c93ff990ec44594c8b964cf99d238c9f6565b79e5e",
+      "transcript_sha256": "5442d808432ffbcc5d670904ccd6627bc99bc5ce37e2d22db0d71e913e937e65",
+      "source_offset_seconds": 0,
+      "local_original_metadata": "data/slicing-real/source.json"
+    },
+    "daily_opening": {
+      "path": "transcripts/daily_opening.json.gz",
+      "title": "A.I. Is Outsmarting Its Creators",
+      "feed_url": "https://feeds.simplecast.com/54nAGcIl",
+      "original_audio_sha256": "9e340fcb6b75f0bd30fb2dc084302fbbe4cd327d79a5453348428984e331150c",
+      "transcript_sha256": "1982676b57ab238c2f2190b8f093fdb62ee1ddc8d7ec20ff11534834fa54472a",
+      "source_offset_seconds": 0,
+      "local_original_metadata": "data/slicing-real/daily/source.json"
+    },
+    "daily_closing": {
+      "path": "transcripts/daily_closing.json.gz",
+      "title": "A.I. Is Outsmarting Its Creators",
+      "feed_url": "https://feeds.simplecast.com/54nAGcIl",
+      "original_audio_sha256": "9e340fcb6b75f0bd30fb2dc084302fbbe4cd327d79a5453348428984e331150c",
+      "transcript_sha256": "dff384904cd82fe3a50549768ed8e52d3b704c3eba8a6ad40968bb39593e8959",
+      "source_offset_seconds": 2226.911,
+      "local_original_metadata": "data/slicing-real/daily/source.json"
+    },
+    "ezra_opening": {
+      "path": "transcripts/ezra_opening.json.gz",
+      "title": "Best Of: The Tao of Rick Rubin",
+      "feed_url": "https://feeds.simplecast.com/82FI35Px",
+      "original_audio_sha256": "5a9d379eb7dd17a4ca25cc207abc9f9a5c71a82464c01a22bb6a760199da050e",
+      "transcript_sha256": "678e363cbbc9ce1c8d055c06664b63d698c5f828d2479eb21717d1e7967de35a",
+      "source_offset_seconds": 0,
+      "local_original_metadata": "data/classification-eval/ezra/source.json"
+    },
+    "ezra_closing": {
+      "path": "transcripts/ezra_closing.json.gz",
+      "title": "Best Of: The Tao of Rick Rubin",
+      "feed_url": "https://feeds.simplecast.com/82FI35Px",
+      "original_audio_sha256": "5a9d379eb7dd17a4ca25cc207abc9f9a5c71a82464c01a22bb6a760199da050e",
+      "transcript_sha256": "0e648e6afbb3ad3e2a0bc78295c0887582ea1b11b7f3c400f5578d85a1f2c8c8",
+      "source_offset_seconds": 5216.819563,
+      "local_original_metadata": "data/classification-eval/ezra/source.json"
+    }
+  },
+  "model_aliases": {
+    "dsf": "deepseek/deepseek-v4-flash",
+    "glm": "zai/glm-5.2",
+    "gpt": "openai/gpt-5.5",
+    "opus": "anthropic/claude-opus-4-8"
+  },
+  "speaker_labels": "Not measured. See speaker-boundary hypothesis in README."
+}

@@ -1,0 +1,500 @@
+[
+  {
+    "core": [
+      0,
+      499
+    ],
+    "context": [
+      0,
+      599
+    ],
+    "response_id": "35cd8c72-7d6d-4ac7-a390-ad7f6a589d44",
+    "output_text": "{\"ranges\":[{\"first\":10,\"last\":178,\"kind\":\"ad\",\"reason\":\"Sponsor segment for Verbo (Burbo mis-transcription) with personal anecdote and booking call to action.\"},{\"first\":475,\"last\":487,\"kind\":\"self_promo\",\"reason\":\"Patreon and review promotion for the show.\"}]}",
+    "seconds": 1.2551987499464303,
+    "cost_usd": 0.001289736,
+    "usage": {
+      "completion_tokens": 71,
+      "prompt_tokens": 3090,
+      "total_tokens": 3161,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 2706
+    },
+    "prompt_sha256": "049634d594f3df9c090f6201500ac0ff574c335a5c953b71da7b697d6c8b899e",
+    "parsed": {
+      "ranges": [
+        {
+          "first": 10,
+          "last": 178,
+          "kind": "ad",
+          "reason": "Sponsor segment for Verbo (Burbo mis-transcription) with personal anecdote and booking call to action."
+        },
+        {
+          "first": 475,
+          "last": 487,
+          "kind": "self_promo",
+          "reason": "Patreon and review promotion for the show."
+        }
+      ]
+    }
+  },
+  {
+    "core": [
+      500,
+      999
+    ],
+    "context": [
+      400,
+      1099
+    ],
+    "response_id": "15e10bbb-8d50-4edc-b8d7-5071342071eb",
+    "output_text": "```json\n{\"ranges\":[{\"first\":475,\"last\":545,\"kind\":\"self_promo\",\"reason\":\"Patron and review promo, plus host sign-off and transition into content; includes thank-you to patrons/listeners and a specific review, and 'let's get right to it' leading to topic.\"}]}\n```",
+    "seconds": 1.1951497080735862,
+    "cost_usd": 0.0015286560000000002,
+    "usage": {
+      "completion_tokens": 67,
+      "prompt_tokens": 3645,
+      "total_tokens": 3712,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3261
+    },
+    "prompt_sha256": "4a820930570106b529ef7bdf0d6ba22c1b00bbd5be12667a7e87370e4836bbd2",
+    "parsed": {
+      "ranges": [
+        {
+          "first": 475,
+          "last": 545,
+          "kind": "self_promo",
+          "reason": "Patron and review promo, plus host sign-off and transition into content; includes thank-you to patrons/listeners and a specific review, and 'let's get right to it' leading to topic."
+        }
+      ]
+    }
+  },
+  {
+    "core": [
+      1000,
+      1499
+    ],
+    "context": [
+      900,
+      1599
+    ],
+    "response_id": "c3bf2379-8598-4216-91aa-b7bea78fc75f",
+    "output_text": "{\"ranges\":[]}",
+    "seconds": 0.566170624922961,
+    "cost_usd": 0.0016879360000000001,
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 4190,
+      "total_tokens": 4196,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3806
+    },
+    "prompt_sha256": "8b9fc69fea17f671eb839ef757805cebb20ab76adfd3a9a7f1264ff2f85cc8e2",
+    "parsed": {
+      "ranges": []
+    }
+  },
+  {
+    "core": [
+      1500,
+      1999
+    ],
+    "context": [
+      1400,
+      2099
+    ],
+    "response_id": "cb67addc-888a-4c28-af08-73e12cbd2930",
+    "output_text": "{\"ranges\": []}",
+    "seconds": 0.5895259170792997,
+    "cost_usd": 0.0017218160000000001,
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 4267,
+      "total_tokens": 4273,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3883
+    },
+    "prompt_sha256": "84c7849246251b7899687bbf7e78f274c0ec6cffb6f809b08f3d4dd74c5136f1",
+    "parsed": {
+      "ranges": []
+    }
+  },
+  {
+    "core": [
+      2000,
+      2499
+    ],
+    "context": [
+      1900,
+      2599
+    ],
+    "response_id": "1fc6b922-cb28-4ff4-aa41-3231284cf54b",
+    "output_text": "{\"ranges\":[]}",
+    "seconds": 0.5905874170130119,
+    "cost_usd": 0.0017028960000000002,
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 4224,
+      "total_tokens": 4230,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3840
+    },
+    "prompt_sha256": "76e910eef6e4882d3b8a3c945159729509d3e175e68d7aaa927a649f314633f0",
+    "parsed": {
+      "ranges": []
+    }
+  },
+  {
+    "core": [
+      2500,
+      2999
+    ],
+    "context": [
+      2400,
+      3099
+    ],
+    "response_id": "62f739bc-2513-4c67-8166-a2df1ae22e4d",
+    "output_text": "{\"ranges\":[]}",
+    "seconds": 0.6038714580936357,
+    "cost_usd": 0.0016936560000000002,
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 4203,
+      "total_tokens": 4209,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3819
+    },
+    "prompt_sha256": "2b1568fa7db7e0c8bfde5d76793750ea68cab5587337242cb747e14ad2c9e739",
+    "parsed": {
+      "ranges": []
+    }
+  },
+  {
+    "core": [
+      3000,
+      3499
+    ],
+    "context": [
+      2900,
+      3599
+    ],
+    "response_id": "92ba325a-136d-421b-9ead-550ed9af2e19",
+    "output_text": "{\"ranges\":[]}",
+    "seconds": 0.8056008329149336,
+    "cost_usd": 0.0016932160000000002,
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 4202,
+      "total_tokens": 4208,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3818
+    },
+    "prompt_sha256": "e2f17a1a74780244faa4cb5d420ed9d017bf6fe571fb3d6cc39eef0eea80bdec",
+    "parsed": {
+      "ranges": []
+    }
+  },
+  {
+    "core": [
+      3500,
+      3999
+    ],
+    "context": [
+      3400,
+      4099
+    ],
+    "response_id": "0c903a7c-6dab-48e7-8922-8f6f544748d0",
+    "output_text": "{\"ranges\":[{\"first\":4012,\"last\":4070,\"kind\":\"self_promo\",\"reason\":\"Donation/charity promotion with call to action and website plug\"},{\"first\":4071,\"last\":4099,\"kind\":\"self_promo\",\"reason\":\"Continuation of charity promotion listing another donation recipient and its services\"}]}",
+    "seconds": 1.011874333024025,
+    "cost_usd": 0.0018067360000000002,
+    "usage": {
+      "completion_tokens": 72,
+      "prompt_tokens": 4262,
+      "total_tokens": 4334,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3878
+    },
+    "prompt_sha256": "2fc8e0289578980611494cda74c3566d5535c320e69e4e9c3a65bcd9d8ae75fe",
+    "parsed": {
+      "ranges": [
+        {
+          "first": 4012,
+          "last": 4070,
+          "kind": "self_promo",
+          "reason": "Donation/charity promotion with call to action and website plug"
+        },
+        {
+          "first": 4071,
+          "last": 4099,
+          "kind": "self_promo",
+          "reason": "Continuation of charity promotion listing another donation recipient and its services"
+        }
+      ]
+    }
+  },
+  {
+    "core": [
+      4000,
+      4499
+    ],
+    "context": [
+      3900,
+      4599
+    ],
+    "response_id": "375d5058-ef95-45ee-8972-57841a23cd91",
+    "output_text": "```json\n{\n  \"ranges\": [\n    {\n      \"first\": 4161,\n      \"last\": 4351,\n      \"kind\": \"ad\",\n      \"reason\": \"Verbo sponsorship pitch with product details and CTA, including host's personal anecdote framing the ad.\"\n    },\n    {\n      \"first\": 4138,\n      \"last\": 4160,\n      \"kind\": \"ad\",\n      \"reason\": \"Thank-you to sponsor Verbo, directly tied to the sponsorship and donation.\"\n    },\n    {\n      \"first\": 4012,\n      \"last\": 4137,\n      \"kind\": \"self_promo\",\n      \"reason\": \"Donation promotion and charity announcements with names, descriptions, and show-notes links; not editorial content.\"\n    }\n  ]\n}\n```",
+    "seconds": 1.6294121249811724,
+    "cost_usd": 0.0019259760000000003,
+    "usage": {
+      "completion_tokens": 169,
+      "prompt_tokens": 4242,
+      "total_tokens": 4411,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3858
+    },
+    "prompt_sha256": "a2a9edba26c19a8225ab14b59de2571599352aa4cbaaabd287fe45eecfe564b6",
+    "parsed": {
+      "ranges": [
+        {
+          "first": 4161,
+          "last": 4351,
+          "kind": "ad",
+          "reason": "Verbo sponsorship pitch with product details and CTA, including host's personal anecdote framing the ad."
+        },
+        {
+          "first": 4138,
+          "last": 4160,
+          "kind": "ad",
+          "reason": "Thank-you to sponsor Verbo, directly tied to the sponsorship and donation."
+        },
+        {
+          "first": 4012,
+          "last": 4137,
+          "kind": "self_promo",
+          "reason": "Donation promotion and charity announcements with names, descriptions, and show-notes links; not editorial content."
+        }
+      ]
+    }
+  },
+  {
+    "core": [
+      4500,
+      4999
+    ],
+    "context": [
+      4400,
+      5099
+    ],
+    "response_id": "e03509c8-9527-4b6a-a69d-442eb4d64ddf",
+    "output_text": "{\"ranges\":[]}",
+    "seconds": 0.5948042500531301,
+    "cost_usd": 0.0017090560000000002,
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 4238,
+      "total_tokens": 4244,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3854
+    },
+    "prompt_sha256": "2e2269f2b9b1b8eb5c02bf1b1d055f57edfab1da4af657d37e6d2b9d66b7db08",
+    "parsed": {
+      "ranges": []
+    }
+  },
+  {
+    "core": [
+      5000,
+      5499
+    ],
+    "context": [
+      4900,
+      5599
+    ],
+    "response_id": "57005d55-3699-4b2d-bfd4-51f909083f3a",
+    "output_text": "{\"ranges\":[]}",
+    "seconds": 0.7651832919800654,
+    "cost_usd": 0.0017332560000000003,
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 4293,
+      "total_tokens": 4299,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3909
+    },
+    "prompt_sha256": "6226ae0b162e37f16ada3461de02550127c9e54420ff795df64b521ef31d2a47",
+    "parsed": {
+      "ranges": []
+    }
+  },
+  {
+    "core": [
+      5500,
+      5999
+    ],
+    "context": [
+      5400,
+      6099
+    ],
+    "response_id": "ebf1fbb8-c45f-459f-8bfb-e359602679c2",
+    "output_text": "{\"ranges\":[]}",
+    "seconds": 0.6277684159576893,
+    "cost_usd": 0.0017174160000000003,
+    "usage": {
+      "completion_tokens": 6,
+      "prompt_tokens": 4257,
+      "total_tokens": 4263,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3873
+    },
+    "prompt_sha256": "09b33313a4346dc9f1f4712b19a83a52847b5b4a303cbdd368b8e712c16ecbaf",
+    "parsed": {
+      "ranges": []
+    }
+  },
+  {
+    "core": [
+      6000,
+      6499
+    ],
+    "context": [
+      5900,
+      6599
+    ],
+    "response_id": "b9d59e35-a0e2-48a7-a6cf-e88de75abce4",
+    "output_text": "```json\n{\"ranges\":[]}\n```",
+    "seconds": 0.6078400840051472,
+    "cost_usd": 0.0017160960000000003,
+    "usage": {
+      "completion_tokens": 10,
+      "prompt_tokens": 4242,
+      "total_tokens": 4252,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3858
+    },
+    "prompt_sha256": "5cad39db15abd5c442109cb6376f490eaece8aba2662c62496baac34d71c915a",
+    "parsed": {
+      "ranges": []
+    }
+  },
+  {
+    "core": [
+      6500,
+      6999
+    ],
+    "context": [
+      6400,
+      7099
+    ],
+    "response_id": "0e759283-5e23-42ca-9e6f-78cfcc7a14b2",
+    "output_text": "{\"ranges\":[{\"first\":6807,\"last\":6953,\"kind\":\"credits\",\"reason\":\"Outro with host social handles, show feed promo, Patreon supporters, staff and production credits, and tease of following content.\"},{\"first\":6800,\"last\":6806,\"kind\":\"credits\",\"reason\":\"Show notes reference tied to promoting guests and causes is part of the outro wrap-up.\"}]}",
+    "seconds": 1.3074812919367105,
+    "cost_usd": 0.0018212560000000003,
+    "usage": {
+      "completion_tokens": 85,
+      "prompt_tokens": 4256,
+      "total_tokens": 4341,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 3872
+    },
+    "prompt_sha256": "cd8dfc8a94d55fab6e8fe6c4f7ce6a526519e3c3c287d7681f73734de2727c36",
+    "parsed": {
+      "ranges": [
+        {
+          "first": 6807,
+          "last": 6953,
+          "kind": "credits",
+          "reason": "Outro with host social handles, show feed promo, Patreon supporters, staff and production credits, and tease of following content."
+        },
+        {
+          "first": 6800,
+          "last": 6806,
+          "kind": "credits",
+          "reason": "Show notes reference tied to promoting guests and causes is part of the outro wrap-up."
+        }
+      ]
+    }
+  },
+  {
+    "core": [
+      7000,
+      7303
+    ],
+    "context": [
+      6900,
+      7303
+    ],
+    "response_id": "422ca915-c5fa-431e-9de5-5c0218c94856",
+    "output_text": "{\"ranges\":[{\"first\":6900,\"last\":6939,\"kind\":\"credits\",\"reason\":\"Production and staff credits for the show, including editor and theme music credits.\"},{\"first\":7144,\"last\":7302,\"kind\":\"ad\",\"reason\":\"Sponsor message for Verbo, including sponsorship acknowledgment, product pitch, and call to action.\"}]}",
+    "seconds": 1.1370777090778574,
+    "cost_usd": 0.0011058160000000001,
+    "usage": {
+      "completion_tokens": 75,
+      "prompt_tokens": 2660,
+      "total_tokens": 2735,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 2276
+    },
+    "prompt_sha256": "8caf09590fef31dd8665b5f226d469a48d4b4a963710491a6ee8f58d2c862f8e",
+    "parsed": {
+      "ranges": [
+        {
+          "first": 6900,
+          "last": 6939,
+          "kind": "credits",
+          "reason": "Production and staff credits for the show, including editor and theme music credits."
+        },
+        {
+          "first": 7144,
+          "last": 7302,
+          "kind": "ad",
+          "reason": "Sponsor message for Verbo, including sponsorship acknowledgment, product pitch, and call to action."
+        }
+      ]
+    }
+  }
+]

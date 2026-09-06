@@ -25,6 +25,9 @@ on a single machine for local development — the worker just polls
 
 - `src/api/` — FastAPI app, routes (feeds, audio, management, queue)
 - `src/pipeline/` — Processing stages: downloader, transcriber, classifier, editor
+  The editor keeps individual word intervals, snaps approximate boundaries only
+  within 50 ms of a word edge, and absorbs adjacent transcript gaps. Boundaries
+  inside known speech are not padded; padding applies only without speech timings.
 - `src/feeds/` — RSS parsing (feedparser) and generation (feedgen)
 - `src/database/` — SQLite via raw sqlite3, Pydantic models, CRUD queries
 - `src/scheduler.py` — APScheduler background jobs (poll every 15min, cleanup every 6hr, watchdog every 5min)
@@ -287,3 +290,27 @@ Linting: `uv run ruff check src/`
    processing.
 8. Processed audio is cleaned up after `retention_days` (default 30);
    the episode resets to `pending` and will reprocess on next request.
+
+## Slicing Experiments
+
+`experiments/slicing/` contains isolated synthetic and real-podcast boundary
+benchmarks, resolved experimental dependencies, and results. The real-podcast
+scripts and report are under `experiments/slicing/real/`; original recordings,
+transcripts and rendered comparisons live under gitignored `data/slicing-real/`. Run its scripts from the repo
+root; generated audio and transcripts go under gitignored
+`data/slicing-experiment/`. These dependencies are separate from the production
+worker. See its README for reproducible commands and measurement limitations.
+`uv run python experiments/slicing/real/fixed-selection.py` audits cutter overlap
+against saved word timestamps with classification selections held fixed. It is
+offline; overlap measurements are not acoustic ground truth.
+
+## Classification Evals
+
+`experiments/classification/` stores compressed real-podcast transcripts, source
+checksums, reference word labels, frozen prompts and recorded model responses.
+`python3 experiments/classification/evaluate.py check` and `score` are offline
+and use only the standard library. Only the explicit `run` command contacts a
+model API; it defaults to the local proxy’s `dsf` alias and disables response
+caching for repeatable comparisons. Full-episode cases require explicit selection.
+New results go under gitignored `data/classification-eval/runs/`. Speaker-change
+cues are a documented hypothesis; the saved corpus has no measured speaker labels.

@@ -1,0 +1,220 @@
+[
+  {
+    "case": "ologies_editorial",
+    "model": "gpt",
+    "seconds": 1.3,
+    "usage": {
+      "completion_tokens": 37,
+      "prompt_tokens": 2266,
+      "total_tokens": 2303,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 24,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 1792
+      }
+    },
+    "parsed": {
+      "ranges": []
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.0043760000000000005,
+    "response_id": "chatcmpl-ELFXpiFlY4HXu9S2ef2vzVkrRbS2d",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "daily_opening",
+    "model": "gpt",
+    "seconds": 3.61,
+    "usage": {
+      "completion_tokens": 276,
+      "prompt_tokens": 2749,
+      "total_tokens": 3025,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 237,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 1792
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 0,
+          "last": 10,
+          "kind": "credits",
+          "reason": "network/show identifier boilerplate before the editorial episode introduction"
+        }
+      ]
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.013961,
+    "response_id": "chatcmpl-ELFXpMRLWYzHZ6U7M5OpPdYcl6809",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_opening",
+    "model": "gpt",
+    "seconds": 5.76,
+    "usage": {
+      "completion_tokens": 360,
+      "prompt_tokens": 1470,
+      "total_tokens": 1830,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 294,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 0
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 9,
+          "last": 14,
+          "kind": "ad",
+          "reason": "explicit sponsor acknowledgment"
+        },
+        {
+          "first": 98,
+          "last": 178,
+          "kind": "ad",
+          "reason": "personal sponsor-use anecdote followed by product pitch, support claim, tagline, and call to action"
+        }
+      ]
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.01815,
+    "response_id": "chatcmpl-ELFXpbLnnrt922OywXLxDFKUNQo7Q",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "daily_closing",
+    "model": "gpt",
+    "seconds": 5.4,
+    "usage": {
+      "completion_tokens": 352,
+      "prompt_tokens": 2193,
+      "total_tokens": 2545,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 281,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 1792
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 132,
+          "last": 135,
+          "kind": "transition",
+          "reason": "break hand-off"
+        },
+        {
+          "first": 352,
+          "last": 399,
+          "kind": "credits",
+          "reason": "production and staff credits"
+        },
+        {
+          "first": 400,
+          "last": 409,
+          "kind": "credits",
+          "reason": "final sign-off boilerplate"
+        }
+      ]
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.013461,
+    "response_id": "chatcmpl-ELFXq75rDe85wVR1YLgu31ArU5QOr",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  },
+  {
+    "case": "ologies_closing",
+    "model": "gpt",
+    "seconds": 7.0,
+    "usage": {
+      "completion_tokens": 561,
+      "prompt_tokens": 2189,
+      "total_tokens": 2750,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 477,
+        "rejected_prediction_tokens": 0
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 1792
+      }
+    },
+    "parsed": {
+      "ranges": [
+        {
+          "first": 7133,
+          "last": 7135,
+          "kind": "transition",
+          "reason": "final sign-off boilerplate"
+        },
+        {
+          "first": 7144,
+          "last": 7155,
+          "kind": "ad",
+          "reason": "explicit sponsor acknowledgment"
+        },
+        {
+          "first": 7265,
+          "last": 7303,
+          "kind": "ad",
+          "reason": "sponsor product pitch, tagline, and call to action"
+        }
+      ]
+    },
+    "cache_headers": {
+      "llm_provider-cf-cache-status": "DYNAMIC"
+    },
+    "policy": "words-v1",
+    "cost_usd": 0.019711000000000003,
+    "response_id": "chatcmpl-ELFXpRuiSfzIwsXndII9Ku7cy72gs",
+    "response_model": "gpt",
+    "recorded_date": "2026-09-06",
+    "cache_bypassed": true
+  }
+]

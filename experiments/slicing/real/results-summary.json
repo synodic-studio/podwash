@@ -1,0 +1,92 @@
+{
+  "sources": [
+    {
+      "title": "Party Psychology (WHY WE CELEBRATE) with Danielle Brick & Kelley Gullo-Wight",
+      "sha256": "ed7cec66d1acfaa875e9d4c93ff990ec44594c8b964cf99d238c9f6565b79e5e"
+    },
+    {
+      "title": "A.I. Is Outsmarting Its Creators",
+      "sha256": "9e340fcb6b75f0bd30fb2dc084302fbbe4cd327d79a5453348428984e331150c"
+    }
+  ],
+  "comparisons": {
+    "opening": 16,
+    "inline": 8,
+    "daily": 4,
+    "daily_refined": 6
+  },
+  "inline_myself_present": [
+    {
+      "method": "baseline",
+      "cutter": "current",
+      "preserved_in_readback": false,
+      "cut": [
+        36.12,
+        38.38
+      ]
+    },
+    {
+      "method": "baseline",
+      "cutter": "prototype",
+      "preserved_in_readback": true,
+      "cut": [
+        36.62,
+        37.88
+      ]
+    },
+    {
+      "method": "stable",
+      "cutter": "current",
+      "preserved_in_readback": false,
+      "cut": [
+        36.12,
+        38.38
+      ]
+    },
+    {
+      "method": "stable",
+      "cutter": "prototype",
+      "preserved_in_readback": true,
+      "cut": [
+        36.62,
+        37.88
+      ]
+    },
+    {
+      "method": "refine",
+      "cutter": "current",
+      "preserved_in_readback": false,
+      "cut": [
+        36.12,
+        38.005
+      ]
+    },
+    {
+      "method": "refine",
+      "cutter": "prototype",
+      "preserved_in_readback": true,
+      "cut": [
+        36.62,
+        37.9425
+      ]
+    },
+    {
+      "method": "whisperx",
+      "cutter": "current",
+      "preserved_in_readback": true,
+      "cut": [
+        36.684,
+        38.331
+      ]
+    },
+    {
+      "method": "whisperx",
+      "cutter": "prototype",
+      "preserved_in_readback": true,
+      "cut": [
+        36.7745,
+        38.1905
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+[
+  {
+    "selection": [
+      97,
+      178
+    ],
+    "method": "current_exact",
+    "cut": [
+      34.02,
+      62.6
+    ],
+    "context": [
+      27.020000000000003,
+      69.4
+    ],
+    "readback": "the fact, how it affects you the rest of the year. It's scientifically different and people study this and they let me talk to them. I have. Oh, hey, it's your neighbor's cackling Halloween porch hag.",
+    "audio": "data/slicing-real/fixed-after-fix-97-current_exact.wav"
+  },
+  {
+    "selection": [
+      97,
+      178
+    ],
+    "method": "guarded_word_ids",
+    "cut": [
+      34.02,
+      62.52
+    ],
+    "context": [
+      27.020000000000003,
+      69.4
+    ],
+    "readback": "the fact, how it affects you the rest of the year. It's scientifically different and people study this and they let me talk to them. I have. Oh, hey, it's your neighbor's cackling Halloween porch hag.",
+    "audio": "data/slicing-real/fixed-after-fix-97-guarded_word_ids.wav"
+  },
+  {
+    "selection": [
+      6807,
+      6939
+    ],
+    "method": "current_exact",
+    "cut": [
+      2489.22,
+      2535.9
+    ],
+    "context": [
+      2482.54,
+      2542.9
+    ],
+    "readback": "you so many questions and please do find out more about them and their causes of choice this week right in the show notes. And if you stick around to the very very end I tell you a secret and this is one of my favorite birthday candle traditions. I feel like it started",
+    "audio": "data/slicing-real/fixed-after-fix-6807-current_exact.wav"
+  },
+  {
+    "selection": [
+      6807,
+      6939
+    ],
+    "method": "guarded_word_ids",
+    "cut": [
+      2489.2999999999997,
+      2535.9
+    ],
+    "context": [
+      2482.54,
+      2542.9
+    ],
+    "readback": "you so many questions and please do find out more about them and their causes of choice this week right in the show notes. And if you stick around to the very very end I tell you a secret and this is one of my favorite birthday candle traditions. I feel like it started...",
+    "audio": "data/slicing-real/fixed-after-fix-6807-guarded_word_ids.wav"
+  }
+]

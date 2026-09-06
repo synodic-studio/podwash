@@ -1,0 +1,360 @@
+[
+  {
+    "name": "ologies_opening",
+    "split": "development",
+    "transcript": "ologies",
+    "include_ranges": [
+      [
+        0,
+        249
+      ]
+    ],
+    "remove_ranges": [
+      [
+        9,
+        14
+      ],
+      [
+        97,
+        178
+      ]
+    ],
+    "keep_ranges": [
+      [
+        0,
+        8
+      ],
+      [
+        15,
+        96
+      ],
+      [
+        181,
+        249
+      ]
+    ],
+    "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  },
+  {
+    "name": "ologies_closing",
+    "split": "development",
+    "transcript": "ologies",
+    "include_ranges": [
+      [
+        6964,
+        7303
+      ]
+    ],
+    "remove_ranges": [
+      [
+        7133,
+        7135
+      ],
+      [
+        7144,
+        7155
+      ],
+      [
+        7265,
+        7303
+      ]
+    ],
+    "keep_ranges": [
+      [
+        6964,
+        7132
+      ]
+    ],
+    "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  },
+  {
+    "name": "ologies_editorial",
+    "split": "development",
+    "transcript": "ologies",
+    "include_ranges": [
+      [
+        2897,
+        3248
+      ]
+    ],
+    "remove_ranges": [],
+    "keep_ranges": [
+      [
+        2897,
+        3248
+      ]
+    ],
+    "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  },
+  {
+    "name": "daily_opening",
+    "split": "development",
+    "transcript": "daily_opening",
+    "include_ranges": [
+      [
+        0,
+        544
+      ]
+    ],
+    "remove_ranges": [
+      [
+        0,
+        3
+      ]
+    ],
+    "keep_ranges": [
+      [
+        4,
+        544
+      ]
+    ],
+    "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  },
+  {
+    "name": "daily_closing",
+    "split": "development",
+    "transcript": "daily_closing",
+    "include_ranges": [
+      [
+        0,
+        409
+      ]
+    ],
+    "remove_ranges": [
+      [
+        132,
+        135
+      ],
+      [
+        352,
+        409
+      ]
+    ],
+    "keep_ranges": [
+      [
+        0,
+        131
+      ],
+      [
+        136,
+        351
+      ]
+    ],
+    "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  },
+  {
+    "name": "ezra_opening",
+    "split": "holdout_first_pass",
+    "transcript": "ezra_opening",
+    "include_ranges": [
+      [
+        0,
+        439
+      ]
+    ],
+    "remove_ranges": [],
+    "keep_ranges": [
+      [
+        0,
+        439
+      ]
+    ],
+    "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  },
+  {
+    "name": "ezra_closing",
+    "split": "holdout_first_pass",
+    "transcript": "ezra_closing",
+    "include_ranges": [
+      [
+        0,
+        374
+      ]
+    ],
+    "remove_ranges": [
+      [
+        309,
+        374
+      ]
+    ],
+    "keep_ranges": [
+      [
+        0,
+        301
+      ]
+    ],
+    "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  },
+  {
+    "name": "ologies_selfpromo",
+    "split": "additional",
+    "transcript": "ologies",
+    "include_ranges": [
+      [
+        387,
+        620
+      ]
+    ],
+    "remove_ranges": [
+      [
+        465,
+        522
+      ]
+    ],
+    "keep_ranges": [
+      [
+        387,
+        464
+      ],
+      [
+        523,
+        620
+      ]
+    ],
+    "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  },
+  {
+    "name": "ologies_midroll",
+    "split": "additional",
+    "transcript": "ologies",
+    "include_ranges": [
+      [
+        3964,
+        4441
+      ]
+    ],
+    "remove_ranges": [
+      [
+        4138,
+        4355
+      ]
+    ],
+    "keep_ranges": [
+      [
+        3964,
+        4137
+      ],
+      [
+        4356,
+        4441
+      ]
+    ],
+    "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  },
+  {
+    "name": "ologies_credits",
+    "split": "additional",
+    "transcript": "ologies",
+    "include_ranges": [
+      [
+        6691,
+        6963
+      ]
+    ],
+    "remove_ranges": [
+      [
+        6807,
+        6939
+      ]
+    ],
+    "keep_ranges": [
+      [
+        6691,
+        6806
+      ],
+      [
+        6940,
+        6963
+      ]
+    ],
+    "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  },
+  {
+    "name": "ologies_full",
+    "split": "full_context",
+    "transcript": "ologies",
+    "include_ranges": [
+      [
+        0,
+        7303
+      ]
+    ],
+    "remove_ranges": [
+      [
+        9,
+        14
+      ],
+      [
+        97,
+        178
+      ],
+      [
+        465,
+        522
+      ],
+      [
+        4138,
+        4355
+      ],
+      [
+        6807,
+        6939
+      ],
+      [
+        7133,
+        7135
+      ],
+      [
+        7144,
+        7155
+      ],
+      [
+        7265,
+        7303
+      ]
+    ],
+    "keep_ranges": [
+      [
+        0,
+        8
+      ],
+      [
+        15,
+        96
+      ],
+      [
+        181,
+        249
+      ],
+      [
+        387,
+        464
+      ],
+      [
+        523,
+        620
+      ],
+      [
+        2897,
+        3248
+      ],
+      [
+        3964,
+        4137
+      ],
+      [
+        4356,
+        4441
+      ],
+      [
+        6691,
+        6806
+      ],
+      [
+        6940,
+        7132
+      ]
+    ],
+    "label_notes": "Unlisted words are intentionally unscored. Removable includes ads, self-promotion, credits and break transitions."
+  }
+]

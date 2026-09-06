@@ -6,12 +6,9 @@ from pathlib import Path
 
 from src.database.models import ProcessingLog
 
-# How far a reported boundary may sit inside a word and still count as being
-# on that word's edge. Must stay comfortably above the rounding error from
-# `_TIMESTAMP_DECIMALS` in src/pipeline/classifier.py, which is what the model
-# sees: at one decimal place a boundary is already off by up to 0.05s before
-# the model's own imprecision is added.
-_SNAP_TOLERANCE = 0.3
+# Correct only the rounding error from the classifier's one-decimal timestamps.
+# A wider tolerance can swallow an entire short neighboring word.
+_SNAP_TOLERANCE = 0.050001
 
 # Safety net: never let a single boundary walk more than this far across
 # non-speech audio. Real outro music runs ~30-60s; anything past this means
@@ -36,7 +33,7 @@ async def cut_ads(
         audio_path: Path to the original audio file.
         output_path: Path for the processed output.
         ad_segments: List of ad segment dicts with 'start' and 'end' keys.
-        padding: Seconds to trim extra around ad boundaries.
+        padding: Extra trim when no transcript speech timings are available.
         transcript_segments: Whisper transcript segments. When supplied, ad
             boundaries that abut non-speech audio (outro music, silence,
             stingers) are extended across it so the dead space goes too.
@@ -144,12 +141,10 @@ async def cut_ads(
 def _speech_intervals(
     transcript_segments: list[dict] | None,
 ) -> list[tuple[float, float]]:
-    """Flatten a Whisper transcript into merged, sorted spoken-word intervals.
+    """Return sorted speech spans, retaining individual word boundaries.
 
-    Whisper only emits timestamps where it heard speech, so the inverse of
-    these intervals is exactly the non-dialog audio (music, silence, stingers).
-    Word-level timing is preferred; segments transcribed without words fall
-    back to their own span.
+    Segment spans are a fallback when word timings are unavailable. Missing
+    transcript speech is not proof of silence; this remains a timestamp heuristic.
     """
     if not transcript_segments:
         return []
@@ -164,14 +159,7 @@ def _speech_intervals(
             if end >= start:
                 raw.append((start, end))
 
-    raw.sort()
-    merged: list[tuple[float, float]] = []
-    for start, end in raw:
-        if merged and start <= merged[-1][1]:
-            merged[-1] = (merged[-1][0], max(merged[-1][1], end))
-        else:
-            merged.append((start, end))
-    return merged
+    return sorted(raw)
 
 
 def _resolve_cut_ranges(
@@ -180,23 +168,11 @@ def _resolve_cut_ranges(
     duration: float,
     padding: float,
 ) -> list[tuple[float, float]]:
-    """Turn ad segments into the concrete time ranges to remove.
+    """Absorb adjacent dead space without padding into known speech.
 
-    Whenever there is any gap between the ad boundary and the nearest spoken
-    word outside it, the cut lands exactly on that word's edge. This does two
-    jobs at once:
-
-    - Non-dialog audio (outro music, silence, stingers) butting up against a
-      cut is absorbed into it, however long the gap.
-    - The cut can never eat into neighboring speech. Whisper lines are
-      separated by 0.1-0.7s pauses, so blindly padding by 0.5s would clip the
-      first or last words of the surrounding content.
-
-    Padding remains only as the fallback for a boundary that lands mid-word,
-    where there is no gap to cut in and some slack is safer than none.
-
-    Without a transcript there is no speech map, so every boundary falls back
-    to padding and behavior matches the pre-snapping editor.
+    Snap only within timestamp rounding error. If a boundary is genuinely inside
+    speech, retain that requested boundary rather than expanding the damage.
+    Padding is used only when no speech map is available.
     """
     ranges = []
     for ad in ads:
@@ -204,17 +180,22 @@ def _resolve_cut_ranges(
         ad_end = float(ad["end"])
 
         if speech:
+            snapped_start = _nearest_edge(speech, ad_start, 0)
+            snapped_end = _nearest_edge(speech, ad_end, 1)
+            # Very short/ambiguous requests must not invert when snapped.
+            if snapped_start < snapped_end:
+                ad_start, ad_end = snapped_start, snapped_end
             prev_speech_end = _speech_end_before(speech, ad_start)
             cut_start = (
                 max(ad_start - _MAX_DEAD_SPACE_EXTEND, prev_speech_end)
                 if prev_speech_end < ad_start
-                else ad_start - padding
+                else ad_start
             )
             next_speech_start = _speech_start_after(speech, ad_end, duration)
             cut_end = (
                 min(ad_end + _MAX_DEAD_SPACE_EXTEND, next_speech_start)
                 if next_speech_start > ad_end
-                else ad_end + padding
+                else ad_end
             )
         else:
             cut_start = ad_start - padding
@@ -224,37 +205,36 @@ def _resolve_cut_ranges(
     return ranges
 
 
-def _speech_end_before(speech: list[tuple[float, float]], point: float) -> float:
-    """End of the last word clearly finishing before `point` (0.0 if none).
+def _nearest_edge(
+    speech: list[tuple[float, float]], point: float, edge: int
+) -> float:
+    """Choose the nearest start/end, resolving ties toward a smaller cut."""
+    candidates = [span[edge] for span in speech if abs(span[edge] - point) <= _SNAP_TOLERANCE]
+    if not candidates:
+        return point
+    return min(candidates, key=lambda value: (abs(value - point), -value if edge == 0 else value))
 
-    A word genuinely spanning `point` returns `point` itself — the boundary is
-    inside speech, so there is no gap to cut in. Words beginning within
-    `_SNAP_TOLERANCE` of `point` are treated as belonging to the segment that
-    starts there, not as content to preserve.
-    """
+
+def _speech_end_before(speech: list[tuple[float, float]], point: float) -> float:
+    """Last preceding speech edge, or point when speech crosses it."""
     last_end = 0.0
     for start, end in speech:
-        if start >= point - _SNAP_TOLERANCE:
+        if start >= point:
             break
-        if end > point + _SNAP_TOLERANCE:
+        if end > point:
             return point
-        last_end = end
+        last_end = max(last_end, end)
     return last_end
 
 
 def _speech_start_after(
     speech: list[tuple[float, float]], point: float, duration: float
 ) -> float:
-    """Start of the first word clearly beginning after `point` (EOF if none).
-
-    Mirror of `_speech_end_before`: words ending within `_SNAP_TOLERANCE` of
-    `point` belong to the segment ending there, and a word genuinely spanning
-    the boundary returns `point`.
-    """
+    """Next speech edge, or point when speech crosses it."""
     for start, end in speech:
-        if end <= point + _SNAP_TOLERANCE:
+        if end <= point:
             continue
-        if start < point - _SNAP_TOLERANCE:
+        if start < point:
             return point
         return start
     return duration
