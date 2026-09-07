@@ -295,6 +295,10 @@ Linting: `uv run ruff check src/`
 
 ## Slicing Experiments
 
+`experiments/README.md` indexes the investigation reports, evidence limitations,
+artifact locations and parked ideas. Historical reports describe their own
+experimental stage; consult the index for the deployed behavior.
+
 `experiments/slicing/` contains isolated synthetic and real-podcast boundary
 benchmarks, resolved experimental dependencies, and results. The real-podcast
 scripts and report are under `experiments/slicing/real/`; original recordings,

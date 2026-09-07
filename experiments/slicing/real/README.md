@@ -1,5 +1,7 @@
 # Real podcast slicing experiment
 
+Historical experiment report. See the [investigation closeout](../../README.md) for final deployed state and limitations.
+
 2026-09-06. Two downloaded podcasts, 34 rendered comparison clips. Original
 bytes are preserved with SHA-256 checks in `data/slicing-real/`; titles and
 hashes are recorded in `results-summary.json`. Production is unchanged.

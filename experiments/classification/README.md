@@ -1,5 +1,7 @@
 # Podcast classification evals
 
+Historical experiment report. See the [investigation closeout](../README.md) for final deployed state and limitations.
+
 A small, offline-first corpus for testing cheaper classifiers and prompts.
 **The default model for an explicitly requested live run is `dsf`.** GPT and
 Opus results are retained as comparison baselines, not production recommendations.

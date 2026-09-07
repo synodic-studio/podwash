@@ -1,5 +1,7 @@
 # Audio slicing experiment
 
+Historical experiment report. See the [investigation closeout](../README.md) for final deployed state and limitations.
+
 Date: 2026-09-06. Research only; production pipeline and dependencies unchanged.
 
 ## Finding
