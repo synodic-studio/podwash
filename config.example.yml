@@ -13,6 +13,9 @@ feeds:
     url: "https://feeds.example.com/podcast.xml"
     slug: "my-favorite-podcast"
     poll_interval_minutes: 60
+    # Set false to publish placeholders without automatically queueing
+    # new episodes. They enter the worker queue only when requested.
+    auto_process: true
 
   # - name: "Another Podcast"
   #   url: "https://feeds.example.com/another.xml"

@@ -195,10 +195,12 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
 
         max_episodes = DEFAULT_MAX_EPISODES_PER_FEED
         title_includes: list[str] = []
+        auto_process = True
         for fc in settings.feeds:
             if fc.slug == feed.slug:
                 max_episodes = fc.max_episodes or DEFAULT_MAX_EPISODES_PER_FEED
                 title_includes = fc.title_includes
+                auto_process = fc.auto_process
                 break
 
         print(f"[scheduler] Polling feed: {feed.name}")
@@ -211,9 +213,12 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
                 title_includes=title_includes,
             )
             new_count = 0
+            queued_count = 0
             seen_at = datetime.now()
             active_ids: list[int] = []
             auto_flags = _auto_process_flags(episodes, now=seen_at)
+            if not auto_process:
+                auto_flags = [False] * len(episodes)
             for episode, auto in zip(episodes, auto_flags):
                 ep_id, inserted = queries.upsert_episode_from_poll(
                     conn, episode, seen_at=seen_at, auto_process=auto
@@ -221,6 +226,7 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
                 active_ids.append(ep_id)
                 if inserted:
                     new_count += 1
+                    queued_count += int(auto)
             # Only prune visibility when we actually got episodes back —
             # an empty parse is suspicious enough to leave existing rows
             # alone rather than blank the whole feed.
@@ -236,7 +242,7 @@ def _poll_feeds(conn: sqlite3.Connection, settings: Settings) -> None:
             if new_count:
                 print(
                     f"[scheduler] Found {new_count} new episodes in {feed.name} "
-                    f"(queued for worker)"
+                    f"({queued_count} queued for worker)"
                 )
             # Success forgives any prior failure streak.
             _feed_failure_counts.pop(feed.id, None)

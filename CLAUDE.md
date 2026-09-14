@@ -139,6 +139,8 @@ a row is reset, the stale `clean_token` is cleared so old
 ## Configuration
 
 - `config.yml` — main config (gitignored, copy from `config.example.yml`)
+- Per-feed `auto_process` defaults to `true`. Set it to `false` to keep
+  newly discovered episodes visible but off the worker queue until requested.
 - `.env` — `ANTHROPIC_API_KEY` (required for ad classification)
 - Env overrides: `BASE_URL`, `DATA_DIR`, `HOST`, `PORT`, `CONFIG_PATH`
 - Worker env: `WORKER_TOKEN`, `WORKER_SERVER_URL`,

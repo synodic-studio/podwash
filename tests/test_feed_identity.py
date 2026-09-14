@@ -583,6 +583,53 @@ def test_poll_only_auto_queues_recent_episodes(conn):
     assert len(rows) == 22
 
 
+def test_poll_leaves_new_episode_on_demand_when_feed_disables_auto_process(
+    tmp_path, monkeypatch
+):
+    """A feed-level opt-out keeps freshly discovered episodes off the queue."""
+    from src import scheduler
+
+    settings = Settings(
+        data_dir=str(tmp_path),
+        feeds=[
+            FeedConfig(
+                name="Ologies",
+                url="http://show.example/rss",
+                slug="ologies",
+                poll_interval_minutes=0,
+                auto_process=False,
+            )
+        ],
+    )
+    app = create_app(settings)
+    conn = app.state.db
+    feed = queries.get_feed_by_slug(conn, "ologies")
+    episode = Episode(
+        feed_id=feed.id,
+        guid="fresh",
+        title="Fresh episode",
+        source_audio_url="http://show.example/fresh.mp3",
+        pub_date=datetime.now(timezone.utc),
+    )
+
+    monkeypatch.setattr(scheduler, "fetch_public_feed_sync", lambda _url: b"<rss/>")
+    monkeypatch.setattr(
+        scheduler,
+        "parse_feed_content",
+        lambda _content, _feed_id, **_kwargs: [episode],
+    )
+
+    scheduler._poll_feeds(conn, settings)
+
+    stored = queries.get_episode_by_id(
+        conn,
+        conn.execute("SELECT id FROM episodes WHERE guid = 'fresh'").fetchone()["id"],
+    )
+    assert stored.status == EpisodeStatus.NEW
+    assert stored.auto_processed is False
+    assert stored.publication_state == "placeholder"
+
+
 def test_tap_requested_completion_uses_same_pipe_prefix(conn):
     """A completed episode reads the same whether tapped or auto-queued."""
     feed_id = _make_feed(conn)

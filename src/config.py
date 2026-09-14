@@ -14,6 +14,7 @@ class FeedConfig(BaseModel):
     poll_interval_minutes: int = 60
     max_episodes: int = 0  # 0 = unlimited
     title_includes: list[str] = Field(default_factory=list)
+    auto_process: bool = True
 
 
 class ProcessingConfig(BaseModel):
