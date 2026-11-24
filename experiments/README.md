@@ -1,6 +1,8 @@
 # Audio slicing investigation: closeout and index
 
-This investigation is closed at the user's request. There is no scheduled
+The broad investigation below is closed at the user's request. A separately requested
+[September 16 Journal incident check](journal-2026-09-16/README.md) records actual
+surviving commercials and the limits of historical diagnosis. There is no scheduled
 follow-up or standing request to continue experimenting. This file is the entry
 point; individual reports retain their historical measurements and limitations.
 
